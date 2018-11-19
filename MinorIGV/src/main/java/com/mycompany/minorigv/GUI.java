@@ -63,7 +63,9 @@ public class GUI {
 		frame.getContentPane().setLayout(gridBagLayout);
 		
 
-		JMenuBar igvMenuBar = IGVMenuBar.createIGVMenuBar();
+		IGVMenuBar igvMenuBar = new IGVMenuBar();
+		igvMenuBar.init();
+
 		
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.fill = GridBagConstraints.BOTH;
