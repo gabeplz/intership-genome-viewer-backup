@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 public class IGVMenuBar extends JMenuBar {
-		
+	
 	public static IGVMenuBar createIGVMenuBar() {
 		
 		IGVMenuBar bar = new IGVMenuBar();

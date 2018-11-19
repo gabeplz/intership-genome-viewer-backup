@@ -24,6 +24,7 @@ import java.awt.GridBagConstraints;
 public class GUI {
 
 	private JFrame frame;
+	private ReferencePanel ReferencePaneel;
 
 	/**
 	 * Launch the application.
@@ -61,7 +62,6 @@ public class GUI {
 		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
-		
 
 		JMenuBar igvMenuBar = IGVMenuBar.createIGVMenuBar();
 		
@@ -71,20 +71,18 @@ public class GUI {
 		gbc_panel.gridy = 0;
 		frame.getContentPane().add(igvMenuBar,gbc_panel );
 		
-		JPanel filler = new JPanel();
-		filler.setPreferredSize(new Dimension(100,200));
-		GridBagConstraints gbc_hoi = new GridBagConstraints();
-		gbc_hoi.fill = GridBagConstraints.BOTH;
-		gbc_hoi.gridx = 0;
-		gbc_hoi.gridy = 1;
-		frame.getContentPane().add(filler,gbc_hoi );
-		
-		frame.getContentPane().add(igvMenuBar,gbc_panel );
+		ReferencePaneel = new ReferencePanel();
+		ReferencePaneel.init();
 		
 		
+		GridBagConstraints gbc_ReferenceSeq = new GridBagConstraints();
+		
+		gbc_ReferenceSeq.fill = GridBagConstraints.BOTH;
+		gbc_ReferenceSeq.gridx = 0;
+		gbc_ReferenceSeq.gridy = 1;	
+		frame.getContentPane().add(ReferencePaneel,gbc_ReferenceSeq);
 		
 		
 		
 	}
-
 }
