@@ -1,3 +1,5 @@
+package GFFparser;
+
 public class Feature {
     private String id;
     private String start_gene;
@@ -65,16 +67,4 @@ public class Feature {
     public void setPhase(String phase) {
         this.phase = phase;
     }
-
-
-//    @Override
-//    public String toString() {
-//        return "Gene{" +
-//                "start_gene='" + start_gene + '\'' +
-//                ", stop_gene='" + stop_gene + '\'' +
-//                ", strand='" + strand + '\'' +
-//                '}';
-//    }
-
-
 }

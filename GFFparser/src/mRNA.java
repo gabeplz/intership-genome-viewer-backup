@@ -1,15 +1,10 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- *
- * @author amber/anne
- */
-class Gene extends Feature{
+public class mRNA extends Feature{
 
-private HashMap attributes;
+    private HashMap attributes;
 
-    Gene(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
+    mRNA(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
         super(seqid, start, end, score, strand, phase);
         this.attributes = attributes;
     }
@@ -24,6 +19,6 @@ private HashMap attributes;
 
     @Override
     public String toString() {
-        return "Gene" +Integer.toString(getStart_gene());
+        return "mRNA" + Integer.toString(getStart_gene());
     }
 }
