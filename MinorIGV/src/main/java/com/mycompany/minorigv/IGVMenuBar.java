@@ -3,6 +3,7 @@ package com.mycompany.minorigv;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -84,6 +85,16 @@ public class IGVMenuBar extends JMenuBar {
 	}
 	// test button action listener
 	private void loadReferenceAction() {
+		FastaFileChooser fastafile = new FastaFileChooser();
+		String fastaf = fastafile.fastafile();
+		FastaFileReader fasta = new FastaFileReader();
+		try {
+			String sequentie = fasta.seq(fastaf);
+			System.out.println(sequentie);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		System.out.println("load reference test");
 	}
 	private void OpenDataAction() {
