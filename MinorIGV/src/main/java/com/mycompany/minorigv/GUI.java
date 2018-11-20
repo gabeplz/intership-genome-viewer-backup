@@ -20,11 +20,15 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
 import java.awt.GridBagConstraints;
+import javax.swing.JScrollPane;
+import java.awt.Insets;
+import javax.swing.ScrollPaneConstants;
 
 public class GUI {
 
 	private JFrame frame;
 	private ReferencePanel ReferencePaneel;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -60,31 +64,48 @@ public class GUI {
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
 
 		IGVMenuBar igvMenuBar = new IGVMenuBar();
 		igvMenuBar.init();
-
 		
 		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
 		frame.getContentPane().add(igvMenuBar,gbc_panel );
 		
-		ReferencePaneel = new ReferencePanel();
-		ReferencePaneel.init();
+		JScrollPane scrollPane_1 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_1.gridx = 0;
+		gbc_scrollPane_1.gridy = 1;
+		frame.getContentPane().add(scrollPane_1, gbc_scrollPane_1);
+		
+		OrganismPanel organism = new OrganismPanel();
+		scrollPane_1.setViewportView(organism);
+		organism.init();
 		
 		
-		GridBagConstraints gbc_ReferenceSeq = new GridBagConstraints();
+		RulerPanel liniaal = new RulerPanel();
+		liniaal.init();
+		organism.add(liniaal);
 		
-		gbc_ReferenceSeq.fill = GridBagConstraints.BOTH;
-		gbc_ReferenceSeq.gridx = 0;
-		gbc_ReferenceSeq.gridy = 1;	
-		frame.getContentPane().add(ReferencePaneel,gbc_ReferenceSeq);
+		ReferencePanel refpanel1 = new ReferencePanel();
+		refpanel1.init();
+		organism.add(refpanel1);
+		
+		CodonPanel codonPanel1 = new CodonPanel();
+		codonPanel1.init();
+		organism.add(codonPanel1);
+		
+		FeaturePanel features = new FeaturePanel();
+		features.init();
+		organism.add(features);
 		
 		
-		
+
 	}
 }
