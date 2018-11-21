@@ -1,3 +1,4 @@
+package com.mycompany.minorigv;
 public class Feature {
     private String id;
     private String start_gene;
@@ -67,14 +68,14 @@ public class Feature {
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "Gene{" +
-//                "start_gene='" + start_gene + '\'' +
-//                ", stop_gene='" + stop_gene + '\'' +
-//                ", strand='" + strand + '\'' +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return  this.getClass().toString() +
+                "    start_gene='" + start_gene + '\'' +
+                ", stop_gene='" + stop_gene + '\'' +
+                ", strand='" + strand + '\'' +
+                '}';
+    }
 
 
 }

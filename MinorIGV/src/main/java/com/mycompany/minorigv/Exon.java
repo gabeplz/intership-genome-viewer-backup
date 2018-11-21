@@ -1,3 +1,4 @@
+package com.mycompany.minorigv;
 import java.util.HashMap;
 
 public class Exon extends Feature{
@@ -16,8 +17,5 @@ public class Exon extends Feature{
         this.attributes = attributes;
     }
 
-    @Override
-    public String toString() {
-        return "Exon" +Integer.toString(getStart_gene());
-    }
+
 }

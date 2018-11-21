@@ -1,8 +1,10 @@
+package com.mycompany.minorigv;
 import java.util.ArrayList;
 
 public class Chromosome {
 
     private String id;
+
     private ArrayList<Feature> features;
 
     public Chromosome(String id, ArrayList<Feature> features) {
@@ -33,5 +35,23 @@ public class Chromosome {
             result += (" " + features.get(i).toString());
         }
         return result;
+    }
+
+    public ArrayList<Feature> getFeaturesBetween(int start, int stop){
+
+        ArrayList<Feature> featureList = new ArrayList<Feature>();
+        for(Feature f : features){
+
+
+            if (f.getStop_gene() > start && f.getStop_gene() < stop){
+                featureList.add(f);
+            }else if(f.getStart_gene() > start && f.getStart_gene() < stop){
+                featureList.add(f);
+            }else if(f.getStart_gene() < start && f.getStop_gene() > stop){
+                featureList.add(f);
+            }
+        }
+
+        return featureList;
     }
 }

@@ -1,3 +1,4 @@
+package com.mycompany.minorigv;
 import java.util.HashMap;
 
 public class mRNA extends Feature{
@@ -17,8 +18,5 @@ public class mRNA extends Feature{
         this.attributes = attributes;
     }
 
-    @Override
-    public String toString() {
-        return "mRNA" + Integer.toString(getStart_gene());
-    }
+
 }

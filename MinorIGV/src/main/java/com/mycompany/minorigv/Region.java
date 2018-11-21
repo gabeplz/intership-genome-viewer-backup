@@ -1,9 +1,10 @@
+package com.mycompany.minorigv;
 import java.util.HashMap;
 
-public class CDS extends Feature{
+public class Region extends Feature{
     private HashMap attributes;
 
-    CDS(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
+    Region(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
         super(seqid, start, end, score, strand, phase);
         this.attributes = attributes;
     }
@@ -16,8 +17,5 @@ public class CDS extends Feature{
         this.attributes = attributes;
     }
 
-    @Override
-    public String toString() {
-        return "CDS" +Integer.toString(getStart_gene());
-    }
+
 }

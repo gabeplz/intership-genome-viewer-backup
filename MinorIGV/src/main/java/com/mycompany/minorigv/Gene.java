@@ -1,3 +1,4 @@
+package com.mycompany.minorigv;
 import java.util.ArrayList;
 import java.util.HashMap;
 
