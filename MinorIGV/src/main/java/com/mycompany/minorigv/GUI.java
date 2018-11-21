@@ -1,5 +1,6 @@
 package com.mycompany.minorigv;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,6 +9,12 @@ import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 import java.awt.FlowLayout;
 
+
+/**
+ * Class waarin de main staat waarmee de GUI geinitialiseerd wordt en verschillende objecten worden toegevoegt.
+ * @author kahuub
+ * Date: 19/11/18
+ */
 public class GUI {
 
 	private JFrame frame;
@@ -69,9 +76,8 @@ public class GUI {
 		gbc_genome.fill = GridBagConstraints.HORIZONTAL;
 		gbc_genome.gridx = 0;
 		gbc_genome.gridy = 1;
+		organismPanel.setBackground(Color.BLACK);
 		frame.getContentPane().add(organismPanel,gbc_genome );
-		
-		
 		
 		
 		JScrollPane scrollPane_1 = new JScrollPane();

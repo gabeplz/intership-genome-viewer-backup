@@ -8,6 +8,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+
+/**
+ * Class voor interactie met de gebruiker ten behoeve van het verduidelijken welk gedeelte van de sequentie
+ * door de gebruiker aanschouwt wordt.
+ * @author kahuub
+ * Date: 20/11/18
+ */
 public class GenomePanel extends JPanel{
 	
 	private JTextArea Organism;
