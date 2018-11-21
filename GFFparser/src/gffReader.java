@@ -6,6 +6,7 @@ public class gffReader {
 
     public String line;
     public String ID;
+    public ArrayList<String> allContigs = new ArrayList<String>();
 
     public void readData(String path) throws FileNotFoundException, IOException {
         BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -14,6 +15,7 @@ public class gffReader {
         while ((line = reader.readLine()) != null) if (line.startsWith("##sequence-region")) {
             String[] splited = line.split("\\s+");
             ID = splited[1];
+            allContigs.add(ID);
         } else if (line.startsWith("#")) {
         } else if (line.startsWith(ID)) {
             String[] columns = line.split("\\t");
@@ -37,15 +39,23 @@ public class gffReader {
                 HashMap attribute = att.splitAtt(columns[8]);
                 CDS cdsObject = makeCDS(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 make(chromosomes, cdsObject);
+            }else if (line.split("\\t")[2].equals("region")) {
+                HashMap attribute = att.splitAtt(columns[8]);
+                Region regionObject = makeRegion(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
+                make(chromosomes, regionObject);
             }
         }
+        InformationUser info = new InformationUser();
+        info.getInfo(allContigs, chromosomes);
 
-        for( Chromosome chromosome : chromosomes){
-            //NC_001133.9
-            if(chromosome.getId().equals("NC_001134.8")){
-                System.out.println(chromosome);
-            }
-        }
+
+//        for( Chromosome chromosome : chromosomes){
+//            //NC_001133.9
+//            if(chromosome.getId().equals("JH790076.1")){
+//
+//                System.out.println(chromosome);
+//            }
+//        }
 
     }
 
@@ -94,6 +104,12 @@ public class gffReader {
     private static CDS makeCDS(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
         CDS object;
         object = new CDS(seqid, start, end, score, strand, phase, attributes);
+        return object;
+    }
+
+    private static Region makeRegion(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        Region object;
+        object = new Region(seqid, start, end, score, strand, phase, attributes);
         return object;
     }
 

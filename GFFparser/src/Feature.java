@@ -18,7 +18,7 @@ public class Feature {
     public Feature() {
     }
 
-    public String getId() {
+    public String getId(Object s) {
         return id;
     }
 
