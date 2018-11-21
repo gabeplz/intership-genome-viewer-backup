@@ -1,28 +1,12 @@
 package com.mycompany.minorigv;
 
-import java.awt.Dimension;
 import java.awt.EventQueue;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.KeyStroke;
-
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
-import java.awt.Insets;
-import javax.swing.ScrollPaneConstants;
+import java.awt.FlowLayout;
 
 public class GUI {
 
@@ -58,7 +42,7 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 640, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
@@ -77,11 +61,25 @@ public class GUI {
 		gbc_panel.gridy = 0;
 		frame.getContentPane().add(igvMenuBar,gbc_panel );
 		
+		
+		GenomePanel organismPanel = new GenomePanel();
+		organismPanel.init();
+		
+		GridBagConstraints gbc_genome = new GridBagConstraints();
+		gbc_genome.fill = GridBagConstraints.HORIZONTAL;
+		gbc_genome.gridx = 0;
+		gbc_genome.gridy = 1;
+		frame.getContentPane().add(organismPanel,gbc_genome );
+		
+		
+		
+		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.weighty = 1.0;
 		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 1;
+		gbc_scrollPane_1.gridy = 2;
 		frame.getContentPane().add(scrollPane_1, gbc_scrollPane_1);
 		
 		OrganismPanel organism = new OrganismPanel();
