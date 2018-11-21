@@ -13,7 +13,7 @@ public class gffReader {
 
     public String line;
     public String ID;
-
+    public String ID_organism;
 
     /**
      * Het inlezen van het bestand per regel en het opslaan van data in de regels wanneer er in de derde kolom gene, mRNA,
@@ -33,7 +33,11 @@ public class gffReader {
             String[] splited = line.split("\\s+");
             ID = splited[1];
             allContigs.add(ID);
-        } else if (line.startsWith("#")) {
+        } else if (line.startsWith("##species")) {
+            String[] id_org = line.split("=");
+            ID_organism = id_org[1];
+
+        }else if(line.startsWith("#")){
             // Als de regel met ID begint is het mogelijk relevante data om op te slaan.
         } else if (line.startsWith(ID)) {
             String[] columns = line.split("\\t");
@@ -46,27 +50,28 @@ public class gffReader {
                 HashMap attribute = att.splitAtt(columns[8]);
                 Gene genObject = makeGene(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 make(chromosomes, genObject);
-            }else if (line.split("\\t")[2].equals("mRNA")) {
+            } else if (line.split("\\t")[2].equals("mRNA")) {
                 HashMap attribute = att.splitAtt(columns[8]);
                 mRNA mRNAObject = makemRNA(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 make(chromosomes, mRNAObject);
-            }else if (line.split("\\t")[2].equals("exon")) {
+            } else if (line.split("\\t")[2].equals("exon")) {
                 HashMap attribute = att.splitAtt(columns[8]);
-                Exon exonObject = makeExon(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7],attribute);
+                Exon exonObject = makeExon(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 make(chromosomes, exonObject);
-            }else if (line.split("\\t")[2].equals("CDS")) {
+            } else if (line.split("\\t")[2].equals("CDS")) {
                 HashMap attribute = att.splitAtt(columns[8]);
                 CDS cdsObject = makeCDS(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 make(chromosomes, cdsObject);
-            }else if (line.split("\\t")[2].equals("region")) {
+            } else if (line.split("\\t")[2].equals("region")) {
                 HashMap attribute = att.splitAtt(columns[8]);
                 Region regionObject = makeRegion(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 make(chromosomes, regionObject);
             }
         }
+        Organisms org = new Organisms(ID_organism, chromosomes);
 
-        InformationUser info = new InformationUser();
-        info.getInfo(allContigs, chromosomes);
+//        InformationUser info = new InformationUser();
+//        info.getInfo(allContigs, chromosomes);
 
     }
 
