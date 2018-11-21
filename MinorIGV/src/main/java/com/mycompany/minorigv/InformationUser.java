@@ -12,7 +12,8 @@ public class InformationUser {
 
 
         for( Chromosome chromosome : chromosomes){
-            String contigID = allContigs.get(1);
+            // prokaryoten hebben meestal maar 1 chromosoom/contig, vandaar de index 0.
+            String contigID = allContigs.get(0);
             if(chromosome.getId().equals(contigID)){
 //                chromosome.getFeatures();
                 //System.out.println(chromosome);
