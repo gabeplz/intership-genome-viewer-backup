@@ -14,6 +14,10 @@ private HashMap attributes;
         this.attributes = attributes;
     }
 
+    public Gene() {
+
+    }
+
     public HashMap getAttributes() {
         return attributes;
     }
@@ -22,8 +26,8 @@ private HashMap attributes;
         this.attributes = attributes;
     }
 
-    @Override
-    public String toString() {
-        return "Gene" +Integer.toString(getStart_gene());
-    }
+//    @Override
+//    public String toString() {
+//        return "Gene" +Integer.toString(getStart_gene());
+//    }
 }
