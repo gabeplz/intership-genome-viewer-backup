@@ -1,6 +1,7 @@
 package com.mycompany.minorigv;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
@@ -14,6 +15,13 @@ public class CodonPanel extends JPanel{
 
 	public void init() {
 		this.setBackground(Color.ORANGE);
+		
+	}
+	@Override
+	public void paintComponent(Graphics g) {
+		
+		super.paintComponent(g);
+		DrawingTools.drawCenteredChar(g, 'r', 20, 20);
 		
 	}
 

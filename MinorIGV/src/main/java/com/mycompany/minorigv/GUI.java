@@ -109,7 +109,5 @@ public class GUI {
 		features.init();
 		organism.add(features);
 		
-		
-
 	}
 }

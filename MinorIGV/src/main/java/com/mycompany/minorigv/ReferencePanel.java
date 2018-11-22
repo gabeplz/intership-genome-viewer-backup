@@ -21,14 +21,14 @@ public class ReferencePanel extends JPanel {
 		g2.setColor(Color.RED);
 		Font font = new Font("Monospaced", Font.PLAIN, 12);
 		g2.setFont(font);
-		System.out.println(this.getSize());
+		//System.out.println(this.getSize());
 
 		int n_x= 0;
 		int n_y = 20;
 		int r_n_y = 40;
 
 		for (int i = 0; i<=seq.length()-1;i++) {
-			System.out.println(i);
+			//System.out.println(i);
 
 			char seq_n = seq.charAt(i);
 			char rev_seq_n = rev_seq.charAt(i);
