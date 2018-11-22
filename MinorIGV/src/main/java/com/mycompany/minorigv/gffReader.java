@@ -7,7 +7,7 @@ import java.util.*;
  * Deze class leest een bestand met genomische data in. Per regel wordt er gekeken of de data in die regel relevant is
  * aan de hand van de derde kolom. Vervolgens worden er van de relevante regels objecten gemaakt zodat de data wordt opgeslagen.
  *
- * @author Anne en Amber
+ * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
 public class gffReader {
 
@@ -128,9 +128,9 @@ public class gffReader {
      * @param seqid       Het ID van het contig/chromosoom waarin het gen aanwezig is.
      * @param start       Start positie van het gen op het genoom
      * @param end         Stop positie van het gen op het genoom
-     * @param score
+     * @param score       Score van het gen
      * @param strand      Of het gen aanwezig is in de strand (+) of complementaire strand (-)
-     * @param phase
+     * @param phase       Het geeft het reading frame aan waarin het gen voorkomt (0,1,2 of ".")
      * @param attributes  Informatie over het gen, locus_tag aanwezig.
      * @return            Object waarin de meegegeven informatie van het gen wordt opgeslagen.
      */
@@ -146,9 +146,9 @@ public class gffReader {
      * @param seqid         Het ID van het contig/chromosoom waarin het mRNA aanwezig is.
      * @param start         Start positie van het mRNA op het genoom
      * @param end           Stop positie van het mRNA op het genoom
-     * @param score
+     * @param score         Score van het mRNA
      * @param strand        Of het mRNA aanwezig is in de strand (+) of complementaire strand (-)
-     * @param phase
+     * @param phase         Het geeft het reading frame aan waarin het mRNA voorkomt (0,1,2 of ".")
      * @param attributes    Informatie over het gen.
      * @return              Object waarin de meegegeven informatie van het gen wordt opgeslagen.
      */
@@ -164,9 +164,9 @@ public class gffReader {
      * @param seqid         Het ID van het contig/chromosoom waarin het exon aanwezig is.
      * @param start         Start positie van het exon op het genoom
      * @param end           Stop positie van het exon op het genoom
-     * @param score
+     * @param score         Score van het exon
      * @param strand        Of het exon aanwezig is in de strand (+) of complementaire strand (-)
-     * @param phase
+     * @param phase         Het geeft het reading frame aan waarin het exon voorkomt (0,1,2 of ".")
      * @param attributes    Informatie over het exon.
      * @return              Object waarin de meegegeven informatie van het exon wordt opgeslagen.
      */
@@ -182,9 +182,9 @@ public class gffReader {
      * @param seqid         Het ID van het contig/chromosoom waarin het CDS aanwezig is.
      * @param start         Start positie van het CDS op het genoom
      * @param end           Stop positie van het CDS op het genoom
-     * @param score
+     * @param score         Score van het CDS
      * @param strand        Of het CDS aanwezig is in de strand (+) of complementaire strand (-)
-     * @param phase
+     * @param phase         Het geeft het reading frame aan waarin het CDS voorkomt (0,1,2)
      * @param attributes    Informatie over het CDS.
      * @return              Object waarin de meegegeven informatie van het CDS wordt opgeslagen.
      */
@@ -201,9 +201,9 @@ public class gffReader {
      * @param seqid         Het ID van het contig/chromosoom.
      * @param start         Start positie van het contig/chromosoom op het genoom
      * @param end           Stop positie van het contig/chromosoom op het genoom
-     * @param score
+     * @param score         Score van het Region
      * @param strand        Of het contig/chromosoom aanwezig is in de strand (+) of complementaire strand (-)
-     * @param phase
+     * @param phase         Het geeft het reading frame aan waarin het Region voorkomt (0,1,2 of ".")
      * @param attributes    Informatie over het contig/chromosoom.
      * @return              Object waarin de meegegeven informatie van het CDS wordt opgeslagen.
      */

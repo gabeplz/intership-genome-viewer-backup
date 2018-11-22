@@ -6,11 +6,6 @@ public class InformationUser {
 
     public void getInfo(ArrayList<String> allContigs, ArrayList<Chromosome> chromosomes){
         Gene gen = new Gene();
-
-
-
-
-
         for( Chromosome chromosome : chromosomes){
             // prokaryoten hebben meestal maar 1 chromosoom/contig, vandaar de index 0.
             String contigID = allContigs.get(0);
@@ -18,9 +13,6 @@ public class InformationUser {
                 ArrayList<Feature> lijst = chromosome.getFeaturesBetween(2000,5000);
                 for(Feature s : lijst){
 //                    System.out.println(s);
-
-
-
                 }
             }
         }
