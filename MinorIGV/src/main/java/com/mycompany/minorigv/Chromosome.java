@@ -1,4 +1,5 @@
 package com.mycompany.minorigv;
+
 import java.util.ArrayList;
 
 /**
@@ -58,13 +59,31 @@ public class Chromosome {
      * wordt niet de locatie geprint, maar print het op de manier hoe het hier is aangegeven.
      * @return Het object in een string.
      */
-    @Override
-    public String toString() {
-        String result = "";
-        for(int i = 0; i< features.size(); i++){
-            result += (" " + features.get(i).toString());
+//    @Override
+//    public String toString() {
+//        String result = "";
+//        for(int i = 0; i< features.size(); i++){
+//            result += (" " + features.get(i).toString());
+//        }
+//        return result;
+//    }
+
+    public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
+
+
+        ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
+
+        for (Feature feat : featureList){
+
+            String klas = feat.getClass().toString();
+            for (String optie : SelectedFeatures){
+                if (klas.contains(optie)){
+                    featureFilteredList.add(feat);
+                }
+            }
         }
-        return result;
+        return featureFilteredList;
+
     }
 
     /**

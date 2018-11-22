@@ -47,6 +47,18 @@ public class Organisms {
         return chromosomes;
     }
 
+    public Chromosome getChromosome(String id) throws Exception{
+
+        for (Chromosome chr : chromosomes){
+            if(chr.getId().equals(id)){
+
+                return chr;
+            }
+        }
+        throw new Exception();
+
+    }
+
     /**
      * Het genereerd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
      * @param chromosomes is een ArrayList met daarin de chromosomen.

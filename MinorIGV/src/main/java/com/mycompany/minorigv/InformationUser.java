@@ -4,17 +4,23 @@ import java.util.ArrayList;
 public class InformationUser {
 
 
-    public void getInfo(ArrayList<String> allContigs, ArrayList<Chromosome> chromosomes){
-        for( Chromosome chromosome : chromosomes){
-            // prokaryoten hebben meestal maar 1 chromosoom/contig, vandaar de index 0.
-            String contigID = allContigs.get(0);
-            if(chromosome.getId().equals(contigID)){
-                ArrayList<Feature> lijst = chromosome.getFeaturesBetween(2000,5000);
-                for(Feature s : lijst){
-//                    System.out.println(s);
-                }
-            }
+    public void getInfo(Organisms organisme){
+
+        String org_id = "559292";
+        String chromosoom_id = "NC_001133.9";
+        int start = 2000;
+        int stop = 5000;
+        ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
+
+        Chromosome chromosoom = null;
+        try {
+            chromosoom = organisme.getChromosome(chromosoom_id);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        ArrayList<Feature> featureList = chromosoom.getFeaturesBetween(start,stop);
+        ArrayList<Feature> featureFilteredList = chromosoom.filterFeatures(featureList, keuze_gebruiker);
+        System.out.println(featureFilteredList);
     }
 }

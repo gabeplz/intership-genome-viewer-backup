@@ -23,7 +23,7 @@ public class gffReader {
      * @throws FileNotFoundException    Afvangen van een error zodra het bestand niet gevonden kan worden.
      * @throws IOException              Als er een input of output exception plaatsvindt.
      */
-    public void readData(String path) throws FileNotFoundException, IOException {
+    public Organisms readData(String path) throws FileNotFoundException, IOException {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<Chromosome> chromosomes = new ArrayList<>();
         ArrayList<String> allContigs = new ArrayList<String>();
@@ -67,14 +67,10 @@ public class gffReader {
                     Region regionObject = makeRegion(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                     make(chromosomes, regionObject);
                 }
-
-                Organisms org = new Organisms(ID_organism, chromosomes);
-
-                InformationUser info = new InformationUser();
-                info.getInfo(allContigs, chromosomes);
-
             }
         }
+        Organisms org = new Organisms(ID_organism, chromosomes);
+        return org;
     }
 
     /**
@@ -214,7 +210,5 @@ public class gffReader {
         object = new Region(seqid, start, end, score, strand, phase, attributes);
         return object;
     }
-
-
 }
 
