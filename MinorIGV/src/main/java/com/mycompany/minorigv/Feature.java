@@ -33,6 +33,7 @@ public class Feature {
         this.score = score;
         this.strand = strand;
         this.phase = phase;
+        this.attributes = attributes;
     }
 
     /**
@@ -132,10 +133,10 @@ public class Feature {
     }
 
     /**
-     * Ophalen van de attributen/informatie van een gen.
+     * Ophalen van de attributen/informatie van een feature.
      *
      * @return     HashMap met als key de omschrijving van de informatie (bijv. name) en
-     *             als value de specifieke informatie van het gen (bijv. PAU8).
+     *             als value de specifieke informatie van de feature (bijv. PAU8).
      */
     public HashMap getAttributes() {
 
@@ -144,7 +145,7 @@ public class Feature {
 
     /**
      * @param attributes    Het maken van de HashMap met daarin de informatie: als key de omschrijving van de informatie (bijv. name)
-     *                      en als value de specifieke informatie van het gen (bijv. PAU8).
+     *                      en als value de specifieke informatie van een feature (bijv. PAU8).
      */
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;

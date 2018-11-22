@@ -1,5 +1,6 @@
 package com.mycompany.minorigv;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Ophalen van de informatie doormiddel van de keuzes die de gebruiker maakt in de gui.
@@ -35,8 +36,13 @@ public class InformationUser {
         ArrayList<Feature> featureFilteredList = chromosoom.filterFeatures(featureList, keuze_gebruiker);
 
         for(Feature feat: featureFilteredList){
-//            feat.getAttributes();
-            System.out.println(feat.getAttributes());
+            HashMap attributes = feat.getAttributes();
+            // Lijst met alle Keys
+            attributes.keySet();
+            // Ophalen values
+            attributes.get("locus_tag");
+
+            System.out.println(feat.getStart() + " " + feat.getStop());
         }
     }
 }
