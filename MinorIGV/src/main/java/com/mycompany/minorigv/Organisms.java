@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 /**
  * Deze class maakt objecten voor organismes. Ook worden in het object de bijbehorende chromosomen gezet.
+ *
+ * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
 public class Organisms {
     private String id; //organism id
@@ -47,16 +49,21 @@ public class Organisms {
         return chromosomes;
     }
 
+    /**
+     * Zoekt het chromosoom dat voldoet aan de opgegeven id (die de gebruiker heeft gekozen).
+     * @param id       id van het chromosoom die de gebruiker heeft uitgekozen.
+     * @return         het chromosoom dat voldoet aan het chromosoom id.
+     * @throws Exception
+     */
     public Chromosome getChromosome(String id) throws Exception{
-
+        // Loopt over alle chromosoom objecten
         for (Chromosome chr : chromosomes){
+            // Zoekt het chromosoom die voldoet aan het id, die de gebruiker heeft gekozen.
             if(chr.getId().equals(id)){
-
                 return chr;
             }
         }
         throw new Exception();
-
     }
 
     /**

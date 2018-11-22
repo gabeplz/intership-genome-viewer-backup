@@ -13,8 +13,6 @@ public class Chromosome {
     private ArrayList<Feature> features;
     private String seq;
 
-
-
     /**
      * De constructor.
      * @param id        Het id van het chromosoom/contig.
@@ -84,41 +82,10 @@ public class Chromosome {
     }
 
     /**
-     * Het retured hoe het object wordt geprint. Wanneer het object nu wordt geprint
-     * wordt niet de locatie geprint, maar print het op de manier hoe het hier is aangegeven.
-     * @return Het object in een string.
-     */
-//    @Override
-//    public String toString() {
-//        String result = "";
-//        for(int i = 0; i< features.size(); i++){
-//            result += (" " + features.get(i).toString());
-//        }
-//        return result;
-//    }
-
-    public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
-
-
-        ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
-
-        for (Feature feat : featureList){
-
-            String klas = feat.getClass().toString();
-            for (String optie : SelectedFeatures){
-                if (klas.contains(optie)){
-                    featureFilteredList.add(feat);
-                }
-            }
-        }
-        return featureFilteredList;
-    }
-
-    /**
-     *
-     * @param start
-     * @param stop
-     * @return
+     * Alle features die tussen de start en stop positie voorkomen wordem om eem ArrayList gezet.
+     * @param start     Start positie van de feature op het chromosoom.
+     * @param stop      Stop positie van de feature op het chromosoom
+     * @return          Een lijst met de features die voldoen aan de start en stop
      */
     public ArrayList<Feature> getFeaturesBetween(int start, int stop){
 
@@ -137,4 +104,30 @@ public class Chromosome {
 
         return featureList;
     }
+
+    /**
+     * De Features worden opgehaald na keuze van de gebruiker.
+     * Stel de gebruiker wilt alleen Gene en CDS zien, dan worden deze features opgehaald die behoren tot CDS en Gene.
+     * @param featureList           is de lijst met alle features uit het chromosoom/contig.
+     * @param SelectedFeatures      is de lijst met de gekozen features (dus bijv. Gene en CDS) die de gebruiker heeft gekozen.
+     * @return                      Een lijst met de gekozen features wordt gereturned.
+     */
+    public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
+
+
+        ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
+
+        for (Feature feat : featureList){
+
+            String klas = feat.getClass().toString();
+            for (String optie : SelectedFeatures){
+                if (klas.contains(optie)){
+                    featureFilteredList.add(feat);
+                }
+            }
+        }
+        return featureFilteredList;
+    }
+
+
 }

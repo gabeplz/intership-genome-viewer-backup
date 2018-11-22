@@ -127,20 +127,4 @@ public class Feature {
     public void setPhase(String phase) {
         this.phase = phase;
     }
-
-    /**
-     * Het retured hoe het object wordt geprint. Wanneer het object nu wordt geprint
-     * wordt niet de locatie geprint, maar print het op de manier hoe het hier is aangegeven.
-     * @return het object in een string.
-     */
-//    @Override
-//    public String toString() {
-//        return  this.getClass().toString() +
-//                "    start_gene='" + start + '\'' +
-//                ", stop_gene='" + stop + '\'' +
-//                ", strand='" + strand + '\'' +
-//                '}';
-//    }
-
-
 }

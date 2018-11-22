@@ -7,6 +7,7 @@ import java.util.Map;
  * en zo opgeslagen in het object. Hierdoor kan deze informatie altijd opgehaald worden. Per regel van het bestand wordt deze
  * class aangeroepen.
  *
+ *  @author Anne van Ewijk en Amber Janssen Groesbeek *
  */
 public class attributes {
     Map<String, Object> attribute = new HashMap<String, Object>();

@@ -45,6 +45,7 @@ public class Exon extends Feature{
      *                      en als value de specifieke informatie van het exon (bijv. PAU8).
      */
     public void setAttributes(HashMap attributes) {
+
         this.attributes = attributes;
     }
 
