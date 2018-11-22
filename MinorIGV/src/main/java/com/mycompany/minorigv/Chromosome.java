@@ -11,6 +11,9 @@ public class Chromosome {
 
     private String id;
     private ArrayList<Feature> features;
+    private String seq;
+
+
 
     /**
      * De constructor.
@@ -20,6 +23,16 @@ public class Chromosome {
     public Chromosome(String id, ArrayList<Feature> features) {
         this.id = id;
         this.features = features;
+    }
+
+    /**
+     * De constructor.
+     * @param id        Het id van het chromosoom/contig.
+     * @param seq
+     */
+    public Chromosome(String id, String seq) {
+        this.id = id;
+        this.seq = seq;
     }
 
     /**
@@ -36,6 +49,22 @@ public class Chromosome {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getSeq() {
+        return seq;
+    }
+
+    /**
+     *
+     * @param seq
+     */
+    public void setSeq(String seq) {
+        this.seq = seq;
     }
 
     /**
@@ -83,7 +112,6 @@ public class Chromosome {
             }
         }
         return featureFilteredList;
-
     }
 
     /**
