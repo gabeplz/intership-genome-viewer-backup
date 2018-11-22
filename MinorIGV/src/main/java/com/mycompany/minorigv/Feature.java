@@ -1,5 +1,7 @@
 package com.mycompany.minorigv;
 
+import java.util.HashMap;
+
 /**
  * Features wordt overgeërfd door de classes CDS, Chromosome, Exon, Gene en Region.
  * Verder maakt deze class getters en setters voor id, start, stop, score, strand en phase.
@@ -13,6 +15,7 @@ public class Feature {
     private String score;
     private String strand;
     private String phase;
+    private HashMap attributes;
 
     /**
      * De constructor.
@@ -23,7 +26,7 @@ public class Feature {
      * @param strand    Of de feature aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase     Het geeft het readingframe aan waarin het feature voorkomt (0,1,2).
      */
-    Feature(String seqid, String start, String end, String score, String strand, String phase) {
+    Feature(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
         this.id = seqid;
         this.start = start;
         this.stop = end;
@@ -126,5 +129,24 @@ public class Feature {
      */
     public void setPhase(String phase) {
         this.phase = phase;
+    }
+
+    /**
+     * Ophalen van de attributen/informatie van een gen.
+     *
+     * @return     HashMap met als key de omschrijving van de informatie (bijv. name) en
+     *             als value de specifieke informatie van het gen (bijv. PAU8).
+     */
+    public HashMap getAttributes() {
+
+        return attributes;
+    }
+
+    /**
+     * @param attributes    Het maken van de HashMap met daarin de informatie: als key de omschrijving van de informatie (bijv. name)
+     *                      en als value de specifieke informatie van het gen (bijv. PAU8).
+     */
+    public void setAttributes(HashMap attributes) {
+        this.attributes = attributes;
     }
 }

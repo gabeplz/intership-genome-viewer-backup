@@ -25,7 +25,7 @@ public class Exon extends Feature{
      * @param attributes    HashMap met daarin de informatie over het exon.
      */
     Exon(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqid, start, end, score, strand, phase);
+        super(seqid, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 

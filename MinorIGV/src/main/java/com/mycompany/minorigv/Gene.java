@@ -27,7 +27,7 @@ private HashMap attributes;
      * @param attributes  HashMap met daarin de informatie over het gen.
      */
     Gene(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqid, start, end, score, strand, phase);
+        super(seqid, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 

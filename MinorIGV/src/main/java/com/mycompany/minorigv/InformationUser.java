@@ -33,5 +33,10 @@ public class InformationUser {
 
         // Filteren van de features die tussen een bepaalde start en stop codon zitten.
         ArrayList<Feature> featureFilteredList = chromosoom.filterFeatures(featureList, keuze_gebruiker);
+
+        for(Feature feat: featureFilteredList){
+//            feat.getAttributes();
+            System.out.println(feat.getAttributes());
+        }
     }
 }
