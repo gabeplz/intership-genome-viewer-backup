@@ -2,12 +2,14 @@ package com.mycompany.minorigv;
 
 import java.util.ArrayList;
 
+
 /**
  * Deze class maakt objecten voor organismes. Ook worden in het object de bijbehorende chromosomen gezet.
  */
 public class Organisms {
     private String id; //organism id
     private ArrayList<Chromosome> chromosomes;
+
 
     /**
      * De constructor.
@@ -27,6 +29,7 @@ public class Organisms {
         return id;
     }
 
+
     /**
      * Het genereerd het id van het organisme.
      * @param id is het id van het organisme.
@@ -34,6 +37,7 @@ public class Organisms {
     public void setId(String id) {
         this.id = id;
     }
+
 
     /**
      * Het returnd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
