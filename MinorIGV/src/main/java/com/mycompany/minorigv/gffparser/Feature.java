@@ -1,4 +1,4 @@
-package com.mycompany.minorigv;
+package com.mycompany.minorigv.gffparser;
 
 /**
  * Features wordt overgeërfd door de classes CDS, Chromosome, Exon, Gene en Region.

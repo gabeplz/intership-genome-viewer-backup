@@ -1,4 +1,4 @@
-package com.mycompany.minorigv;
+package com.mycompany.minorigv.gui;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -7,6 +7,8 @@ import java.io.IOException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import com.mycompany.minorigv.FastaFileChooser;
 
 public class IGVMenuBar extends JMenuBar {
 

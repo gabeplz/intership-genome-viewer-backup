@@ -1,4 +1,4 @@
-package com.mycompany.minorigv;
+package com.mycompany.minorigv.gffparser;
 
 import java.util.ArrayList;
 

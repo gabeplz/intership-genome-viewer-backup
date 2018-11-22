@@ -1,0 +1,73 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+#!genome-build R64
+#!genome-build-accession NCBI_Assembly:GCF_000146045.2
+#!annotation-source SGD R64-2-1
+##sequence-region NC_001133.9 1 230218
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=559292
+NC_001133.9	RefSeq	region	1	230218	.	+	.	ID=id0;Dbxref=taxon:559292;Name=I;chromosome=I;gbkey=Src;genome=chromosome;mol_type=genomic DNA;strain=S288C
+NC_001133.9	RefSeq	telomere	1	801	.	-	.	ID=id1;Dbxref=SGD:S000028862;Note=TEL01L%3B Telomeric region on the left arm of Chromosome I%3B composed of an X element core sequence%2C X element combinatorial repeats%2C and a short terminal stretch of telomeric repeats;gbkey=telomere
+NC_001133.9	RefSeq	origin_of_replication	707	776	.	+	.	ID=id2;Dbxref=SGD:S000121252;Note=ARS102~Autonomously Replicating Sequence;gbkey=rep_origin
+NC_001133.9	RefSeq	gene	1807	2169	.	-	.	ID=gene0;Dbxref=GeneID:851229;Name=PAU8;end_range=2169,.;gbkey=Gene;gene=PAU8;gene_biotype=protein_coding;locus_tag=YAL068C;partial=true;start_range=.,1807
+NC_001133.9	RefSeq	mRNA	1807	2169	.	-	.	ID=rna0;Parent=gene0;Dbxref=GeneID:851229,Genbank:NM_001180043.1;Name=NM_001180043.1;end_range=2169,.;gbkey=mRNA;gene=PAU8;partial=true;product=seripauperin PAU8;start_range=.,1807;transcript_id=NM_001180043.1
+NC_001133.9	RefSeq	exon	1807	2169	.	-	.	ID=id3;Parent=rna0;Dbxref=GeneID:851229,Genbank:NM_001180043.1;end_range=2169,.;gbkey=mRNA;gene=PAU8;partial=true;product=seripauperin PAU8;start_range=.,1807;transcript_id=NM_001180043.1
+NC_001133.9	RefSeq	CDS	1807	2169	.	-	0	ID=cds0;Parent=rna0;Dbxref=SGD:S000002142,GeneID:851229,Genbank:NP_009332.1;Name=NP_009332.1;Note=hypothetical protein%3B member of the seripauperin multigene family encoded mainly in subtelomeric regions;gbkey=CDS;gene=PAU8;product=seripauperin PAU8;protein_id=NP_009332.1
+NC_001133.9	RefSeq	gene	2480	2707	.	+	.	ID=gene1;Dbxref=GeneID:1466426;Name=YAL067W-A;end_range=2707,.;gbkey=Gene;gene_biotype=protein_coding;locus_tag=YAL067W-A;partial=true;start_range=.,2480
+NC_001133.9	RefSeq	mRNA	2480	2707	.	+	.	ID=rna1;Parent=gene1;Dbxref=GeneID:1466426,Genbank:NM_001184582.1;Name=NM_001184582.1;end_range=2707,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,2480;transcript_id=NM_001184582.1
+NC_001133.9	RefSeq	exon	2480	2707	.	+	.	ID=id4;Parent=rna1;Dbxref=GeneID:1466426,Genbank:NM_001184582.1;end_range=2707,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,2480;transcript_id=NM_001184582.1
+NC_001133.9	RefSeq	CDS	2480	2707	.	+	0	ID=cds1;Parent=rna1;Dbxref=SGD:S000028593,GeneID:1466426,Genbank:NP_878038.1;Name=NP_878038.1;Note=hypothetical protein%3B identified by gene-trapping%2C microarray-based expression analysis%2C and genome-wide homology searching;gbkey=CDS;product=hypothetical protein;protein_id=NP_878038.1
+NC_001133.9	RefSeq	gene	7235	9016	.	-	.	ID=gene2;Dbxref=GeneID:851230;Name=SEO1;end_range=9016,.;gbkey=Gene;gene=SEO1;gene_biotype=protein_coding;locus_tag=YAL067C;partial=true;start_range=.,7235
+NC_001133.9	RefSeq	mRNA	7235	9016	.	-	.	ID=rna2;Parent=gene2;Dbxref=GeneID:851230,Genbank:NM_001178208.1;Name=NM_001178208.1;end_range=9016,.;gbkey=mRNA;gene=SEO1;partial=true;product=putative permease SEO1;start_range=.,7235;transcript_id=NM_001178208.1
+NC_001133.9	RefSeq	exon	7235	9016	.	-	.	ID=id5;Parent=rna2;Dbxref=GeneID:851230,Genbank:NM_001178208.1;end_range=9016,.;gbkey=mRNA;gene=SEO1;partial=true;product=putative permease SEO1;start_range=.,7235;transcript_id=NM_001178208.1
+NC_001133.9	RefSeq	CDS	7235	9016	.	-	0	ID=cds2;Parent=rna2;Dbxref=SGD:S000000062,GeneID:851230,Genbank:NP_009333.1;Name=NP_009333.1;Note=Putative permease%3B member of the allantoate transporter subfamily of the major facilitator superfamily%3B mutation confers resistance to ethionine sulfoxide;gbkey=CDS;gene=SEO1;product=putative permease SEO1;protein_id=NP_009333.1
+NC_001133.9	RefSeq	origin_of_replication	7997	8547	.	+	.	ID=id6;Dbxref=SGD:S000121253;Note=ARS103~Autonomously Replicating Sequence%3B replication origin of very weak function;gbkey=rep_origin
+NC_001133.9	RefSeq	gene	11565	11951	.	-	.	ID=gene3;Dbxref=GeneID:851232;Name=YAL065C;end_range=11951,.;gbkey=Gene;gene_biotype=protein_coding;locus_tag=YAL065C;partial=true;start_range=.,11565
+NC_001133.9	RefSeq	mRNA	11565	11951	.	-	.	ID=rna3;Parent=gene3;Dbxref=GeneID:851232,Genbank:NM_001179897.1;Name=NM_001179897.1;end_range=11951,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,11565;transcript_id=NM_001179897.1
+NC_001133.9	RefSeq	exon	11565	11951	.	-	.	ID=id7;Parent=rna3;Dbxref=GeneID:851232,Genbank:NM_001179897.1;end_range=11951,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,11565;transcript_id=NM_001179897.1
+NC_001133.9	RefSeq	CDS	11565	11951	.	-	0	ID=cds3;Parent=rna3;Dbxref=SGD:S000001817,GeneID:851232,Genbank:NP_009335.1;Name=NP_009335.1;Note=hypothetical protein%3B shows sequence similarity to FLO1 and other flocculins;gbkey=CDS;product=hypothetical protein;protein_id=NP_009335.1
+NC_001133.9	RefSeq	gene	12046	12426	.	+	.	ID=gene4;Dbxref=GeneID:851233;Name=YAL064W-B;end_range=12426,.;gbkey=Gene;gene_biotype=protein_coding;locus_tag=YAL064W-B;partial=true;start_range=.,12046
+NC_001133.9	RefSeq	mRNA	12046	12426	.	+	.	ID=rna4;Parent=gene4;Dbxref=GeneID:851233,Genbank:NM_001180042.1;Name=NM_001180042.1;end_range=12426,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,12046;transcript_id=NM_001180042.1
+NC_001133.9	RefSeq	exon	12046	12426	.	+	.	ID=id8;Parent=rna4;Dbxref=GeneID:851233,Genbank:NM_001180042.1;end_range=12426,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,12046;transcript_id=NM_001180042.1
+NC_001133.9	RefSeq	CDS	12046	12426	.	+	0	ID=cds4;Parent=rna4;Dbxref=SGD:S000002141,GeneID:851233,Genbank:NP_009336.1;Name=NP_009336.1;Note=Fungal-specific hypothetical protein;gbkey=CDS;product=hypothetical protein;protein_id=NP_009336.1
+##sequence-region NC_001134.8 1 813184
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=559292
+NC_001134.8	RefSeq	region	1	813184	.	+	.	ID=id134;Dbxref=taxon:559292;Name=II;chromosome=II;gbkey=Src;genome=chromosome;mol_type=genomic DNA;strain=S288C
+NC_001134.8	RefSeq	telomere	1	6608	.	-	.	ID=id135;Dbxref=SGD:S000028867;Note=TEL02L%3B Telomeric region on the left arm of Chromosome II%3B annotated components include an X element core sequence%2C X element combinatorial repeats%2C and a short Y' element%3B TEL02L does have telomeric repeats (TEL02L-TR)%2C but they are missing from the genome annotation due to difficulties encountered during sequencing and/or assembly;gbkey=telomere
+NC_001134.8	RefSeq	origin_of_replication	40	202	.	+	.	ID=id136;Dbxref=SGD:S000178039;Note=ARS200~Autonomously replicating sequence;gbkey=rep_origin
+NC_001134.8	RefSeq	gene	280	2658	.	-	.	ID=gene101;Dbxref=GeneID:852159;Name=YBL113C;end_range=2658,.;gbkey=Gene;gene_biotype=protein_coding;locus_tag=YBL113C;partial=true;start_range=.,280
+NC_001134.8	RefSeq	mRNA	280	2658	.	-	.	ID=rna101;Parent=gene101;Dbxref=GeneID:852159,Genbank:NM_001180054.1;Name=NM_001180054.1;end_range=2658,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,280;transcript_id=NM_001180054.1
+NC_001134.8	RefSeq	exon	280	2658	.	-	.	ID=id137;Parent=rna101;Dbxref=GeneID:852159,Genbank:NM_001180054.1;end_range=2658,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,280;transcript_id=NM_001180054.1
+NC_001134.8	RefSeq	CDS	280	2658	.	-	0	ID=cds94;Parent=rna101;Dbxref=SGD:S000002153,GeneID:852159,Genbank:NP_009437.1;Name=NP_009437.1;Note=Helicase-like protein encoded within the telomeric Y' element;gbkey=CDS;product=hypothetical protein;protein_id=NP_009437.1
+NC_001134.8	RefSeq	gene	2582	2899	.	-	.	ID=gene102;Dbxref=GeneID:852160;Name=YBL112C;end_range=2899,.;gbkey=Gene;gene_biotype=protein_coding;locus_tag=YBL112C;partial=true;start_range=.,2582
+NC_001134.8	RefSeq	mRNA	2582	2899	.	-	.	ID=rna102;Parent=gene102;Dbxref=GeneID:852160,Genbank:NM_001180053.1;Name=NM_001180053.1;end_range=2899,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,2582;transcript_id=NM_001180053.1
+NC_001134.8	RefSeq	exon	2582	2899	.	-	.	ID=id138;Parent=rna102;Dbxref=GeneID:852160,Genbank:NM_001180053.1;end_range=2899,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,2582;transcript_id=NM_001180053.1
+NC_001134.8	RefSeq	CDS	2582	2899	.	-	0	ID=cds95;Parent=rna102;Dbxref=SGD:S000002152,GeneID:852160,Genbank:NP_009438.1;Name=NP_009438.1;Note=hypothetical protein%3B YBL112C is contained within TEL02L;gbkey=CDS;product=hypothetical protein;protein_id=NP_009438.1
+NC_001134.8	RefSeq	gene	2907	5009	.	-	.	ID=gene103;Dbxref=GeneID:852161;Name=YBL111C;end_range=5009,.;gbkey=Gene;gene_biotype=protein_coding;locus_tag=YBL111C;partial=true;start_range=.,2907
+NC_001134.8	RefSeq	mRNA	2907	5009	.	-	.	ID=rna103;Parent=gene103;Dbxref=GeneID:852161,Genbank:NM_001180052.1;Name=NM_001180052.1;end_range=5009,.;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,2907;transcript_id=NM_001180052.1
+NC_001134.8	RefSeq	exon	4216	5009	.	-	.	ID=id139;Parent=rna103;Dbxref=GeneID:852161,Genbank:NM_001180052.1;end_range=5009,.;gbkey=mRNA;partial=true;product=hypothetical protein;transcript_id=NM_001180052.1
+NC_001134.8	RefSeq	exon	2907	4116	.	-	.	ID=id140;Parent=rna103;Dbxref=GeneID:852161,Genbank:NM_001180052.1;gbkey=mRNA;partial=true;product=hypothetical protein;start_range=.,2907;transcript_id=NM_001180052.1
+NC_001134.8	RefSeq	CDS	4216	5009	.	-	0	ID=cds96;Parent=rna103;Dbxref=SGD:S000002151,GeneID:852161,Genbank:NP_009439.1;Name=NP_009439.1;Note=Helicase-like protein encoded within the telomeric Y' element%3B relocalizes from mitochondrion to cytoplasm upon DNA replication stress;gbkey=CDS;product=hypothetical protein;protein_id=NP_009439.1
+NC_001134.8	RefSeq	CDS	2907	4116	.	-	1	ID=cds96;Parent=rna103;Dbxref=SGD:S000002151,GeneID:852161,Genbank:NP_009439.1;Name=NP_009439.1;Note=Helicase-like protein encoded within the telomeric Y' element%3B relocalizes from mitochondrion to cytoplasm upon DNA replication stress;gbkey=CDS;product=hypothetical protein;protein_id=NP_009439.1
+NC_001134.8	RefSeq	origin_of_replication	6498	6620	.	+	.	ID=id141;Dbxref=SGD:S000178040;Note=ARS201~Autonomously replicating sequence;gbkey=rep_origin
+NC_001134.8	RefSeq	gene	7605	7733	.	-	.	ID=gene104;Dbxref=GeneID:852163;Name=PAU9;end_range=7733,.;gbkey=Gene;gene=PAU9;gene_biotype=protein_coding;locus_tag=YBL108C-A;partial=true;start_range=.,7605
+NC_001134.8	RefSeq	mRNA	7605	7733	.	-	.	ID=rna104;Parent=gene104;Dbxref=GeneID:852163,Genbank:NM_001184458.1;Name=NM_001184458.1;end_range=7733,.;gbkey=mRNA;gene=PAU9;partial=true;product=seripauperin PAU9;start_range=.,7605;transcript_id=NM_001184458.1
+NC_001134.8	RefSeq	exon	7605	7733	.	-	.	ID=id142;Parent=rna104;Dbxref=GeneID:852163,Genbank:NM_001184458.1;end_range=7733,.;gbkey=mRNA;gene=PAU9;partial=true;product=seripauperin PAU9;start_range=.,7605;transcript_id=NM_001184458.1
+##sequence-region NC_001224.1 1 85779
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=559292
+NC_001224.1	RefSeq	region	1	85779	.	+	.	ID=id7644;Dbxref=taxon:559292;Is_circular=true;Name=MT;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA;strain=S288C;substrain=FY1679
+NC_001224.1	RefSeq	gene	731	802	.	+	.	ID=gene6399;Dbxref=GeneID:854578,SGD:S000007328;Name=tP(UGG)Q;gbkey=Gene;gene_biotype=tRNA;locus_tag=tP(UGG)Q
+NC_001224.1	RefSeq	tRNA	731	802	.	+	.	ID=rna6393;Parent=gene6399;Dbxref=GeneID:854578,SGD:S000007328;gbkey=tRNA;product=tRNA-Pro
+NC_001224.1	RefSeq	exon	731	802	.	+	.	ID=id7645;Parent=rna6393;Dbxref=GeneID:854578,SGD:S000007328;gbkey=tRNA;product=tRNA-Pro
+NC_001224.1	RefSeq	origin_of_replication	4012	4312	.	-	.	ID=id7646;Dbxref=SGD:S000029667;Note=ORI1%3B mitochondrial DNA replication origin%3B non-essential for mitochondrial function;gbkey=rep_origin
+NC_001224.1	RefSeq	gene	6546	8194	.	+	.	ID=gene6400;Dbxref=GeneID:9164990,SGD:S000007287;Name=15S_RRNA;gbkey=Gene;gene=15S_RRNA;gene_biotype=rRNA;locus_tag=Q0020
+NC_001224.1	RefSeq	rRNA	6546	8194	.	+	.	ID=rna6394;Parent=gene6400;Dbxref=GeneID:9164990,SGD:S000007287;Note=ribosomal RNA of the small mitochondrial ribosomal subunit%3B MSU1 allele suppresses ochre stop mutations in mitochondrial protein-coding genes;gbkey=rRNA;gene=15S_RRNA;product=15S ribosomal RNA
+NC_001224.1	RefSeq	exon	6546	8194	.	+	.	ID=id7647;Parent=rna6394;Dbxref=GeneID:9164990,SGD:S000007287;Note=ribosomal RNA of the small mitochondrial ribosomal subunit%3B MSU1 allele suppresses ochre stop mutations in mitochondrial protein-coding genes;gbkey=rRNA;gene=15S_RRNA;product=15S ribosomal RNA
+NC_001224.1	RefSeq	gene	9374	9447	.	+	.	ID=gene6401;Dbxref=GeneID:854581,SGD:S000007337;Name=tW(UCA)Q;gbkey=Gene;gene_biotype=tRNA;locus_tag=tW(UCA)Q
+NC_001224.1	RefSeq	tRNA	9374	9447	.	+	.	ID=rna6395;Parent=gene6401;Dbxref=GeneID:854581,SGD:S000007337;Note=mitochondrial tRNA%2C annotated as tryptophanyl tRNA (tRNA-Trp)%3B predicted by tRNAscan-SE analysis to have specificity for selenocysteine;gbkey=tRNA;product=tRNA-Trp
+NC_001224.1	RefSeq	exon	9374	9447	.	+	.	ID=id7648;Parent=rna6395;Dbxref=GeneID:854581,SGD:S000007337;Note=mitochondrial tRNA%2C annotated as tryptophanyl tRNA (tRNA-Trp)%3B predicted by tRNAscan-SE analysis to have specificity for selenocysteine;gbkey=tRNA;product=tRNA-Trp
+NC_001224.1	RefSeq	origin_of_replication	12510	12780	.	-	.	ID=id7649;Dbxref=SGD:S000029331;Note=ORI8%3B mitochondrial origin of replication;gbkey=rep_origin
+NC_001224.1	RefSeq	gene	13818	26701	.	+	.	ID=gene6402;Dbxref=GeneID:854598,SGD:S000007260;Name=COX1;gbkey=Gene;gene=COX1;gene_biotype=protein_coding;gene_synonym=OXI3;locus_tag=Q0045
+NC_001224.1	RefSeq	CDS	13818	13986	.	+	0	ID=cds5989;Parent=gene6402;Dbxref=Genbank:NP_009305.1,GeneID:854598,SGD:S000007260;Name=NP_009305.1;Note=subunit I of cytochrome c oxidase (Complex IV)%3B Complex IV is the terminal member of the mitochondrial inner membrane electron transport chain%3B one of three mitochondrially-encoded subunits;gbkey=CDS;gene=COX1;product=cytochrome c oxidase subunit 1;protein_id=NP_009305.1;transl_table=3
+NC_001224.1	RefSeq	CDS	16435	16470	.	+	2	ID=cds5989;Parent=gene6402;Dbxref=Genbank:NP_009305.1,GeneID:854598,SGD:S000007260;Name=NP_009305.1;Note=subunit I of cytochrome c oxidase (Complex IV)%3B Complex IV is the terminal member of the mitochondrial inner membrane electron transport chain%3B one of three mitochondrially-encoded subunits;gbkey=CDS;gene=COX1;product=cytochrome c oxidase subunit 1;protein_id=NP_009305.1;transl_table=3
+###
