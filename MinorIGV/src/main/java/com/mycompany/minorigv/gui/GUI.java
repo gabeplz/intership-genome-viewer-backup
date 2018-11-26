@@ -1,4 +1,4 @@
-package com.mycompany.minorigv;
+package com.mycompany.minorigv.gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
+
 import java.awt.FlowLayout;
 
 

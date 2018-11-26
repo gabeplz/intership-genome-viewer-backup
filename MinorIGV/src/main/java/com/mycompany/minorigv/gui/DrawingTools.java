@@ -1,4 +1,4 @@
-package com.mycompany.minorigv;
+package com.mycompany.minorigv.gui;
 
 import java.awt.Graphics;
 import java.awt.font.LineMetrics;
