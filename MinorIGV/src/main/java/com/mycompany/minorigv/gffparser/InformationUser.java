@@ -43,7 +43,9 @@ public class InformationUser {
             // Ophalen values
             attributes.get("locus_tag");
 
-            System.out.println(feat.getStart() + " " + feat.getStop());
+            //System.out.println(feat.getStart() + " " + feat.getStop());
         }
+
+        System.out.println(chromosoom.getListORF());
     }
 }

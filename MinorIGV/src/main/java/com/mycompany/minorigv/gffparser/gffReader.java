@@ -80,7 +80,7 @@ public class gffReader {
      * @param chromosomes   Een ArrayList met de objecten van chromosome.
      * @param feature       Het object van een feature (gene, mRNA, exon, CDS of region).
      */
-    private void make(ArrayList<Chromosome> chromosomes, Feature feature) {
+    public void make(ArrayList<Chromosome> chromosomes, Feature feature) {
         // Ophalen of de ArrayList chromosome het ID al bevat (nee: -1).
         int index = containsID(chromosomes, ID);
 

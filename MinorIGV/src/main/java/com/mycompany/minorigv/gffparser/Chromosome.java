@@ -14,6 +14,7 @@ public class Chromosome {
     private String id;
     private ArrayList<Feature> features;
     private String seq;
+    private ArrayList<ORF> listORF;
 
     /**
      * De constructor.
@@ -37,13 +38,12 @@ public class Chromosome {
      * @param id        Het id van het chromosoom/contig.
      * @param seq
      */
-    public Chromosome(String id, String seq) {
+    public Chromosome(String id, String seq, ArrayList<ORF> listORF){
 
         this.id = id;
         this.seq = seq;
+        this.listORF = listORF;
 
-        findORF orf = new findORF();
-        orf.searchORF(seq.toUpperCase());
     }
 
     /**
@@ -92,6 +92,14 @@ public class Chromosome {
      */
     public void setFeatures(ArrayList<Feature> features) {
         this.features = features;
+    }
+
+    public ArrayList<ORF> getListORF() {
+        return listORF;
+    }
+
+    public void setListORF(ArrayList<ORF> listORF) {
+        this.listORF = listORF;
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.mycompany.minorigv;
 import com.mycompany.minorigv.gffparser.Chromosome;
+import com.mycompany.minorigv.gffparser.ORF;
+import com.mycompany.minorigv.sequence.findORF;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,8 +44,11 @@ public class FastaFileReader {
                 regel = f_reader.readLine();
             }
 
+            findORF orf = new findORF();
+            ArrayList<ORF> listORF = orf.searchORF(id ,chromosoomSeq.toString().toUpperCase());
+
             // Toevoegen van sequentie en ID aan chromosoom object
-            Chromosome chr = new Chromosome(id, chromosoomSeq.toString());
+            Chromosome chr = new Chromosome(id, chromosoomSeq.toString(), listORF);
 
         }
 
