@@ -46,6 +46,7 @@ public class InformationUser {
             //System.out.println(feat.getStart() + " " + feat.getStop());
         }
 
-        System.out.println(chromosoom.getListORF());
+        ArrayList<ORF> hi = chromosoom.getListORF();
+        System.out.println(hi);
     }
 }

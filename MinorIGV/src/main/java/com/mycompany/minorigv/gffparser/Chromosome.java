@@ -39,11 +39,10 @@ public class Chromosome {
      * @param seq
      */
     public Chromosome(String id, String seq, ArrayList<ORF> listORF){
-
         this.id = id;
         this.seq = seq;
         this.listORF = listORF;
-
+        System.out.println(listORF);
     }
 
     /**
