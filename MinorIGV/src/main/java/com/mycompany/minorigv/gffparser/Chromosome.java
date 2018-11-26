@@ -1,6 +1,6 @@
 package com.mycompany.minorigv.gffparser;
 
-import com.mycompany.sequence.findORF;
+import com.mycompany.minorigv.sequence.findORF;
 
 import java.util.ArrayList;
 
@@ -142,5 +142,5 @@ public class Chromosome {
         }
         return featureFilteredList;
     }
-    
+
 }

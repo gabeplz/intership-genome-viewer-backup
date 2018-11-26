@@ -1,4 +1,4 @@
-package com.mycompany.sequence;
+package com.mycompany.minorigv.sequence;
 
 import com.mycompany.minorigv.gffparser.ORF;
 
@@ -23,7 +23,7 @@ public class findORF {
     public void searchORF(String seq) {
 
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
-        Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)");
+        Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
 
         // Informatie ophalen van het ORF.
@@ -49,6 +49,37 @@ public class findORF {
 
             ORF newORF = makeORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
         }
+    }
+
+    public void searchORF(String seq, String bevestiging){
+
+        // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
+        Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
+        Matcher match = patroon.matcher(seq);
+
+        while(match.find()){
+            int start = seq.length() - match.start() -3;   // Positie van het startcodon op de orginele sequentie (+)
+            int stop = seq.length() - match.end() -3;      // Positie van het stopcodon op de orginele sequentie (+)
+
+            idORF++;
+
+            if((start % 3) == 0){
+                readingframe = -1;
+            }else if((start % 3) == 1){
+                readingframe = -2;
+            }else if((start % 3) == 2){
+                readingframe = -3;
+            }else{
+                System.out.println("Geen ORF gevonden.");
+            }
+
+            // Positie van de start aminozuur en stop aminozuur bepalen.
+            int aaStart = (int) Math.ceil(start/3.0);
+            int aaStop = (int) Math.ceil(stop/3.0);
+
+            ORF newORF = makeORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
+        }
+
     }
     
     private static ORF makeORF(int start, int stop, int readingframe, int idORF, int aaStart, int aaStop, String DNA_ORF) {
