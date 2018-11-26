@@ -1,5 +1,7 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.sequence.findORF;
+
 import java.util.ArrayList;
 
 /**
@@ -13,6 +15,12 @@ public class Chromosome {
     private ArrayList<Feature> features;
     private String seq;
 
+    /**
+     * De constructor.
+     */
+    public Chromosome() {
+
+    }
 
     /**
      * De constructor.
@@ -33,6 +41,9 @@ public class Chromosome {
 
         this.id = id;
         this.seq = seq;
+
+        findORF orf = new findORF();
+        orf.searchORF(seq.toUpperCase());
     }
 
     /**
@@ -83,20 +94,6 @@ public class Chromosome {
         this.features = features;
     }
 
-    /**
-     * Het retured hoe het object wordt geprint. Wanneer het object nu wordt geprint
-     * wordt niet de locatie geprint, maar print het op de manier hoe het hier is aangegeven.
-     * @return Het object in een string.
-     */
-//    @Override
-//    public String toString() {
-//        String result = "";
-//        for(int i = 0; i< features.size(); i++){
-//            result += (" " + features.get(i).toString());
-//        }
-//        return result;
-//    }
-
     public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
 
 
@@ -137,4 +134,5 @@ public class Chromosome {
 
         return featureList;
     }
+
 }
