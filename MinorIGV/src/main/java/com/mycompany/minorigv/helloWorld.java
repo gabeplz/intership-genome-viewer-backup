@@ -6,6 +6,9 @@
  */
 package com.mycompany.minorigv;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
 /**
  *
  * @author Gebruiker
@@ -13,6 +16,14 @@ package com.mycompany.minorigv;
 public class helloWorld {
 
     public static void main(String[] args) {
-        System.out.println("hello, World");
+        chromosometest nummer1 = new chromosometest("1", "atgaaaccg"); //werk tot ongeveer 52000  //atgaaaccg
+        chromosometest nummer2 = new chromosometest("1", "aattaaggg");
+        
+        
+        
+    
+        System.out.println((TranslationManeger.start(nummer1)[0].getSequence()));
+//        System.out.println((TranslationManeger.start(nummer2)[0].getSequence()));
+
     }
 }
