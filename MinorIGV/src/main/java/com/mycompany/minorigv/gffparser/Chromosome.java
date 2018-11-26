@@ -14,7 +14,6 @@ public class Chromosome {
     private String seq;
 
 
-
     /**
      * De constructor.
      * @param id        Het id van het chromosoom/contig.
@@ -31,6 +30,7 @@ public class Chromosome {
      * @param seq
      */
     public Chromosome(String id, String seq) {
+
         this.id = id;
         this.seq = seq;
     }

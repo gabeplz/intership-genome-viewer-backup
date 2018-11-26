@@ -7,8 +7,7 @@ import javax.swing.filechooser.FileSystemView;
 
 public class FastaFileChooser {
 
-    public String fastafile()
-    {
+    public String fastafile() {
         String fasta = "";
         JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
@@ -22,6 +21,5 @@ public class FastaFileChooser {
         return fasta;
 
     }
-
 
 }

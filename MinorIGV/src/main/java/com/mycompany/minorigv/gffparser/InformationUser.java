@@ -10,6 +10,7 @@ public class InformationUser {
         String chromosoom_id = "NC_001133.9";
         int start = 2000;
         int stop = 5000;
+
         ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
 
         Chromosome chromosoom = null;
