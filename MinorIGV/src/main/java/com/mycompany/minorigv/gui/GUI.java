@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 
 /**
@@ -21,6 +22,7 @@ public class GUI {
 	private JFrame frame;
 	private ReferencePanel ReferencePaneel;
 	private JScrollPane scrollPane;
+	private Context context;
 
 	/**
 	 * Launch the application.
@@ -109,6 +111,12 @@ public class GUI {
 		FeaturePanel features = new FeaturePanel();
 		features.init();
 		organism.add(features);
+		
+		context = new Context("hoi");
+		refpanel1.setContext(context);
+		codonPanel1.setContext(context);
+	    
+		
 		
 	}
 }
