@@ -25,14 +25,12 @@ public class gffReader {
      */
     public Organisms readData(String path) throws FileNotFoundException, IOException, Exception {
         BufferedReader reader = new BufferedReader(new FileReader(path));
-        ArrayList<Chromosome> chromosomes = new ArrayList<>();
         ArrayList<String> allContigs = new ArrayList<String>();
 
         Organisms org = new Organisms();
         Chromosome chrom = null;
         // inlezen van het bestand per regel.
         while ((line = reader.readLine()) != null) {
-
             if (line.startsWith("##sequence-region")) {
                 String[] splited = line.split("\\s+");
                 ID = splited[1];
@@ -59,26 +57,19 @@ public class gffReader {
                 } else if (line.split("\\t")[2].equals("mRNA")) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new mRNA(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-
                 } else if (line.split("\\t")[2].equals("exon")) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new Exon(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-
                 } else if (line.split("\\t")[2].equals("CDS")) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new CDS(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-
                 } else if (line.split("\\t")[2].equals("region")) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new Region(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-
                 }
-                System.out.println(feat);
                 chrom.addFeature(feat);
             }
         }
-        //Organisms org = new Organisms(ID_organism, chromosomes);
         return org;
     }
 }
-

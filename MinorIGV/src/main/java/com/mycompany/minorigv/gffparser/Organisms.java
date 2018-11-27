@@ -24,18 +24,17 @@ public class Organisms {
         //this.chromosomes = chromosomes;
     }
 
+    /**
+     * De constructor.
+     * @param id            Het id van het organisme.
+     */
     public Organisms(String id){
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Organisms{" +
-                "id='" + id + '\'' +
-                ", chromosomes=" + chromosomes +
-                '}';
-    }
-
+    /**
+     * De constructor.
+     */
     public Organisms() {
         chromosomes = new HashMap<String,Chromosome>();
     }
@@ -73,33 +72,45 @@ public class Organisms {
      * @throws Exception
      */
     public Chromosome getChromosome(String id) throws Exception{
-        // Loopt over alle chromosoom objecten
-
         return chromosomes.get(id);
-
     }
 
+    /**
+     * Voegt de sequentie van het chromosoom toe aan het chromosoom.
+     * @param id    id van het chromosoom die de gebruiker heeft uitgekozen.
+     * @param Seq   de sequentie van het chromosoom.
+     */
     public void addSequence(String id, String Seq){
-
         if(chromosomes.containsKey(id)){
             chromosomes.get(id).setSeq(Seq);
-        }
-        else {
+        }else {
             Chromosome chr = new Chromosome();
             chr.setSeq(Seq);
             chr.setId(Seq);
         }
     }
 
+    /**
+     * Voegt de chromosomen toe aan het organisme.
+     * @param chr   Is het object van een chromosoom.
+     */
     public void addChromosome(Chromosome chr){
         this.chromosomes.put(chr.getId(),chr);
 }
 
-    /**
-     * Het genereerd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
-     * @param chromosomes is een ArrayList met daarin de chromosomen.
-     */
-    //public void setChromosomes(ArrayList<Chromosome> chromosomes) {
-    //    this.chromosomes = chromosomes;
-    //}
+//    /**
+//     * Het genereerd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
+//     * @param chromosomes is een ArrayList met daarin de chromosomen.
+//     */
+//    //public void setChromosomes(ArrayList<Chromosome> chromosomes) {
+//    //    this.chromosomes = chromosomes;
+//    //}
+
+    @Override
+    public String toString() {
+        return "Organisms{" +
+                "id='" + id + '\'' +
+                ", chromosomes=" + chromosomes +
+                '}';
+    }
 }

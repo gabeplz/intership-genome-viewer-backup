@@ -4,8 +4,7 @@ import java.util.HashMap;
 
 /**
  * Het object Gene maken waarbij de superclass Feature wordt overgeërfd. Van elke regel in het bestand
- * waarin Gene in de derde kolom staat wordt een object gemaakt. Class wordt aangeroepen in gffReader.java
- * in methode makeGene.
+ * waarin Gene in de derde kolom staat wordt een object gemaakt.
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  *
@@ -38,7 +37,6 @@ private HashMap attributes;
      *             als value de specifieke informatie van het gen (bijv. PAU8).
      */
     public HashMap getAttributes() {
-
         return attributes;
     }
 

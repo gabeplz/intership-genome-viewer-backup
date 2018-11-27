@@ -3,8 +3,7 @@ import java.util.HashMap;
 
 /**
  * Het object mRNA maken waarbij de superclass Feature wordt overgeërfd. Van elke regel in het bestand
- * waarin mRNA in de derde kolom staat wordt een object gemaakt. Class wordt aangeroepen in gffReader.java
- * in methode makemRNA.
+ * waarin mRNA in de derde kolom staat wordt een object gemaakt.
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  *
@@ -37,7 +36,6 @@ public class mRNA extends Feature{
      *             als value de specifieke informatie van het mRNA (bijv. PAU8).
      */
     public HashMap getAttributes() {
-
         return attributes;
     }
 
@@ -47,9 +45,6 @@ public class mRNA extends Feature{
      *                      en als value de specifieke informatie van het mRNA (bijv. PAU8).
      */
     public void setAttributes(HashMap attributes) {
-
         this.attributes = attributes;
     }
-
-
 }

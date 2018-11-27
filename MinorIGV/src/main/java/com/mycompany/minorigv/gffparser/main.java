@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Aanroepen van gffReader.
+ *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
 public class main {
@@ -20,23 +20,16 @@ public class main {
         gffReader lees = new gffReader();
         Organisms org = lees.readData(path_gff);
 
-        System.out.println(org);
-
-
         HashMap<String,String> fastaMap = FastaFileReader.getSequences(path_fasta);
 
         for(String id : fastaMap.keySet()){
             org.addSequence(id,fastaMap.get(id));
         }
-
-        System.out.println();
         Chromosome chr = org.getChromosome("NC_001133.9");
         ArrayList orfs = findORF.searchORF("NC_001133.9",chr.getSeq());
         chr.setListORF(orfs);
 
-
         InformationUser info = new InformationUser();
         info.getInfo(org);
-
     }
 }

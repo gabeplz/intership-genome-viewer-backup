@@ -20,6 +20,7 @@ public class FastaFileReader {
      * met het ID van het chromosoom/contig.
      *
      * @param pad           Pad van het fasta bestand
+     * @return CH_list is een HashMap met daarin als key het chromosoom id en als value de sequentie van het chromosoom.
      * @throws IOException  Input/output exceptie
      */
     public static HashMap<String,String> getSequences(String pad) throws IOException{
@@ -54,6 +55,5 @@ public class FastaFileReader {
 
         }
         return CH_list;
-
     }
 }

@@ -42,15 +42,15 @@ public class InformationUser {
             attributes.keySet();
             // Ophalen values
             attributes.get("locus_tag");
-            System.out.println(attributes.get("locus_tag"));
+            //System.out.println(attributes.get("locus_tag"));
         }
 
         for(ORF o: chromosoom.getListORF()){
-            System.out.println(o.getAaStart());
+            //System.out.println(o.getAaStart());
         }
 
         ArrayList<ORF> hi = chromosoom.getListORF();
-        System.out.println(hi);
+        //System.out.println(hi);
 
     }
 }

@@ -139,7 +139,6 @@ public class Feature {
      *             als value de specifieke informatie van de feature (bijv. PAU8).
      */
     public HashMap getAttributes() {
-
         return attributes;
     }
 

@@ -3,8 +3,7 @@ import java.util.HashMap;
 
 /**
  * Het object CDS maken waarbij de superclass Feature wordt overgeërfd. Van elke regel in het bestand
- * waarin CDS in de derde kolom staat wordt een object gemaakt. Class wordt aangeroepen in gffReader.java
- * in methode makeCDS.
+ * waarin CDS in de derde kolom staat wordt een object gemaakt.
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  *

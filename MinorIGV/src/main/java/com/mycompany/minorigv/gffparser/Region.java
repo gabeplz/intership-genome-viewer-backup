@@ -3,8 +3,7 @@ import java.util.HashMap;
 
 /**
  * Het object Region maken waarbij de superclass Feature wordt overgeërfd. Van elke regel in het bestand
- * waarin Region in de derde kolom staat wordt een object gemaakt. Class wordt aangeroepen in gffReader.java
- * in methode makeRegion.
+ * waarin Region in de derde kolom staat wordt een object gemaakt.
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  *
@@ -37,7 +36,6 @@ public class Region extends Feature{
      *             als value de specifieke informatie van een Region (bijv. PAU8).
      */
     public HashMap getAttributes() {
-
         return attributes;
     }
 
@@ -47,7 +45,6 @@ public class Region extends Feature{
      *                      en als value de specifieke informatie van een Region (bijv. PAU8).
      */
     public void setAttributes(HashMap attributes) {
-
         this.attributes = attributes;
     }
 

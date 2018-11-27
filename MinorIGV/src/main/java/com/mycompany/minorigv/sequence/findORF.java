@@ -19,12 +19,13 @@ import java.util.regex.Pattern;
 public class findORF {
 
     /**
-     * Het vinden van het ORF in drie verschillende reading frames. Elk ORF wordt opgeslagen in een object.
+     * Het vinden van het ORF in drie verschillende reading frames (Template strand). Elk ORF wordt opgeslagen in een object.
      *
-     * @param seq   Elk opgeslagen chromosoom sequentie wordt een voor een meegegeven aan searchORF.
+     * @param id    Het id van het chromosoom.
+     * @param seq   De sequentie van het chromosoom.
+     * @return  listORF is een Arraylist met ORF objecten.
      */
     public static ArrayList<ORF> searchORF(String id, String seq) {
-
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
         Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
@@ -32,12 +33,11 @@ public class findORF {
         ArrayList<ORF> listORF = new ArrayList<>();
         // Informatie ophalen van het ORF.
         while(match.find()){
-
             int start = match.start();      // Positie startcodon
             int stop = match.end();         // Positie stopcodon
-
             idORF++;
             int readingframe = Integer.MIN_VALUE;
+
             if((start % 3) == 0){
                 readingframe = +1;
             }else if((start % 3) == 1){
@@ -61,14 +61,23 @@ public class findORF {
         return listORF;
     }
 
+    /**
+     * Het vinden van het ORF in drie verschillende reading frames (Template strand). Elk ORF wordt opgeslagen in een object.
+     *
+     * @param id        Het id van het chromosoom.
+     * @param seq       De sequentie van het chromosoom.
+     * @param bevestiging
+     * @return listORF is een Arraylist met ORF objecten.
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
     public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging) throws FileNotFoundException, UnsupportedEncodingException {
-
-
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
         Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
         int idORF = 0;
         ArrayList<ORF> listORF = new ArrayList<>();
+
         while(match.find()){
             int start = seq.length() - match.start() -3;   // Positie van het startcodon op de orginele sequentie (+)
             int stop = seq.length() - match.end() -3;      // Positie van het stopcodon op de orginele sequentie (+)

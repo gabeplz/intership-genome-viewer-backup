@@ -19,7 +19,6 @@ public class Chromosome {
      */
     public Chromosome() {
         features = new ArrayList<Feature>();
-
     }
 
     /**
@@ -32,13 +31,6 @@ public class Chromosome {
         this.features = features;
     }
 
-    public void addFeature(Feature feat){
-        if (feat instanceof Feature){
-            features.add(feat);
-        }
-
-    }
-
     /**
      * De constructor.
      * @param id        Het id van het chromosoom/contig.
@@ -48,7 +40,16 @@ public class Chromosome {
         this.id = id;
         this.seq = seq;
         this.listORF = listORF;
+    }
 
+    /**
+     * Het toevoegen van features aan het chromosoom.
+     * @param feat      Features zijn het CDS, Exon, Gene, mRNA en Region.
+     */
+    public void addFeature(Feature feat){
+        if (feat instanceof Feature){
+            features.add(feat);
+        }
     }
 
     /**
@@ -68,15 +69,15 @@ public class Chromosome {
     }
 
     /**
-     *
-     * @return
+     * Het returned de sequentie van het chromosoom/contig.
+     * @return  seq is een String. Het is de DNA sequentie van het chromosoom.
      */
     public String getSeq() {
         return seq;
     }
 
     /**
-     *
+     * Het genereerd de sequentie van het chromosoom/contig.
      * @param seq
      */
     public void setSeq(String seq) {
@@ -85,7 +86,7 @@ public class Chromosome {
 
     /**
      * Het returned een ArrayList met de features erin.
-     * @return  features is een Arraylist met daarin de features
+     * @return  features is een ArrayList met daarin de features
      */
     public ArrayList<Feature> getFeatures() {
         return features;
@@ -99,10 +100,18 @@ public class Chromosome {
         this.features = features;
     }
 
+    /**
+     * Het returned een ArrayList met daarin de ORFs.
+     * @return  listORF is een ArrayList met daarin de ORFs.
+     */
     public ArrayList<ORF> getListORF() {
         return listORF;
     }
 
+    /**
+     * Het genereerd de ArrayList met daarin de ORFs
+     * @param listORF is een ArrayList met daarin de ORFs.
+     */
     public void setListORF(ArrayList<ORF> listORF) {
         this.listORF = listORF;
     }
@@ -117,8 +126,6 @@ public class Chromosome {
 
         ArrayList<Feature> featureList = new ArrayList<Feature>();
         for(Feature f : features){
-
-
             if (f.getStop() > start && f.getStop() < stop){
                 featureList.add(f);
             }else if(f.getStart() > start && f.getStart() < stop){
@@ -127,7 +134,6 @@ public class Chromosome {
                 featureList.add(f);
             }
         }
-
         return featureList;
     }
 
@@ -139,12 +145,8 @@ public class Chromosome {
      * @return                      Een lijst met de gekozen features wordt gereturned.
      */
     public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
-
-
         ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
-
         for (Feature feat : featureList){
-
             String klas = feat.getClass().toString();
             for (String optie : SelectedFeatures){
                 if (klas.contains(optie)){
@@ -154,6 +156,7 @@ public class Chromosome {
         }
         return featureFilteredList;
     }
+
 
     @Override
     public String toString() {

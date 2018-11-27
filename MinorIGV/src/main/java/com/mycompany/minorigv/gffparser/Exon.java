@@ -3,8 +3,7 @@ import java.util.HashMap;
 
 /**
  * Het object Exon maken waarbij de superclass Feature wordt overgeërfd. Van elke regel in het bestand
- * waarin Exon in de derde kolom staat wordt een object gemaakt. Class wordt aangeroepen in gffReader.java
- * in methode makeExon.
+ * waarin Exon in de derde kolom staat wordt een object gemaakt.
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  *
@@ -45,7 +44,6 @@ public class Exon extends Feature{
      *                      en als value de specifieke informatie van het exon (bijv. PAU8).
      */
     public void setAttributes(HashMap attributes) {
-
         this.attributes = attributes;
     }
 
