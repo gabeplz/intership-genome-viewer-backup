@@ -1,4 +1,5 @@
 package com.mycompany.minorigv.gffparser;
+import com.mycompany.minorigv.sequence.AminoAcidSequence;
 import com.mycompany.minorigv.sequence.TranslationManeger;
 import com.mycompany.minorigv.sequence.findORF;
 
@@ -89,13 +90,8 @@ public class InformationUser {
         chr.setComp(comp);
         chr.setReadingframe(readingframes);
         
-        chr.getReadingframe().get("RF5");
-
-
-
-
-
-
+        AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
+        System.out.println(RF.getSequence());
 
     }
 }
