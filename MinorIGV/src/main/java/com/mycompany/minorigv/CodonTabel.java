@@ -46,14 +46,22 @@ public class CodonTabel {
         this.codonMap = codonMap;                      
     }
 
-
+    /**
+     * 
+     * @param key
+     * @param names
+     * @param base
+     * @param aas
+     * @param startString
+     * @return 
+     */
     public static CodonTabel build(Integer key, String[] names, String[] base, String aas, String startString) {
 
             String base1 = base[0];
             String base2 = base[1];
             String base3 = base[2];
             
-         //   checkLengths(base1, base2, base3, aas, startString);
+        
 
             Map<String, String> codonMap = new HashMap<String, String>(aas.length());
             Set<String> starts = new HashSet<String>(aas.length());

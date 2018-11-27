@@ -47,7 +47,11 @@ public class TranslationManeger {
     public static final String TEST_AMINOSTARTS = "---M---------------M---------------M----------------------------";
     
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
-    
+   /**
+    * 
+    * @param chrom
+    * @return 
+    */ 
    public static AminoAcidSequence[] start(chromosometest chrom) {
         String[] namen = {"chromosome1","kaas","baas"};
         CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
@@ -58,13 +62,10 @@ public class TranslationManeger {
         
         int start = 0;
         int mod = start % 3;
-//        System.out.println(mod);
-        int n1 = normalize3(3 - mod);
-//        System.out.println(n1);
+        int n1 = normalize3(3 - mod);;
         int n2 = normalize3(n1 + 1);
-//        System.out.println(n2);
         int n3 = normalize3(n2 + 1);
-//        System.out.println(n3);
+
 
         //List
         String AminoAcidsP1 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n1) , numer1);
@@ -79,9 +80,7 @@ public class TranslationManeger {
  
              
         
-     //   List<String> AminoAcidsN = TranslationManeger.getAminoAcids(Strand.NEGATIVE, chrom.getRefsequence(), numer1);
-       
-  //     AminoAcidSequence TranslatedReadingFrames = {
+   
   
         AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP1, numer1.getKey());
         AminoAcidSequence RF2 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP2, numer1.getKey());
@@ -92,9 +91,8 @@ public class TranslationManeger {
         
          AminoAcidSequence[] TranslatedReadingFrames = {RF1, RF2, RF3, RF4, RF5, RF6};
          
-  // };
+ 
        
-//   System.out.println(CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS).getCodonMap().entrySet());
        return TranslatedReadingFrames;
    }
 
@@ -102,7 +100,14 @@ public class TranslationManeger {
      private static int normalize3(int n) {
         return n == 3 ? 0 : n;
     }  
-   
+    /**
+     * returns a string of aminoacids 
+     * 
+     * @param direction
+     * @param sequence
+     * @param huidigeTabel
+     * @return 
+     */
     static String getAminoAcids(Strand direction, String sequence, CodonTabel huidigeTabel) {
         // in de toekomst vervang codontabel met key in codontabel hashmap
         
@@ -111,32 +116,32 @@ public class TranslationManeger {
         int readLength = sequence.length() / 3;
         List<String> acids = new ArrayList<String>(readLength);
 
-        if(direction == Strand.NEGATIVE) {
-            sequence = TranslationManeger.getReverseComplement(sequence);
+        if(direction == Strand.NEGATIVE) {                                      //waneer enum negative is word een reverse complementare sequentie aangemaakt
+            sequence = TranslationManeger.getReverseComplement(sequence);       // het houd de volgorde aan van nieuwe leesrichting atg aaa ccg -> cgg ttt cat
         }
-        for (int i = 0; i <= sequence.length() - 3; i += 3) {
+        
+        for (int i = 0; i <= sequence.length() - 3; i += 3) {                   // gebruikt codons als keys om de aminozuren uit een hashmap te halen
             String codon = sequence.substring(i, i + 3).toUpperCase();
             String aa = huidigeTabel.getCodonMap().get(codon);
             acids.add(aa);
         }
 
-        if(direction == Strand.NEGATIVE) {
-            
-            Collections.reverse(acids);
-            
+        if(direction == Strand.NEGATIVE) {            // aminozuur sequentie word omgedraaid voor visualisatie doeleinden 
+            Collections.reverse(acids);               // de output is dus achterstevoren met de volgorde waarin ze in een biologische omgeving getransleerd zouden worden
         }
-    //    acids 
         
-       
-        String listString = String.join("", acids);
         
-
+        String listString = String.join("", acids); // turn arraylist into string
+   
         return listString;
     }
    
    /**
- * @author jrobinso
- */ 
+    * 
+    * 
+    * @param sequence
+    * @return 
+    */ 
    public static String getReverseComplement(String sequence) {        // in: atgaaaccg -> out:ccgtttcat
         char[] complement = new char[sequence.length()];
         int jj = complement.length;
