@@ -11,23 +11,20 @@ package com.mycompany.minorigv.sequence;
  */
 public class AminoAcidSequence {
  //   private final Strand strand;    
-    private final Strand strand;
-    private final int start;                // Genomic position for start of sequence.
+    private final Strand strand;              // Genomic position for start of sequence.
     private final String sequence; 
     private final Integer codonTableKey;
     
-    public AminoAcidSequence(Strand strand, int startPosition, String sequence, Integer codonTableKey) {
+    public AminoAcidSequence(Strand strand, String sequence, Integer codonTableKey) {
         this.strand = strand;
-        this.start = startPosition;
         this.sequence = sequence;
         this.codonTableKey = codonTableKey;
     }
+
+
+
     public Strand getStrand() {
         return strand;
-    }
-
-    public int getStart() {
-        return start;
     }
 
     public String getSequence() {

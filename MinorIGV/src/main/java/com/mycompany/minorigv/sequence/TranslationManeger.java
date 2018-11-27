@@ -34,6 +34,8 @@ public class TranslationManeger {
         // maak codontabel aan
         CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
 
+       System.out.println(sequence);
+
         int start = 0;
         int mod = start % 3;
         int n1 = normalize3(3 - mod);
@@ -50,12 +52,12 @@ public class TranslationManeger {
         String AminoAcidsN3 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n3) , numer1);
 
 
-        AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP1, numer1.getKey());
-        AminoAcidSequence RF2 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP2, numer1.getKey());
-        AminoAcidSequence RF3 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP3, numer1.getKey());
-        AminoAcidSequence RF4 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN1, numer1.getKey());
-        AminoAcidSequence RF5 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN2, numer1.getKey());
-        AminoAcidSequence RF6 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN3, numer1.getKey());
+        AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, AminoAcidsP1, numer1.getKey());
+        AminoAcidSequence RF2 = new AminoAcidSequence(Strand.POSITIVE, AminoAcidsP2, numer1.getKey());
+        AminoAcidSequence RF3 = new AminoAcidSequence(Strand.POSITIVE, AminoAcidsP3, numer1.getKey());
+        AminoAcidSequence RF4 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN1, numer1.getKey());
+        AminoAcidSequence RF5 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN2, numer1.getKey());
+        AminoAcidSequence RF6 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN3, numer1.getKey());
 
         AminoAcidSequence[] TranslatedReadingFrames = {RF1, RF2, RF3, RF4, RF5, RF6};
 
@@ -116,18 +118,18 @@ public class TranslationManeger {
                 case 'G':
                     complement[jj] = 'C';
                     break;
-                case 't':
-                    complement[jj] = 'a';
-                    break;
-                case 'a':
-                    complement[jj] = 't';
-                    break;
-                case 'c':
-                    complement[jj] = 'g';
-                    break;
-                case 'g':
-                    complement[jj] = 'c';
-                    break;
+//                case 't':
+//                    complement[jj] = 'a';
+//                    break;
+//                case 'a':
+//                    complement[jj] = 't';
+//                    break;
+//                case 'c':
+//                    complement[jj] = 'g';
+//                    break;
+//                case 'g':
+//                    complement[jj] = 'c';
+//                    break;
                 default:
                     complement[jj] = c;
             }
