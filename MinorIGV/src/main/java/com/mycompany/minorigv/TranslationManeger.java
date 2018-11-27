@@ -1,7 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2007-2015 Broad Institute
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package com.mycompany.minorigv;
 
@@ -16,7 +35,7 @@ import java.util.stream.Collectors;
 
 /**
  *
- * @author Gebruiker
+ * @author jrobinso, Stan Wehkamp
  */
 public class TranslationManeger {
     
@@ -46,23 +65,19 @@ public class TranslationManeger {
 //        System.out.println(n2);
         int n3 = normalize3(n2 + 1);
 //        System.out.println(n3);
+
         //List
         String AminoAcidsP1 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n1) , numer1);
         String AminoAcidsP2 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n2) , numer1);
         String AminoAcidsP3 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n3) , numer1);
         
-//        System.out.println(AminoAcidsP1);
-//        System.out.println(AminoAcidsP2);
-//        System.out.println(AminoAcidsP3);
 
         final int len = sequence.length();
         String AminoAcidsN1 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n1) , numer1);
         String AminoAcidsN2 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n2) , numer1);
         String AminoAcidsN3 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n3) , numer1);
  
-        
-//        System.out.println(AminoAcidsN2);
-//        System.out.println(AminoAcidsN3);        
+             
         
      //   List<String> AminoAcidsN = TranslationManeger.getAminoAcids(Strand.NEGATIVE, chrom.getRefsequence(), numer1);
        
@@ -99,7 +114,6 @@ public class TranslationManeger {
         if(direction == Strand.NEGATIVE) {
             sequence = TranslationManeger.getReverseComplement(sequence);
         }
-
         for (int i = 0; i <= sequence.length() - 3; i += 3) {
             String codon = sequence.substring(i, i + 3).toUpperCase();
             String aa = huidigeTabel.getCodonMap().get(codon);
@@ -107,7 +121,9 @@ public class TranslationManeger {
         }
 
         if(direction == Strand.NEGATIVE) {
+            
             Collections.reverse(acids);
+            
         }
     //    acids 
         
@@ -118,7 +134,10 @@ public class TranslationManeger {
         return listString;
     }
    
-   public static String getReverseComplement(String sequence) {
+   /**
+ * @author jrobinso
+ */ 
+   public static String getReverseComplement(String sequence) {        // in: atgaaaccg -> out:ccgtttcat
         char[] complement = new char[sequence.length()];
         int jj = complement.length;
         for (int ii = 0; ii < sequence.length(); ii++) {
@@ -152,7 +171,7 @@ public class TranslationManeger {
                 default:
                     complement[jj] = c;
             }
-        }
+        } 
         return new String(complement);
     }
 }
