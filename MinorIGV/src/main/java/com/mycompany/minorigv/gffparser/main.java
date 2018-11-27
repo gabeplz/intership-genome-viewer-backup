@@ -29,6 +29,15 @@ public class main {
         ArrayList orfs = findORF.searchORF("NC_001133.9",chr.getSeq());
         chr.setListORF(orfs);
 
+        // Wegschrijven ORFs
+        ArrayList<ORF> listORF = chr.getListORF();
+        PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+        for(ORF o: listORF){
+            writer.println(">ORF" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop());
+            writer.println(o.getDNA_ORF());
+        }
+        writer.close();
+
         InformationUser info = new InformationUser();
         info.getInfo(org);
     }
