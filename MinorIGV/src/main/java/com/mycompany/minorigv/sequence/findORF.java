@@ -17,41 +17,43 @@ import java.util.regex.Pattern;
  * @author Anne van Ewijk en Amber Janssen Groesbeek.
  */
 public class findORF {
-    public int readingframe;
-    public static int idORF;
-    public static PrintWriter writer;
-    public static ArrayList<ORF> listORF = new ArrayList<>();
 
-    static {
-        try {
-            writer = new PrintWriter("/home/users/bxznn/Documents/orf.fasta", "UTF-8");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static ArrayList<Chromosome> chromosomes = new ArrayList<>();
+    //public static PrintWriter writer;
+    //public static ArrayList<ORF> listORF = new ArrayList<>();
+
+//    static {
+//        try {
+//            writer = new PrintWriter("/Users/amber/Desktop/bestandenIGV/orf.fasta", "UTF-8");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    //public static ArrayList<Chromosome> chromosomes = new ArrayList<>();
 
     /**
      * Het vinden van het ORF in drie verschillende reading frames. Elk ORF wordt opgeslagen in een object.
      *
      * @param seq   Elk opgeslagen chromosoom sequentie wordt een voor een meegegeven aan searchORF.
      */
-    public ArrayList<ORF> searchORF(String id, String seq) {
+    public static ArrayList<ORF> searchORF(String id, String seq) {
 
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
         Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
-
+        int idORF = 0;
+        ArrayList<ORF> listORF = new ArrayList<>();
         // Informatie ophalen van het ORF.
         while(match.find()){
+
             int start = match.start();      // Positie startcodon
             int stop = match.end();         // Positie stopcodon
 
             idORF++;
-
+            int readingframe = Integer.MIN_VALUE;
             if((start % 3) == 0){
                 readingframe = +1;
             }else if((start % 3) == 1){
@@ -66,26 +68,27 @@ public class findORF {
             int aaStart = (int) Math.ceil(start/3.0);
             int aaStop = (int) Math.ceil(stop/3.0);
 
-            ORF ORF_Object = makeORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
+            ORF ORF_Object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
             listORF.add(ORF_Object);
-            writer.println(">ORF"+ idORF +" RF:"+ readingframe +" start:"+start + " stop:"+stop);
-            writer.println(match.group());
+            //writer.println(">ORF"+ idORF +" RF:"+ readingframe +" start:"+start + " stop:"+stop);
+            //writer.println(match.group());
         }
-        writer.close();
+        //writer.close();
         return listORF;
     }
 
-    public ArrayList<ORF> searchORF(String id, String seq, String bevestiging) throws FileNotFoundException, UnsupportedEncodingException {
+    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging) throws FileNotFoundException, UnsupportedEncodingException {
 
 
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
         Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
-
+        int idORF = 0;
+        ArrayList<ORF> listORF = new ArrayList<>();
         while(match.find()){
             int start = seq.length() - match.start() -3;   // Positie van het startcodon op de orginele sequentie (+)
             int stop = seq.length() - match.end() -3;      // Positie van het stopcodon op de orginele sequentie (+)
-
+            int readingframe;
             idORF++;
 
             if((start % 3) == 0){
@@ -95,6 +98,7 @@ public class findORF {
             }else if((start % 3) == 2){
                 readingframe = -3;
             }else{
+                readingframe = Integer.MIN_VALUE;
                 System.out.println("Geen ORF gevonden.");
             }
 
@@ -102,18 +106,12 @@ public class findORF {
             int aaStart = (int) Math.ceil(start/3.0);
             int aaStop = (int) Math.ceil(stop/3.0);
 
-            ORF ORF_Object = makeORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
+            ORF ORF_Object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
             listORF.add(ORF_Object);
-            writer.println(">ORF"+ idORF +" RF:"+ readingframe +" start:"+start + " stop:"+stop);
-            writer.println(match.group());
+            //writer.println(">ORF"+ idORF +" RF:"+ readingframe +" start:"+start + " stop:"+stop);
+            //writer.println(match.group());
         }
-        writer.close();
+        //writer.close();
         return listORF;
-    }
-
-    private static ORF makeORF(int start, int stop, int readingframe, int idORF, int aaStart, int aaStop, String DNA_ORF) {
-        ORF object;
-        object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, DNA_ORF);
-        return object;
     }
 }

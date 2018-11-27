@@ -1,7 +1,5 @@
 package com.mycompany.minorigv.gffparser;
 
-import com.mycompany.minorigv.sequence.findORF;
-
 import java.util.ArrayList;
 
 /**
@@ -20,6 +18,7 @@ public class Chromosome {
      * De constructor.
      */
     public Chromosome() {
+        features = new ArrayList<Feature>();
 
     }
 
@@ -33,17 +32,22 @@ public class Chromosome {
         this.features = features;
     }
 
+    public void addFeature(Feature feat){
+        if (feat instanceof Feature){
+            features.add(feat);
+        }
+
+    }
+
     /**
      * De constructor.
      * @param id        Het id van het chromosoom/contig.
      * @param seq
      */
     public Chromosome(String id, String seq, ArrayList<ORF> listORF){
-
         this.id = id;
         this.seq = seq;
         this.listORF = listORF;
-
     }
 
     /**
@@ -133,7 +137,6 @@ public class Chromosome {
      * @param SelectedFeatures      is de lijst met de gekozen features (dus bijv. Gene en CDS) die de gebruiker heeft gekozen.
      * @return                      Een lijst met de gekozen features wordt gereturned.
      */
-
     public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
 
 
@@ -151,4 +154,11 @@ public class Chromosome {
         return featureFilteredList;
     }
 
+    @Override
+    public String toString() {
+        return "Chromosome{" +
+                "id='" + id + '\'' +
+                ", features=" + features +
+                '}';
+    }
 }

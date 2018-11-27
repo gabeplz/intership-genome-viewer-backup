@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gffparser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Organisms {
     private String id; //organism id
-    private ArrayList<Chromosome> chromosomes;
+    private HashMap<String,Chromosome> chromosomes;
 
 
     /**
@@ -20,7 +21,23 @@ public class Organisms {
      */
     public Organisms(String id, ArrayList<Chromosome> chromosomes) {
         this.id = id;
-        this.chromosomes = chromosomes;
+        //this.chromosomes = chromosomes;
+    }
+
+    public Organisms(String id){
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Organisms{" +
+                "id='" + id + '\'' +
+                ", chromosomes=" + chromosomes +
+                '}';
+    }
+
+    public Organisms() {
+        chromosomes = new HashMap<String,Chromosome>();
     }
 
     /**
@@ -45,7 +62,7 @@ public class Organisms {
      * Het returnd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
      * @return  chromosomes is een ArrayList met daarin de chromosomen.
      */
-    public ArrayList<Chromosome> getChromosomes() {
+    public HashMap<String,Chromosome> getChromosomes() {
         return chromosomes;
     }
 
@@ -57,20 +74,32 @@ public class Organisms {
      */
     public Chromosome getChromosome(String id) throws Exception{
         // Loopt over alle chromosoom objecten
-        for (Chromosome chr : chromosomes){
-            // Zoekt het chromosoom die voldoet aan het id, die de gebruiker heeft gekozen.
-            if(chr.getId().equals(id)){
-                return chr;
-            }
-        }
-        throw new Exception();
+
+        return chromosomes.get(id);
+
     }
+
+    public void addSequence(String id, String Seq){
+
+        if(chromosomes.containsKey(id)){
+            chromosomes.get(id).setSeq(Seq);
+        }
+        else {
+            Chromosome chr = new Chromosome();
+            chr.setSeq(Seq);
+            chr.setId(Seq);
+        }
+    }
+
+    public void addChromosome(Chromosome chr){
+        this.chromosomes.put(chr.getId(),chr);
+}
 
     /**
      * Het genereerd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
      * @param chromosomes is een ArrayList met daarin de chromosomen.
      */
-    public void setChromosomes(ArrayList<Chromosome> chromosomes) {
-        this.chromosomes = chromosomes;
-    }
+    //public void setChromosomes(ArrayList<Chromosome> chromosomes) {
+    //    this.chromosomes = chromosomes;
+    //}
 }

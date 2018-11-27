@@ -5,6 +5,7 @@ import com.mycompany.minorigv.sequence.findORF;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Het inlezen van een fasta bestand met chromosoom/contig sequenties. Het ID van het chromosoom/contig wordt
@@ -21,10 +22,10 @@ public class FastaFileReader {
      * @param pad           Pad van het fasta bestand
      * @throws IOException  Input/output exceptie
      */
-    public void getSequences(String pad) throws IOException{
+    public static HashMap<String,String> getSequences(String pad) throws IOException{
 
         BufferedReader f_reader = new BufferedReader(new FileReader(pad));
-        ArrayList<String> CH_list = new ArrayList<>();
+        HashMap<String,String> CH_list = new HashMap<String, String>();
         String regel = f_reader.readLine();
 
         // Loopen over de headers
@@ -44,24 +45,10 @@ public class FastaFileReader {
                 regel = f_reader.readLine();
             }
 
-            findORF orf = new findORF();
-            ArrayList<ORF> listORF = orf.searchORF(id ,chromosoomSeq.toString().toUpperCase());
-
-            // Toevoegen van sequentie en ID aan chromosoom object
-            Chromosome chr = new Chromosome(id, chromosoomSeq.toString(), listORF);
+            CH_list.put(id,chromosoomSeq.toString());
 
         }
+        return CH_list;
 
-    }
-
-    /**
-     * Het ophalen en openen van een fasta file met daarin sequenties van chromosomen/contigs.
-     */
-    public void openFasta(String path) {
-        try {
-            getSequences(path);
-        } catch(Exception e){
-            System.out.println(e.toString());
-        }
     }
 }
