@@ -48,6 +48,7 @@ public class Chromosome {
         this.id = id;
         this.seq = seq;
         this.listORF = listORF;
+
     }
 
     /**

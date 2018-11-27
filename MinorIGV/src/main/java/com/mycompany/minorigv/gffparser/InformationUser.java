@@ -48,5 +48,9 @@ public class InformationUser {
         for(ORF o: chromosoom.getListORF()){
             System.out.println(o.getAaStart());
         }
+
+        ArrayList<ORF> hi = chromosoom.getListORF();
+        System.out.println(hi);
+
     }
 }

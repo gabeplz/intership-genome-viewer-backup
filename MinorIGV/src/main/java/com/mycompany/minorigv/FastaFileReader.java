@@ -46,6 +46,11 @@ public class FastaFileReader {
             }
 
             CH_list.put(id,chromosoomSeq.toString());
+            findORF orf = new findORF();
+            System.out.println(id);
+            ArrayList<ORF> listORF = orf.searchORF(id ,chromosoomSeq.toString().toUpperCase());
+            // Toevoegen van sequentie en ID aan chromosoom object
+            Chromosome chr = new Chromosome(id, chromosoomSeq.toString(), listORF);
 
         }
         return CH_list;

@@ -18,22 +18,6 @@ import java.util.regex.Pattern;
  */
 public class findORF {
 
-
-    //public static PrintWriter writer;
-    //public static ArrayList<ORF> listORF = new ArrayList<>();
-
-//    static {
-//        try {
-//            writer = new PrintWriter("/Users/amber/Desktop/bestandenIGV/orf.fasta", "UTF-8");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    //public static ArrayList<Chromosome> chromosomes = new ArrayList<>();
-
     /**
      * Het vinden van het ORF in drie verschillende reading frames. Elk ORF wordt opgeslagen in een object.
      *
