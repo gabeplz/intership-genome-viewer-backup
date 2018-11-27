@@ -1,4 +1,10 @@
 package com.mycompany.minorigv.gffparser;
+import com.mycompany.minorigv.sequence.TranslationManeger;
+import com.mycompany.minorigv.sequence.findORF;
+
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,7 +21,7 @@ public class InformationUser {
      * @param organisme     object van het organismen met alle bijbehorende chromosomen/contigs en
      *                      daarvan de informatie.
      */
-    public void getInfo(Organisms organisme){
+    public void getInfo(Organisms organisme) throws Exception {
 
         String chromosoom_id = "NC_001133.9";
         int start = 2000;
@@ -36,21 +42,46 @@ public class InformationUser {
         // Filteren van de features die tussen een bepaalde start en stop codon zitten.
         ArrayList<Feature> featureFilteredList = chromosoom.filterFeatures(featureList, keuze_gebruiker);
 
-        for(Feature feat: featureFilteredList){
-            HashMap attributes = feat.getAttributes();
-            // Lijst met alle Keys
-            attributes.keySet();
-            // Ophalen values
-            attributes.get("locus_tag");
-            //System.out.println(attributes.get("locus_tag"));
-        }
+//        for(Feature feat: featureFilteredList){
+//            HashMap attributes = feat.getAttributes();
+//            // Lijst met alle Keys
+//            attributes.keySet();
+//            // Ophalen values
+//            attributes.get("locus_tag");
+//            //System.out.println(attributes.get("locus_tag"));
+//        }
+//
+//        for(ORF o: chromosoom.getListORF()){
+//            //System.out.println(o.getAaStart());
+//        }
+//
+//        ArrayList<ORF> hi = chromosoom.getListORF();
+//        //System.out.println(hi);
 
-        for(ORF o: chromosoom.getListORF()){
-            //System.out.println(o.getAaStart());
-        }
 
-        ArrayList<ORF> hi = chromosoom.getListORF();
-        //System.out.println(hi);
+
+
+
+
+
+        Chromosome chr = organisme.getChromosome("NC_001133.9");
+        ArrayList orfs = findORF.searchORF("NC_001133.9",chr.getSeq());
+        chr.setListORF(orfs);
+
+        // Wegschrijven ORFs
+        ArrayList<ORF> listORF = chr.getListORF();
+        PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+        for(ORF o: listORF){
+            writer.println(">ORF" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop());
+            writer.println(o.getDNA_ORF());
+        }
+        writer.close();
+
+
+        TranslationManeger translator = new TranslationManeger();
+        translator.start(chr.getSeq().toUpperCase());
+
+
 
     }
 }

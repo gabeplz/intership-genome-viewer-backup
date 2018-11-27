@@ -5,6 +5,8 @@
  */
 package com.mycompany.minorigv.sequence;
 
+import com.mycompany.minorigv.gffparser.Chromosome;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -26,12 +28,12 @@ public class TranslationManeger {
     
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
     
-   public static AminoAcidSequence[] start(chromosometest chrom) {
+   public static AminoAcidSequence[] start(String sequence) {
+       // namen = namen van codontabel
         String[] namen = {"chromosome1","kaas","baas"};
+        // maak codontabel aan
         CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
 
-        String sequence = chrom.getRefsequence();
-        
         int start = 0;
         int mod = start % 3;
         int n1 = normalize3(3 - mod);
@@ -47,14 +49,14 @@ public class TranslationManeger {
         String AminoAcidsN2 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n2) , numer1);
         String AminoAcidsN3 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n3) , numer1);
 
-  
+
         AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP1, numer1.getKey());
         AminoAcidSequence RF2 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP2, numer1.getKey());
         AminoAcidSequence RF3 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP3, numer1.getKey());
         AminoAcidSequence RF4 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN1, numer1.getKey());
         AminoAcidSequence RF5 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN2, numer1.getKey());
         AminoAcidSequence RF6 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN3, numer1.getKey());
-        
+
         AminoAcidSequence[] TranslatedReadingFrames = {RF1, RF2, RF3, RF4, RF5, RF6};
 
        return TranslatedReadingFrames;
