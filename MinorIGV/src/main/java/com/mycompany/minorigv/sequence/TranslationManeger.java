@@ -7,10 +7,7 @@ package com.mycompany.minorigv.sequence;
 
 import com.mycompany.minorigv.gffparser.Chromosome;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -28,13 +25,11 @@ public class TranslationManeger {
     
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
     
-   public static AminoAcidSequence[] start(String sequence) {
+   public static HashMap<String, Object> start(String sequence) {
        // namen = namen van codontabel
         String[] namen = {"chromosome1","kaas","baas"};
         // maak codontabel aan
         CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
-
-       System.out.println(sequence);
 
         int start = 0;
         int mod = start % 3;
@@ -59,9 +54,18 @@ public class TranslationManeger {
         AminoAcidSequence RF5 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN2, numer1.getKey());
         AminoAcidSequence RF6 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN3, numer1.getKey());
 
-        AminoAcidSequence[] TranslatedReadingFrames = {RF1, RF2, RF3, RF4, RF5, RF6};
+        HashMap<String, Object> readingframes = new HashMap<String, Object>();
+        readingframes.put("RF1", RF1);
+        readingframes.put("RF2", RF2);
+        readingframes.put("RF3", RF3);
+        readingframes.put("RF4", RF4);
+        readingframes.put("RF5", RF5);
+        readingframes.put("RF6", RF6);
 
-       return TranslatedReadingFrames;
+
+
+
+        return readingframes;
    }
 
  
@@ -118,18 +122,6 @@ public class TranslationManeger {
                 case 'G':
                     complement[jj] = 'C';
                     break;
-//                case 't':
-//                    complement[jj] = 'a';
-//                    break;
-//                case 'a':
-//                    complement[jj] = 't';
-//                    break;
-//                case 'c':
-//                    complement[jj] = 'g';
-//                    break;
-//                case 'g':
-//                    complement[jj] = 'c';
-//                    break;
                 default:
                     complement[jj] = c;
             }

@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.mycompany.minorigv.sequence.TranslationManeger.getReverseComplement;
 
 /**
  * Ophalen van de informatie doormiddel van de keuzes die de gebruiker maakt in de gui.
@@ -79,7 +82,18 @@ public class InformationUser {
 
 
         TranslationManeger translator = new TranslationManeger();
-        translator.start(chr.getSeq().toUpperCase());
+        HashMap<String, Object> readingframes = translator.start(chr.getSeq().toUpperCase());
+
+        String complement = getReverseComplement(chr.getSeq().toUpperCase());
+        String comp = new StringBuilder(complement).reverse().toString();
+        chr.setComp(comp);
+        chr.setReadingframe(readingframes);
+        
+        chr.getReadingframe().get("RF5");
+
+
+
+
 
 
 

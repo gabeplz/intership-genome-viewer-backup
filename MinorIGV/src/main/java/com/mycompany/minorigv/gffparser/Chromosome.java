@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gffparser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Deze class maakt objecten voor chromosomen/contigs. Ook worden hier de bijbehorende features in object gezet.
@@ -13,6 +14,8 @@ public class Chromosome {
     private ArrayList<Feature> features;
     private String seq;
     private ArrayList<ORF> listORF;
+    private String comp;
+    private HashMap<String, Object> readingframe;
 
     /**
      * De constructor.
@@ -30,6 +33,11 @@ public class Chromosome {
         this.id = id;
         this.features = features;
     }
+
+//    public Chromosome(String comp, HashMap<String, Object> readingframe){
+//        this.comp = comp;
+//        this.readingframe = readingframe;
+//    }
 
     /**
      * De constructor.
@@ -81,7 +89,7 @@ public class Chromosome {
      * @param seq
      */
     public void setSeq(String seq) {
-        this.seq = seq;
+        this.seq = seq.toUpperCase();
     }
 
     /**
@@ -114,6 +122,22 @@ public class Chromosome {
      */
     public void setListORF(ArrayList<ORF> listORF) {
         this.listORF = listORF;
+    }
+
+    public String getComp() {
+        return comp;
+    }
+
+    public void setComp(String comp) {
+        this.comp = comp;
+    }
+
+    public HashMap<String, Object> getReadingframe() {
+        return readingframe;
+    }
+
+    public void setReadingframe(HashMap<String, Object> readingframe) {
+        this.readingframe = readingframe;
     }
 
     /**
