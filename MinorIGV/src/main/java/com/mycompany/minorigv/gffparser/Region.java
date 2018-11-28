@@ -17,8 +17,8 @@ public class Region extends Feature{
      * Constructor
      *
      * @param seqid         Het ID van het contig/chromosoom.
-     * @param start         Start positie van het contig/chromosoom op het genoom
-     * @param end           Stop positie van het contig/chromosoom op het genoom
+     * @param start         Start positie van het contig/chromosoom
+     * @param end           Stop positie van het contig/chromosoom
      * @param score         Score van het Region
      * @param strand        Of het contig/chromosoom aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase         Het geeft het reading frame aan waarin de Region voorkomt (0,1,2 of ".")

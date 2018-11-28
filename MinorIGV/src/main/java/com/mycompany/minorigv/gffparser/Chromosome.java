@@ -41,10 +41,10 @@ public class Chromosome {
 
     /**
      * De constructor.
-     * @param id        Het id van het chromosoom/contig.
-     * @param seqTemp
-     * @param listORF
-     * @param seqComp
+     * @param id        Het id van het chromosoom/contig
+     * @param seqTemp   Sequentie van de template strand
+     * @param listORF   Lijst met alle ORFs gevonden
+     * @param seqComp   Sequentie van de complementaire strand
      */
     public Chromosome(String id, String seqTemp, ArrayList<ORF> listORF, String seqComp){
         this.id = id;
@@ -127,19 +127,35 @@ public class Chromosome {
         this.listORF = listORF;
     }
 
+    /**
+     * Het ophalen van de complementaire strand sequentie (DNA)
+     * @return      De DNA sequentie van de complementaire strand
+     */
     public String getSeqComp() {
         return seqComp;
     }
 
+    /**
+     * Het opslaan van de complementaire strand (DNA sequentie)
+     * @param seqComp   De complementaire DNA sequentie
+     */
     public void setSeqComp(String seqComp) {
         this.seqComp = seqComp;
 
     }
 
+    /**
+     * Hashmap met als key de readingframes (RF1, RF2, ..., RF6) en als value de aminozuursequentie
+     * @return      Een hashmap. key: readingframes, value: aminozuursequentie
+     */
     public HashMap<String, Object> getReadingframe() {
         return readingframe;
     }
 
+    /**
+     * Het opslaan van de hashmap met daarin voor elk readingframe (key), de aminozuursequentie (value)
+     * @param readingframe  Hashmap. Key: readingframes, value: aminozuursequentie
+     */
     public void setReadingframe(HashMap<String, Object> readingframe) {
         this.readingframe = readingframe;
     }

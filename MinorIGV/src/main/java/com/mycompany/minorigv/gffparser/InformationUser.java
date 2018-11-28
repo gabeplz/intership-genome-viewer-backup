@@ -15,7 +15,7 @@ import java.util.HashMap;
 /**
  * Ophalen van de informatie doormiddel van de keuzes die de gebruiker maakt in de gui.
  *
- * @author Anne van Ewijk en Huub Goltstein
+ * @author Anne van Ewijk, Huub Goltstein en Amber Janssen Groesbeek
  */
 public class InformationUser {
 
@@ -39,9 +39,9 @@ public class InformationUser {
             e.printStackTrace();
         }
 
-//        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
+        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
         getORFuser(chromosoom, chromosoom_id);
-//        getAAuser(chromosoom);
+        getAAuser(chromosoom);
     }
 
     /**
@@ -65,12 +65,12 @@ public class InformationUser {
             attributes.keySet();
             // Ophalen values
             attributes.get("locus_tag");
-            System.out.println(attributes.get("locus_tag"));
         }
     }
 
     /**
-     * Ophalen en opslaan van de ORFs uit de sequentie van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
+     * Het maken van de complementaire strand. Ophalen en opslaan van de ORFs uit de sequentie
+     * van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
      *
      * @param chr               Het object van het gekozen chromosoom (door de gebruiker)
      * @param chromosoom_id     Het ID van de het gekozen chromosoom
@@ -78,14 +78,14 @@ public class InformationUser {
      * @throws UnsupportedEncodingException
      */
     public void getORFuser(Chromosome chr, String chromosoom_id) throws FileNotFoundException, UnsupportedEncodingException {
+        // Complementaire strand maken
         makeCompStrand compStrand = new makeCompStrand();
         String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
 
         String compSeq = new StringBuilder(comp).reverse().toString();
         chr.setSeqComp(compSeq);
 
-        System.out.println(chr.getSeqComp().length());
-
+        // ORFs zoeken in de template en complementaire strand.
         ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
         ArrayList orfs_comp = findORF.searchORF(chromosoom_id,chr.getSeqComp(), "comp");
         orfs.addAll(orfs_comp);

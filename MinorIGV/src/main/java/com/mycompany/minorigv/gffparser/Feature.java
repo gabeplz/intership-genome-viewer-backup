@@ -20,8 +20,8 @@ public class Feature {
     /**
      * De constructor.
      * @param seqid     Het ID van het contig/chromosoom waarin de feature aanwezig is.
-     * @param start     Start positie van de feature op het genoom
-     * @param end       Stop positie van de feature op het genoom
+     * @param start     Start positie van de feature op het chromosoom/contig
+     * @param end       Stop positie van de feature op het chromosoom/contig
      * @param score     De score van de feature.
      * @param strand    Of de feature aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase     Het geeft het readingframe aan waarin het feature voorkomt (0,1,2).

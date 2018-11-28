@@ -17,8 +17,8 @@ public class mRNA extends Feature{
      * Constructor.
      *
      * @param seqid         Het ID van het contig/chromosoom waarin het mRNA aanwezig is.
-     * @param start         Start positie van het mRNA op het genoom
-     * @param end           Stop positie van het mRNA op het genoom
+     * @param start         Start positie van het mRNA op het chromosoom/contig
+     * @param end           Stop positie van het mRNA op het chromosoom/contig
      * @param score         Score van het mRNA
      * @param strand        Of het mRNA aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase         Het geeft het reading frame aan waarin het mRNA voorkomt (0,1,2 of ".")

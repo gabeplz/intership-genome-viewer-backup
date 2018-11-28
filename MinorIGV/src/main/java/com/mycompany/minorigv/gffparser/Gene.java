@@ -18,8 +18,8 @@ private HashMap attributes;
      * Contstructor.
      *
      * @param seqid       Het ID van het contig/chromosoom waarin het gen aanwezig is.
-     * @param start       Start positie van het gen op het genoom
-     * @param end         Stop positie van het gen op het genoom
+     * @param start       Start positie van het gen op het chromosoom/contig
+     * @param end         Stop positie van het gen op het chromosoom/contig
      * @param score       Score van het gen
      * @param strand      Of het gen aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase       Het geeft het reading frame aan waarin het gen voorkomt (0,1,2 of ".")

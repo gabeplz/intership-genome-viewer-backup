@@ -16,8 +16,8 @@ public class CDS extends Feature{
      * Constructor
      *
      * @param seqid         Het ID van het contig/chromosoom waarin het CDS aanwezig is.
-     * @param start         Start positie van het CDS op het genoom
-     * @param end           Stop positie van het CDS op het genoom
+     * @param start         Start positie van het CDS op het chromosoom/contig
+     * @param end           Stop positie van het CDS op het chromosoom/contig
      * @param score         De score van de CDS
      * @param strand        Of het CDS aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase         Het geeft het reading frame aan waarin het CDS voorkomt (0,1,2)

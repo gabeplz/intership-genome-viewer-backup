@@ -1,10 +1,8 @@
 package com.mycompany.minorigv.sequence;
 
-import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.ORF;
 
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -54,10 +52,7 @@ public class findORF {
 
             ORF ORF_Object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
             listORF.add(ORF_Object);
-            //writer.println(">ORF"+ idORF +" RF:"+ readingframe +" start:"+start + " stop:"+stop);
-            //writer.println(match.group());
         }
-        //writer.close();
         return listORF;
     }
 
@@ -101,10 +96,8 @@ public class findORF {
 
             ORF ORF_Object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
             listORF.add(ORF_Object);
-            //writer.println(">ORF"+ idORF +" RF:"+ readingframe +" start:"+start + " stop:"+stop);
-            //writer.println(match.group());
+
         }
-        //writer.close();
         return listORF;
     }
 }
