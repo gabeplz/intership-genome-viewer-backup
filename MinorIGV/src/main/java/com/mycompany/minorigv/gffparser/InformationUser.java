@@ -105,6 +105,6 @@ public class InformationUser {
 
         AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
         System.out.println(RF.getSequence());
-        
+
     }
 }
