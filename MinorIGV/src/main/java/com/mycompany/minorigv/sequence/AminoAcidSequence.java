@@ -21,8 +21,6 @@ public class AminoAcidSequence {
         this.codonTableKey = codonTableKey;
     }
 
-
-
     public Strand getStrand() {
         return strand;
     }

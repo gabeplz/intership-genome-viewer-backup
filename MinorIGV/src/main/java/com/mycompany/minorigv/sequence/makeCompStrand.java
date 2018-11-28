@@ -10,6 +10,8 @@ public class makeCompStrand {
     * @return 
     */ 
     public String getReverseComplement(String sequence) {
+
+
         char[] complement = new char[sequence.length()];
         int jj = complement.length;
         for (int ii = 0; ii < sequence.length(); ii++) {

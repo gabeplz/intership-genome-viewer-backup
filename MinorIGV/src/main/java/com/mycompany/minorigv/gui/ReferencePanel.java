@@ -11,51 +11,125 @@ import javax.swing.JPanel;
 public class ReferencePanel extends JPanel {
 
 	//Hardcoded String ff want moeten nog Context objecten hebben
-	String seq = "ATCGAATCGATCGATTCGATCGATCGATTCATCGATCGATCGATTCGATCGATTCGGTCGATCGATCGATCGATTCGATCGATTCGATTCG";
-	String rev_seq = "ATCGAATCGATCGATTCGATCGATCGATTCATCGATCGATCGATTCGATCGATTCGGTCGATCGATCGATCGATTCGATCGATTCGATTCG";
+	Context cont;
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		if(cont == null) return;
+		System.out.println("yeet");
+
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.RED);
-		Font font = new Font("Monospaced", Font.PLAIN, 12);
-		g2.setFont(font);
 
-		// X start coordinaten voor het tekenen van de referentie sequenties.
-		int n_x= 0;
+		Dimension dim = this.getSize();
+		String seq = cont.getSubSequentie();
 
-		// Y start coordinatie voor het tekenen van de nucleotide uit de forward(n_y) en reverse(r_n_y) van de referentie sequentie.
-		int n_y = 20;
-		int r_n_y = 40;
+		int length = cont.getStop()-cont.getStart();
 
-		// Loop die forward en reverse strand nucleotide 1 voor 1 tekent.
-		for (int i = 0; i<=seq.length()-1;i++) {
+		double disBetween = dim.getWidth() / length;
+		String revComp = getReverseComplement(seq);
+		int j = length;
+		for(int i = 0; i < length; i++  ) {
+			j--;
+			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
+			int x_pos = info[1];
 
-		// ophalen van de volgende nucleotide uit de forward en reverse sequentie.
-			char seq_n = seq.charAt(i);
-			char rev_seq_n = rev_seq.charAt(i);
+			this.chooseLetterColor(g,seq.charAt(i));
 
-			//coordinaten voor het teken van de nucleotide
-			g2.drawString(String.valueOf(seq_n)		, n_x	, n_y);
-			g2.drawString(String.valueOf(rev_seq_n)	, n_x	, r_n_y);
+			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, 20);
 
-			//verplaatsen van de x coordinaten naar rechts zodat de getekende nucleotide samen een sequentie vormen.
-			n_x += 12;
-
-
-
+			this.chooseLetterColor(g,revComp.charAt(j));
+			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 40);
+			g.setColor(Color.BLACK);
 		}
-		
-	}
-// initiatie van het paneel waarin de sequenties worden getekent
-	public void init() {
-		
-		setPreferredSize(new Dimension(500,25));
-		setMinimumSize(new Dimension(100,30));
-		setBackground(new Color(180,180,180));
-		
-		
+
 	}
 
+	private void chooseLetterColor(Graphics g, char c) {
+
+		switch (c) {
+		case 'T':
+			g.setColor(Color.BLUE);
+			break;
+		case 'A':
+			g.setColor(Color.RED);
+			break;
+		case 'C':
+			g.setColor(new Color(0 ,153, 0));
+			break;
+		case 'G':
+			g.setColor(new Color(255 ,85, 0));
+			break;
+		case 't':
+			g.setColor(Color.BLUE);
+			break;
+		case 'a':
+			g.setColor(Color.RED);
+			break;
+		case 'c':
+			g.setColor(new Color(0 ,153, 0));
+			break;
+		case 'g':
+			g.setColor(new Color(255 ,85, 0));
+			break;
+		default:
+			g.setColor(Color.BLACK);
+		}
+
+	}
+
+	/**
+	 * ripperino IGV
+	 * @param sequence
+	 * @return
+	 */
+	public static String getReverseComplement(String sequence) {
+		char[] complement = new char[sequence.length()];
+		int jj = complement.length;
+		for (int ii = 0; ii < sequence.length(); ii++) {
+			char c = sequence.charAt(ii);
+			jj--;
+			switch (c) {
+			case 'T':
+				complement[jj] = 'A';
+				break;
+			case 'A':
+				complement[jj] = 'T';
+				break;
+			case 'C':
+				complement[jj] = 'G';
+				break;
+			case 'G':
+				complement[jj] = 'C';
+				break;
+			case 't':
+				complement[jj] = 'a';
+				break;
+			case 'a':
+				complement[jj] = 't';
+				break;
+			case 'c':
+				complement[jj] = 'g';
+				break;
+			case 'g':
+				complement[jj] = 'c';
+				break;
+			default:
+				complement[jj] = c;
+			}
+		}
+		return new String(complement);
+	}
+	// initiatie van het paneel waarin de sequenties worden getekent
+	public void init() {
+
+		setPreferredSize(new Dimension(500,55));
+		setMaximumSize(new Dimension(2000,40));
+		setMinimumSize(new Dimension(100,30));
+		setBackground(Color.WHITE);
+	}
+
+	public void setContext(Context cont) {
+		this.cont = cont;
+	}
 }

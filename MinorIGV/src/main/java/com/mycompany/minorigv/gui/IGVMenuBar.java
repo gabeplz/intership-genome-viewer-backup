@@ -3,12 +3,10 @@ package com.mycompany.minorigv.gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import com.mycompany.minorigv.FastaFileChooser;
 
 public class IGVMenuBar extends JMenuBar {
 
@@ -87,7 +85,6 @@ public class IGVMenuBar extends JMenuBar {
 	}
 	// test button action listener
 	private void loadReferenceAction() {
-		FastaFileChooser fastafile = new FastaFileChooser();
 
 		System.out.println("load reference test");
 	}

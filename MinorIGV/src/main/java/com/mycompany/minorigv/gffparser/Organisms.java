@@ -29,7 +29,9 @@ public class Organisms {
      * @param id            Het id van het organisme.
      */
     public Organisms(String id){
+
         this.id = id;
+        this.chromosomes = new HashMap<String,Chromosome>();
     }
 
     /**
@@ -81,12 +83,14 @@ public class Organisms {
      * @param Seq   de sequentie van het chromosoom.
      */
     public void addSequence(String id, String Seq){
+
         if(chromosomes.containsKey(id)){
             chromosomes.get(id).setSeqTemp(Seq);
         }else {
             Chromosome chr = new Chromosome();
             chr.setSeqTemp(Seq);
             chr.setId(Seq);
+            chromosomes.put(id,chr);
         }
     }
 

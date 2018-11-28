@@ -79,6 +79,7 @@ public class InformationUser {
      */
     public void getORFuser(Chromosome chr, String chromosoom_id) throws FileNotFoundException, UnsupportedEncodingException {
         // Complementaire strand maken
+
         makeCompStrand compStrand = new makeCompStrand();
         String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
 

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 /**
  * Het vinden van Open Reading Frames (ORFs) in de sequentie van een chromosoom/contig. De informatie van een ORF
  * wordt opgeslagen in een object.
@@ -15,7 +17,6 @@ import java.util.regex.Pattern;
  * @author Anne van Ewijk en Amber Janssen Groesbeek.
  */
 public class findORF {
-
     /**
      * Het vinden van het ORF in drie verschillende reading frames (Template strand). Elk ORF wordt opgeslagen in een object.
      *
