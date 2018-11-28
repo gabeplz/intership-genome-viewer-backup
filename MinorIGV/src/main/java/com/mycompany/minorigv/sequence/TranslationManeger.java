@@ -5,8 +5,6 @@
  */
 package com.mycompany.minorigv.sequence;
 
-import com.mycompany.minorigv.gffparser.Chromosome;
-
 import java.util.*;
 
 
@@ -80,9 +78,10 @@ public class TranslationManeger {
         // calling program to send a sequence properly aligned.
         int readLength = sequence.length() / 3;
         List<String> acids = new ArrayList<String>(readLength);
+        makeCompStrand makeComp = new makeCompStrand();
 
         if(direction == Strand.NEGATIVE) {
-            sequence = TranslationManeger.getReverseComplement(sequence);
+            sequence = makeComp.getReverseComplement(sequence);
         }
 
         for (int i = 0; i <= sequence.length() - 3; i += 3) {
@@ -103,29 +102,29 @@ public class TranslationManeger {
         return listString;
     }
    
-   public static String getReverseComplement(String sequence) {
-        char[] complement = new char[sequence.length()];
-        int jj = complement.length;
-        for (int ii = 0; ii < sequence.length(); ii++) {
-            char c = sequence.charAt(ii);
-            jj--;
-            switch (c) {
-                case 'T':
-                    complement[jj] = 'A';
-                    break;
-                case 'A':
-                    complement[jj] = 'T';
-                    break;
-                case 'C':
-                    complement[jj] = 'G';
-                    break;
-                case 'G':
-                    complement[jj] = 'C';
-                    break;
-                default:
-                    complement[jj] = c;
-            }
-        }
-        return new String(complement);
-    }
+//   public static String getReverseComplement(String sequence) {
+//        char[] complement = new char[sequence.length()];
+//        int jj = complement.length;
+//        for (int ii = 0; ii < sequence.length(); ii++) {
+//            char c = sequence.charAt(ii);
+//            jj--;
+//            switch (c) {
+//                case 'T':
+//                    complement[jj] = 'A';
+//                    break;
+//                case 'A':
+//                    complement[jj] = 'T';
+//                    break;
+//                case 'C':
+//                    complement[jj] = 'G';
+//                    break;
+//                case 'G':
+//                    complement[jj] = 'C';
+//                    break;
+//                default:
+//                    complement[jj] = c;
+//            }
+//        }
+//        return new String(complement);
+//    }
 }

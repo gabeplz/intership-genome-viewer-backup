@@ -2,15 +2,15 @@ package com.mycompany.minorigv.gffparser;
 import com.mycompany.minorigv.sequence.AminoAcidSequence;
 import com.mycompany.minorigv.sequence.TranslationManeger;
 import com.mycompany.minorigv.sequence.findORF;
+import com.mycompany.minorigv.sequence.makeCompStrand;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import static com.mycompany.minorigv.sequence.TranslationManeger.getReverseComplement;
+
 
 /**
  * Ophalen van de informatie doormiddel van de keuzes die de gebruiker maakt in de gui.
@@ -26,11 +26,10 @@ public class InformationUser {
      *                      daarvan de informatie.
      */
     public void getInfo(Organisms organisme) throws Exception {
-
+        // Keuzes van de gebruiker van de applicatie.
         String chromosoom_id = "NC_001133.9";
         int start = 2000;
         int stop = 5000;
-
         ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
 
         Chromosome chromosoom = null;
@@ -40,36 +39,46 @@ public class InformationUser {
             e.printStackTrace();
         }
 
+        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
+        getORFuser(chromosoom, chromosoom_id);
+        getAAuser(chromosoom);
+    }
+
+    /**
+     * Het verkrijgen van de objecten van de gewenste features en binnen een bepaalde range.
+     *
+     * @param chromosoom        Object met het gewenste chromosoom object
+     * @param start             Start positie die de gebruiker wilt zien
+     * @param stop              Stop positie tot waar de gebruiker het chromosoom wilt zien
+     * @param keuze_gebruiker   De keuze die de gebruiker maakt voor het tonen van welke features
+     */
+    public void getFeaturesUser(Chromosome chromosoom, int start, int stop, ArrayList<String> keuze_gebruiker){
         // Ophalen van alle features tussen een bepaalde start en stop codon.
         ArrayList<Feature> featureList = chromosoom.getFeaturesBetween(start,stop);
 
         // Filteren van de features die tussen een bepaalde start en stop codon zitten.
         ArrayList<Feature> featureFilteredList = chromosoom.filterFeatures(featureList, keuze_gebruiker);
 
-//        for(Feature feat: featureFilteredList){
-//            HashMap attributes = feat.getAttributes();
-//            // Lijst met alle Keys
-//            attributes.keySet();
-//            // Ophalen values
-//            attributes.get("locus_tag");
-//            //System.out.println(attributes.get("locus_tag"));
-//        }
-//
-//        for(ORF o: chromosoom.getListORF()){
-//            //System.out.println(o.getAaStart());
-//        }
-//
-//        ArrayList<ORF> hi = chromosoom.getListORF();
-//        //System.out.println(hi);
+        for(Feature feat: featureFilteredList){
+            HashMap attributes = feat.getAttributes();
+            // Lijst met alle Keys
+            attributes.keySet();
+            // Ophalen values
+            attributes.get("locus_tag");
+            System.out.println(attributes.get("locus_tag"));
+        }
+    }
 
-
-
-
-
-
-
-        Chromosome chr = organisme.getChromosome("NC_001133.9");
-        ArrayList orfs = findORF.searchORF("NC_001133.9",chr.getSeq());
+    /**
+     * Ophalen en opslaan van de ORFs uit de sequentie van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
+     *
+     * @param chr               Het object van het gekozen chromosoom (door de gebruiker)
+     * @param chromosoom_id     Het ID van de het gekozen chromosoom
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public void getORFuser(Chromosome chr, String chromosoom_id) throws FileNotFoundException, UnsupportedEncodingException {
+        ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
         chr.setListORF(orfs);
 
         // Wegschrijven ORFs
@@ -80,18 +89,22 @@ public class InformationUser {
             writer.println(o.getDNA_ORF());
         }
         writer.close();
+    }
 
-
+    /**
+     * Het vertalen van de sequentie uit het fasta bestand (chromosoom/contig sequentie) naar een aminozuursequentie
+     * in drie verschillende reading frames.
+     *
+     * @param chr       Chromosoom object van het gekozen chromosoom van de gebruiker.
+     */
+    public void getAAuser(Chromosome chr){
         TranslationManeger translator = new TranslationManeger();
-        HashMap<String, Object> readingframes = translator.start(chr.getSeq().toUpperCase());
+        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase());
 
-        String complement = getReverseComplement(chr.getSeq().toUpperCase());
-        String comp = new StringBuilder(complement).reverse().toString();
-        chr.setComp(comp);
         chr.setReadingframe(readingframes);
-        
+
         AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
         System.out.println(RF.getSequence());
-
+        
     }
 }

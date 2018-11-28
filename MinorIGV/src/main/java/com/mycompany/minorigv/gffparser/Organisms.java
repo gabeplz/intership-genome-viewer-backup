@@ -82,10 +82,10 @@ public class Organisms {
      */
     public void addSequence(String id, String Seq){
         if(chromosomes.containsKey(id)){
-            chromosomes.get(id).setSeq(Seq);
+            chromosomes.get(id).setSeqTemp(Seq);
         }else {
             Chromosome chr = new Chromosome();
-            chr.setSeq(Seq);
+            chr.setSeqTemp(Seq);
             chr.setId(Seq);
         }
     }

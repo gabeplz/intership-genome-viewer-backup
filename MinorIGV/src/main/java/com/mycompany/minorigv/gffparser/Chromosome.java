@@ -12,10 +12,10 @@ public class Chromosome {
 
     private String id;
     private ArrayList<Feature> features;
-    private String seq;
+    private String seqTemp;
     private ArrayList<ORF> listORF;
-    private String comp;
     private HashMap<String, Object> readingframe;
+    private String seqComp;
 
     /**
      * De constructor.
@@ -42,12 +42,15 @@ public class Chromosome {
     /**
      * De constructor.
      * @param id        Het id van het chromosoom/contig.
-     * @param seq
+     * @param seqTemp
+     * @param listORF
+     * @param seqComp
      */
-    public Chromosome(String id, String seq, ArrayList<ORF> listORF){
+    public Chromosome(String id, String seqTemp, ArrayList<ORF> listORF, String seqComp){
         this.id = id;
-        this.seq = seq;
+        this.seqTemp = seqTemp;
         this.listORF = listORF;
+        this.seqComp = seqComp;
     }
 
     /**
@@ -78,18 +81,18 @@ public class Chromosome {
 
     /**
      * Het returned de sequentie van het chromosoom/contig.
-     * @return  seq is een String. Het is de DNA sequentie van het chromosoom.
+     * @return  seqTemp is een String. Het is de DNA sequentie van het chromosoom.
      */
-    public String getSeq() {
-        return seq;
+    public String getSeqTemp() {
+        return seqTemp;
     }
 
     /**
      * Het genereerd de sequentie van het chromosoom/contig.
-     * @param seq
+     * @param seqTemp
      */
-    public void setSeq(String seq) {
-        this.seq = seq.toUpperCase();
+    public void setSeqTemp(String seqTemp) {
+        this.seqTemp = seqTemp;
     }
 
     /**
@@ -124,12 +127,12 @@ public class Chromosome {
         this.listORF = listORF;
     }
 
-    public String getComp() {
-        return comp;
+    public String getSeqComp() {
+        return seqComp;
     }
 
-    public void setComp(String comp) {
-        this.comp = comp;
+    public void setSeqComp(String seqComp) {
+        this.seqComp = seqComp;
     }
 
     public HashMap<String, Object> getReadingframe() {

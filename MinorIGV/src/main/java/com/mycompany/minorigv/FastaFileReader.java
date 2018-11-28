@@ -2,6 +2,7 @@ package com.mycompany.minorigv;
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.findORF;
+import com.mycompany.minorigv.sequence.makeCompStrand;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -47,12 +48,24 @@ public class FastaFileReader {
             }
 
             CH_list.put(id,chromosoomSeq.toString());
+
+            String seqTemp = chromosoomSeq.toString().toUpperCase();
             findORF orf = new findORF();
             System.out.println(id);
-            ArrayList<ORF> listORF = orf.searchORF(id ,chromosoomSeq.toString().toUpperCase());
-            // Toevoegen van sequentie en ID aan chromosoom object
-            Chromosome chr = new Chromosome(id, chromosoomSeq.toString(), listORF);
+            ArrayList<ORF> listORF = orf.searchORF(id ,seqTemp);
 
+            makeCompStrand makeComp = new makeCompStrand();
+
+            //Chromosome chr = new Chromosome();
+            String complement = makeComp.getReverseComplement(seqTemp);
+            String seqComp = new StringBuilder(complement).reverse().toString();
+
+            ArrayList<ORF> listORF_comp = orf.searchORF(id, seqComp, "seqComp");
+
+            listORF.addAll(listORF_comp);
+
+            // Toevoegen van sequentie en ID aan chromosoom object
+            Chromosome chromo = new Chromosome(id, seqTemp, listORF, seqComp);
         }
         return CH_list;
     }
