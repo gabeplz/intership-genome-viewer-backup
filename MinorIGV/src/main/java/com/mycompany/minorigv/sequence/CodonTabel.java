@@ -1,7 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2007-2015 Broad Institute
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package com.mycompany.minorigv.sequence;
 
@@ -12,8 +31,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
- * @author Gebruiker
+ * @author jrobinso, Stan Wehkamp
+ * bevat constructor for codontable
+ * bevat method "build" om arguments te genereren voor de constuctor
  */
 public class CodonTabel {
     private Integer key;
@@ -21,11 +41,20 @@ public class CodonTabel {
     private Set<String> starts;
     private Map<String, String> codonMap;
 
+        /**
+     * genereerd de argumenten codonMap en Starts voor de CodonTable constructor en returnt een new CodonTable
+     * @param key
+     * @param names
+     * @param base
+     * @param aas
+     * @param startString
+     * @return 
+     */
     public CodonTabel(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
-        this.key = key;
-        this.names = names;
-        this.starts = starts;       
-        this.codonMap = codonMap;                      
+        this.key = key;                 //functions as id for the table and as key for the hasmap that will contaion codonTable objects
+        this.names = names;             // array voor de namen van de codontabel
+        this.starts = starts;           // alternative start aminozuren
+        this.codonMap = codonMap;       // hasmap key: codon als sting, value: aminoacid als string
     }
 
 

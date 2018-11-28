@@ -7,13 +7,13 @@ package com.mycompany.minorigv.sequence;
 
 /**
  *
- * @author Gebruiker
+ * @author Stan Wehkamp
  */
 public class AminoAcidSequence {
- //   private final Strand strand;    
-    private final Strand strand;              // Genomic position for start of sequence.
-    private final String sequence; 
-    private final Integer codonTableKey;
+    
+    private final Strand strand;             // enum strand duid aan of de sequentie van de positieve of negative strand komt       
+    private final String sequence;           // aminozuur sequentie
+    private final Integer codonTableKey;     // key value van hasmap met codontabellen 
     
     public AminoAcidSequence(Strand strand, String sequence, Integer codonTableKey) {
         this.strand = strand;
