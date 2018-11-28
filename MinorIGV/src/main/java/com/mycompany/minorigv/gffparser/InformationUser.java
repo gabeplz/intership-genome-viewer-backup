@@ -78,7 +78,18 @@ public class InformationUser {
      * @throws UnsupportedEncodingException
      */
     public void getORFuser(Chromosome chr, String chromosoom_id) throws FileNotFoundException, UnsupportedEncodingException {
+        makeCompStrand compStrand = new makeCompStrand();
+        String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
+
+        String compSeq = new StringBuilder(comp).reverse().toString();
+        chr.setSeqComp(compSeq);
+
+        System.out.println(chr.getSeqComp().length());
+
         ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
+        ArrayList orfs_comp = findORF.searchORF(chromosoom_id,chr.getSeqComp(), "comp");
+        orfs.addAll(orfs_comp);
+
         chr.setListORF(orfs);
 
         // Wegschrijven ORFs
@@ -90,13 +101,7 @@ public class InformationUser {
         }
         writer.close();
 
-        makeCompStrand compStrand = new makeCompStrand();
-        String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
 
-        String compSeq = new StringBuilder(comp).reverse().toString();
-        chr.setSeqComp(compSeq);
-
-        System.out.println(chr.getSeqComp().length());
     }
 
     /**

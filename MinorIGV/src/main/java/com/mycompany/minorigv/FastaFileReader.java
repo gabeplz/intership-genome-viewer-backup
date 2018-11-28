@@ -47,7 +47,7 @@ public class FastaFileReader {
                 regel = f_reader.readLine();
             }
 
-            CH_list.put(id,chromosoomSeq.toString());
+            CH_list.put(id,chromosoomSeq.toString().toUpperCase());
         }
         return CH_list;
     }
