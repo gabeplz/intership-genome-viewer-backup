@@ -1,5 +1,5 @@
 package com.mycompany.minorigv;
-import com.mycompany.minorigv.gffparser.Chromosome;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class FastaFileReader {
      * @param pad           Pad van het fasta bestand
      * @throws IOException  Input/output exceptie
      */
-    public void getSequences(String pad) throws IOException{
+    public static String getSequences(String pad) throws IOException{
 
         BufferedReader f_reader = new BufferedReader(new FileReader(pad));
         ArrayList<String> CH_list = new ArrayList<>();
@@ -43,10 +43,10 @@ public class FastaFileReader {
             }
 
             // Toevoegen van sequentie en ID aan chromosoom object
-            Chromosome chr = new Chromosome(id, chromosoomSeq.toString());
+            return chromosoomSeq.toString();
 
         }
-
+        return "";
     }
 
     /**

@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -17,7 +19,7 @@ import java.awt.Font;
  * @author kahuub
  * Date: 19/11/18
  */
-public class GUI {
+public class GUI implements Observer {
 
 	private JFrame frame;
 	private ReferencePanel ReferencePaneel;
@@ -125,7 +127,17 @@ public class GUI {
 		codonPanel2.setContext(context);
 		liniaal.setContext(context);
 		organismPanel.setContext(context);
+
+		context.addObserver(this);
 		
 		
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		System.out.println("ree");
+		frame.validate();
+		frame.repaint();
+
 	}
 }

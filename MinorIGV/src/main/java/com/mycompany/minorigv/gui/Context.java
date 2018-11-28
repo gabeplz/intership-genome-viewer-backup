@@ -1,19 +1,20 @@
 package com.mycompany.minorigv.gui;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
+import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 
-public class Context {
+public class Context extends Observable {
 
 	private Organisms organism;
 	private Chromosome curChromosome;
 	private ArrayList<Feature> CurrentFeatureList;
 	private int start;
 	private int stop;
-	
 	
 	public Context(Organisms organism) {
 		this.organism = organism;
@@ -25,14 +26,22 @@ public class Context {
 	public void changeSize(int newStart, int newStop) {
 		this.start = newStart;
 		this.stop = newStop;
-		//updateView();
+		changed();
+	}
+
+	public void changed(){
+		setChanged();
+		notifyObservers();
 	}
 	
 	public Context(String test) {
 		
 		ArrayList<Chromosome> testList;
 		testList = new ArrayList<Chromosome>();
-		Chromosome Chr1 = new Chromosome("jan", "ACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTGACTG");
+
+		String seq = "ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG";
+
+		Chromosome Chr1 = new Chromosome("jan",seq );
 		testList.add(Chr1);
 		Organisms org = new Organisms("piet",testList);
 		this.organism = org;
@@ -78,5 +87,7 @@ public class Context {
 	public int getStop() {
 		return stop;
 	}
+
+
 		
 }
