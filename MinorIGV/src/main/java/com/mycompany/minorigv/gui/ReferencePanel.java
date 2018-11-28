@@ -13,13 +13,8 @@ public class ReferencePanel extends JPanel {
 	//Hardcoded String ff want moeten nog Context objecten hebben
 	Context cont;
 
-	String seq = "ATCGAATCGATCGATTCGATCGATCGATTCATCGATCGATCGATTCGATCGATTCGGTCGATCGATCGATCGATTCGATCGATTCGATTCG";
-	String rev_seq = "ATCGAATCGATCGATTCGATCGATCGATTCATCGATCGATCGATTCGATCGATTCGGTCGATCGATCGATCGATTCGATCGATTCGATTCG";
-
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
-		//g.setFont(new Font(Font.MONOSPACED, 12, Font.BOLD));
 
 		if(cont == null) return;
 		System.out.println("yeet");
@@ -29,14 +24,13 @@ public class ReferencePanel extends JPanel {
 		Dimension dim = this.getSize();
 		String seq = cont.getSubSequentie();
 
-
 		int length = cont.getStop()-cont.getStart();
 
 		double disBetween = dim.getWidth() / length;
 		String revComp = getReverseComplement(seq);
+		int j = length;
 		for(int i = 0; i < length; i++  ) {
-
-
+			j--;
 			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
 			int x_pos = info[1];
 
@@ -44,8 +38,8 @@ public class ReferencePanel extends JPanel {
 
 			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, 20);
 
-			this.chooseLetterColor(g,revComp.charAt(i));
-			DrawingTools.drawCenteredChar(g2, revComp.charAt(i), x_pos, 40);
+			this.chooseLetterColor(g,revComp.charAt(j));
+			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 40);
 			g.setColor(Color.BLACK);
 		}	
 

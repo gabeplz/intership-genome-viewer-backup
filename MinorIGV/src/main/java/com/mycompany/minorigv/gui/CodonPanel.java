@@ -15,9 +15,11 @@ import javax.swing.JPanel;
 public class CodonPanel extends JPanel{
 
 	Context cont;
+	Boolean forward;
 
 
-	public void init() {
+	public void init(Boolean strand) {
+		this.forward = strand;
 		this.setBackground(Color.ORANGE);
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
@@ -29,28 +31,30 @@ public class CodonPanel extends JPanel{
 		super.paintComponent(g);
 
 		String seq = cont.getSubSequentie();
+		int start = cont.getStart();
+		int stop = cont.getStop();
+		seq = forward ? seq : ReferencePanel.getReverseComplement(seq);
 
-		for (int f = 0; f < 3; f++) {
-			for (int i = f+1; i < seq.length()-1; i+=3) {
-				int[] info = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(),seq.length(), i);
+		for (int f = 1; f < 4; f++) {
+			for (int i = f; i < seq.length()-1; i+=3) {
+				int j = forward ? i : seq.length()-i;
+				int[] info = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(),seq.length(), j);
 				int x_pos = info[1];
-				int width = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(), i+1.5)[1];
-				width -= DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(),i-1.5)[1];
-				if(i%2 > 0) {
+				int width = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(), j+1.5)[1];
+				width -= DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(),j-1.5)[1];
+				if(j%2 > 0) {
 					g.setColor(new Color(42, 112, 150));
 				}
 				else{
 					g.setColor(new Color(127, 191, 226));
 				}
 
+				int y = (start + j) % 3;
 
-				DrawingTools.drawFilledRect(g, x_pos, 20*(f+1),width+1, 20);
+				DrawingTools.drawFilledRect(g, x_pos, 20+20*(y),width+1, 20);
 				g.setColor(Color.BLACK);
 
-				DrawingTools.drawCenteredChar(g,seq.charAt(i),x_pos,20*(f+1));
-
-
-
+				DrawingTools.drawCenteredChar(g,seq.charAt(j),x_pos,20+20*(y));
 
 			}
 
@@ -60,5 +64,9 @@ public class CodonPanel extends JPanel{
 
 	public void setContext(Context cont) {
 		this.cont = cont;
+	}
+
+	public void setForward(Boolean forward) {
+		this.forward = forward;
 	}
 }

@@ -100,13 +100,20 @@ public class GUI {
 		liniaal.init();
 		organism.add(liniaal);
 		
+
+		
+		CodonPanel codonPanel1 = new CodonPanel();
+		codonPanel1.init(true);
+		organism.add(codonPanel1);
+
 		ReferencePanel refpanel1 = new ReferencePanel();
 		refpanel1.init();
 		organism.add(refpanel1);
-		
-		CodonPanel codonPanel1 = new CodonPanel();
-		codonPanel1.init();
-		organism.add(codonPanel1);
+
+		CodonPanel codonPanel2 = new CodonPanel();
+		codonPanel2.init(false);
+		organism.add(codonPanel2);
+
 		
 		FeaturePanel features = new FeaturePanel();
 		features.init();
@@ -115,7 +122,9 @@ public class GUI {
 		context = new Context("hoi");
 		refpanel1.setContext(context);
 		codonPanel1.setContext(context);
-	    
+		codonPanel2.setContext(context);
+		liniaal.setContext(context);
+		organismPanel.setContext(context);
 		
 		
 	}

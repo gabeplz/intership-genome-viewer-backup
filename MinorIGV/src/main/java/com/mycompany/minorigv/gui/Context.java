@@ -25,7 +25,7 @@ public class Context {
 	public void changeSize(int newStart, int newStop) {
 		this.start = newStart;
 		this.stop = newStop;
-		updateView();
+		//updateView();
 	}
 	
 	public Context(String test) {
@@ -39,6 +39,10 @@ public class Context {
 		this.curChromosome = organism.getChromosomes().get(0);
 		start = 0;
 		stop = 50;
+	}
+
+	public int getLength(){
+		return stop-start;
 	}
 	
 	private void updateView() {
