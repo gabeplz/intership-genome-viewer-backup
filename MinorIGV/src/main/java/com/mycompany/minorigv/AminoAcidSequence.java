@@ -9,13 +9,13 @@ import java.util.List;
 
 /**
  *
- * @author Gebruiker
+ * @author jrobinso, Gebruiker
  */
 public class AminoAcidSequence {
    
     private final Strand strand;            // enum strand duid aan of de sequentie van de positieve of negative strand komt
     private final int start;                // Genomic position for start of sequence.
-    private final String sequence;          // nuc sequentie
+    private final String sequence;          // amino acid sequentie
     private final Integer codonTableKey;    // key value van hasmap met codontabellen 
     
     public AminoAcidSequence(Strand strand, int startPosition, String sequence, Integer codonTableKey) {

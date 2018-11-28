@@ -32,13 +32,17 @@ import java.util.Set;
 
 /**
  * @author jrobinso, Stan Wehkamp
+ * contains constructor for codontable
+ * contains funtion "build" to genarate arguments for the constructor
  */
 public class CodonTabel {
-    private Integer key;
-    private String[] names;
-    private Set<String> starts;
-    private Map<String, String> codonMap;
+    private Integer key;            //functions as id for the table and as key for the hasmap that will contaion codonTable objects
+    private String[] names;         // array for the names of the codon table
+    private Set<String> starts;     // alternative start aminoacids
+    private Map<String, String> codonMap;   // hasmap key: string codon, value: string aminoacid
 
+    
+    
     public CodonTabel(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
         this.key = key;
         this.names = names;
@@ -47,7 +51,7 @@ public class CodonTabel {
     }
 
     /**
-     * 
+     * generates the agument codonMap and Starts for the CodonTable contstructor and returns a new Codontable 
      * @param key
      * @param names
      * @param base
@@ -77,7 +81,7 @@ public class CodonTabel {
                     starts.add(aa);
                 }
             }
-
+            
             return new CodonTabel(key, names, starts, codonMap);
         }
 

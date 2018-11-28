@@ -23,7 +23,7 @@ public class helloWorld {
         
     
         System.out.println((TranslationManeger.start(nummer1)[3].getSequence()));
-//        System.out.println((TranslationManeger.start(nummer2)[0].getSequence()));
+
 
     }
 }

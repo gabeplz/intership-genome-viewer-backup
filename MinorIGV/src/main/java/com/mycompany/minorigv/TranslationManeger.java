@@ -36,45 +36,48 @@ import java.util.stream.Collectors;
 /**
  *
  * @author jrobinso, Stan Wehkamp
+ * 
+ * start method passes arguments needed for the constructors for CodonTable, AminoAcidSequence and to the own class method getaminoacied. 
+ * contains static classes to translate amino acids and make reverse complemantary sequence 
  */
 public class TranslationManeger {
     
-    public static final String[] BASE_SEQUENCES = {"TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",
+    public static final String[] BASE_SEQUENCES = {"TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded as the codon order is permanent in the format of the files
                                                    "TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
                                                    "TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
     
     public static final String TEST_AMINOVOLGORDE = "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG";
-    public static final String TEST_AMINOSTARTS = "---M---------------M---------------M----------------------------";
+    public static final String TEST_AMINOSTARTS =  "---M---------------M---------------M----------------------------";      // TEST_AMINOVOLGORDE, TEST_AMINOSTARTS will be read from a file in the future
     
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
    /**
-    * 
+    * returns a array containing 6 AminoacidSeqeance objects
     * @param chrom
     * @return 
     */ 
    public static AminoAcidSequence[] start(chromosometest chrom) {
-        String[] namen = {"chromosome1","kaas","baas"};
-        CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
+        String[] namen = {"chromosome1","kaas","baas"};                             //namen wil be read in from a file in the future
+        CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS); 
         
         
         
         String sequence = chrom.getRefsequence();
         
-        int start = 0;
-        int mod = start % 3;
-        int n1 = normalize3(3 - mod);;
+        int start = 0;                      // currently overly complicated way to give the following variables the values:
+        int mod = start % 3;                // n1 = 0, n2 = 1, n2 = 2
+        int n1 = normalize3(3 - mod);;      // in future start may be based on the reference frame and location on chromosome
         int n2 = normalize3(n1 + 1);
         int n3 = normalize3(n2 + 1);
 
 
-        //List
-        String AminoAcidsP1 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n1) , numer1);
+        
+        String AminoAcidsP1 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n1) , numer1);  // 6 amino acid strings are made for eacht reading frame
         String AminoAcidsP2 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n2) , numer1);
         String AminoAcidsP3 = TranslationManeger.getAminoAcids(Strand.POSITIVE, sequence.substring(n3) , numer1);
         
 
         final int len = sequence.length();
-        String AminoAcidsN1 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n1) , numer1);
+        String AminoAcidsN1 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n1) , numer1); // enum negative will cause a reverse complemantary sequence to be created and used
         String AminoAcidsN2 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n2) , numer1);
         String AminoAcidsN3 = TranslationManeger.getAminoAcids(Strand.NEGATIVE, sequence.substring(0, len - n3) , numer1);
  
@@ -82,14 +85,14 @@ public class TranslationManeger {
         
    
   
-        AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP1, numer1.getKey());
+        AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP1, numer1.getKey()); 
         AminoAcidSequence RF2 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP2, numer1.getKey());
         AminoAcidSequence RF3 = new AminoAcidSequence(Strand.POSITIVE, 1, AminoAcidsP3, numer1.getKey());
         AminoAcidSequence RF4 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN1, numer1.getKey());
         AminoAcidSequence RF5 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN2, numer1.getKey());
         AminoAcidSequence RF6 = new AminoAcidSequence(Strand.NEGATIVE, 1, AminoAcidsN3, numer1.getKey());
         
-         AminoAcidSequence[] TranslatedReadingFrames = {RF1, RF2, RF3, RF4, RF5, RF6};
+         AminoAcidSequence[] TranslatedReadingFrames = {RF1, RF2, RF3, RF4, RF5, RF6}; 
          
  
        
@@ -101,7 +104,8 @@ public class TranslationManeger {
         return n == 3 ? 0 : n;
     }  
     /**
-     * returns a string of aminoacids 
+     * returns a string of aminoacids using a given nucleotide sequence and codon table. the enum strand will lead to the sequence being used as
+     * is or for a reverse complamentary sequence to be created and used
      * 
      * @param direction
      * @param sequence
@@ -137,12 +141,14 @@ public class TranslationManeger {
     }
    
    /**
-    * 
-    * 
+    * creates a reverse complemantary strand of nucleotides. the order of the amino acids is equal to the order 
+    * at wich the nucleotides would be encouterd following the reading frame.
+    * so not alligned to the original sequence
+    * in: atgaaaccg -> out:ccgtttcat
     * @param sequence
     * @return 
     */ 
-   public static String getReverseComplement(String sequence) {        // in: atgaaaccg -> out:ccgtttcat
+   public static String getReverseComplement(String sequence) {        
         char[] complement = new char[sequence.length()];
         int jj = complement.length;
         for (int ii = 0; ii < sequence.length(); ii++) {
