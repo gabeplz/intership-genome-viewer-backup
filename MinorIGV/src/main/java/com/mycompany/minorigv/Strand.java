@@ -7,7 +7,7 @@ package com.mycompany.minorigv;
 
 /**
  *
- * @author Gebruiker
+ * @author Stan Wehkamp
  */
 public enum Strand {
     NONE, POSITIVE, NEGATIVE;
