@@ -60,9 +60,6 @@ public class TranslationManeger {
         readingframes.put("RF5", RF5);
         readingframes.put("RF6", RF6);
 
-
-
-
         return readingframes;
    }
 

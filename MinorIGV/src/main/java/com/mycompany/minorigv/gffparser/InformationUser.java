@@ -32,16 +32,16 @@ public class InformationUser {
         int stop = 5000;
         ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
 
-        Chromosome chromosoom = null;
+        Chromosome chromosoom = new Chromosome();
         try {
             chromosoom = organisme.getChromosome(chromosoom_id);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
+//        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
         getORFuser(chromosoom, chromosoom_id);
-        getAAuser(chromosoom);
+//        getAAuser(chromosoom);
     }
 
     /**
@@ -89,6 +89,14 @@ public class InformationUser {
             writer.println(o.getDNA_ORF());
         }
         writer.close();
+
+        makeCompStrand compStrand = new makeCompStrand();
+        String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
+
+        String compSeq = new StringBuilder(comp).reverse().toString();
+        chr.setSeqComp(compSeq);
+
+        System.out.println(chr.getSeqComp().length());
     }
 
     /**
@@ -104,7 +112,6 @@ public class InformationUser {
         chr.setReadingframe(readingframes);
 
         AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
-        System.out.println(RF.getSequence());
 
     }
 }

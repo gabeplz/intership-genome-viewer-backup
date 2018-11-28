@@ -133,6 +133,7 @@ public class Chromosome {
 
     public void setSeqComp(String seqComp) {
         this.seqComp = seqComp;
+
     }
 
     public HashMap<String, Object> getReadingframe() {
