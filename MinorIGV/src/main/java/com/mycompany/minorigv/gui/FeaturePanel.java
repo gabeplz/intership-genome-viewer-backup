@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 public class FeaturePanel extends JPanel {
 
 	public void init() {
-		this.setBackground(Color.green);
+		this.setBackground(Color.lightGray);
 		
 	}
 }

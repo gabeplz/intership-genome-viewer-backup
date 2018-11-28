@@ -55,10 +55,10 @@ public class ReferencePanel extends JPanel {
 			g.setColor(Color.RED);
 			break;
 		case 'C':
-			g.setColor(Color.GREEN);
+			g.setColor(new Color(0 ,153, 0));
 			break;
 		case 'G':
-			g.setColor(Color.YELLOW);
+			g.setColor(new Color(255 ,85, 0));
 			break;
 		case 't':
 			g.setColor(Color.BLUE);
@@ -67,10 +67,10 @@ public class ReferencePanel extends JPanel {
 			g.setColor(Color.RED);
 			break;
 		case 'c':
-			g.setColor(Color.GREEN);
+			g.setColor(new Color(0 ,153, 0));
 			break;
 		case 'g':
-			g.setColor(Color.YELLOW);
+			g.setColor(new Color(255 ,85, 0));
 			break;
 		default:
 			g.setColor(Color.BLACK);

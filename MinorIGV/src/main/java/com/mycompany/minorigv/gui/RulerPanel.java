@@ -10,7 +10,7 @@ public class RulerPanel extends JPanel {
 
 	public void init() {
 
-		this.setBackground(Color.PINK);
+		this.setBackground(Color.lightGray);
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
@@ -30,9 +30,9 @@ public class RulerPanel extends JPanel {
 		int stepSize = calculateStepSize(length);
 		int first = (start - (start % stepSize)) + stepSize - 1;
 
-		for (int j = first; j < length; j+= stepSize){
+		for (int j = first; j < stop; j+= stepSize){
 
-			int[] info = DrawingTools.calculateLetterPosition(this.getWidth(), length,Double.valueOf( j));
+			int[] info = DrawingTools.calculateLetterPosition(this.getWidth(), length,Double.valueOf(j-start));
 			int pos = info[1];
 			g.drawLine(pos,20,pos,0);
 

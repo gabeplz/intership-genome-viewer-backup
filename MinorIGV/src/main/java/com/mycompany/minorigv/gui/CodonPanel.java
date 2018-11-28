@@ -20,7 +20,7 @@ public class CodonPanel extends JPanel{
 
 	public void init(Boolean strand) {
 		this.forward = strand;
-		this.setBackground(Color.ORANGE);
+		//this.setBackground(Color.ORANGE);
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
