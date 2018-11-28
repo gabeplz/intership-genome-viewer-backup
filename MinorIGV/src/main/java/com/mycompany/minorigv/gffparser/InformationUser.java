@@ -112,7 +112,7 @@ public class InformationUser {
      */
     public void getAAuser(Chromosome chr){
         TranslationManeger translator = new TranslationManeger();
-        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase());
+        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), chr.getSeqComp().toUpperCase());
 
         chr.setReadingframe(readingframes);
 
