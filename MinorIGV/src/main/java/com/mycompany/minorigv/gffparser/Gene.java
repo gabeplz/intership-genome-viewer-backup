@@ -23,7 +23,7 @@ class Gene extends Feature{
      * @param phase       Het geeft het reading frame aan waarin het gen voorkomt (0,1,2 of ".")
      * @param attributes  HashMap met daarin de informatie over het gen.
      */
-    Gene(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
+    Gene(String seqid, int start, int end, String score, String strand, String phase, HashMap attributes) {
         super(seqid, start, end, score, strand, phase, attributes);
     }
 }

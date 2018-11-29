@@ -8,6 +8,7 @@ public class ORF extends Elements{
     private String idORF;
     private int aaStart;
     private int aaStop;
+    private int readingframe;
     //private String DNA_ORF;
 
     /**
@@ -23,10 +24,11 @@ public class ORF extends Elements{
      * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
      */
     public ORF(int start, int stop, int readingframe, String strand, String idORF, int aaStart, int aaStop) {
-        super(start, stop, strand, readingframe);
+        super(start, stop, strand);
         this.idORF = idORF;
         this.aaStart = aaStart;
         this.aaStop = aaStop;
+        this.readingframe = readingframe;
         //this.DNA_ORF = DNA_ORF;
     }
 
@@ -64,21 +66,21 @@ public class ORF extends Elements{
 //        this.stop = stop;
 //    }
 
-//    /**
-//     * Het ophalen van het reading frame waarin het ORF is gevonden
-//     * @return      De reading frame van het ORF met de strand (+1, +2, +3, -1, -2, -3)
-//     */
-//    public int getReadingframe() {
-//        return readingframe;
-//    }
-//
-//    /**
-//     * Het opslaan van het reading frame waarin het ORF is gevonden, samen met de strand waarin het ORF zit (+ of -)
-//     * @param readingframe      De reading frame waarin het ORF is gevonden met de strand (+1, +2, +3, -1, -2, -3)
-//     */
-//    public void setReadingframe(int readingframe) {
-//        this.readingframe = readingframe;
-//    }
+    /**
+     * Het ophalen van het reading frame waarin het ORF is gevonden
+     * @return      De reading frame van het ORF met de strand (+1, +2, +3, -1, -2, -3)
+     */
+    public int getReadingframe() {
+        return readingframe;
+    }
+
+    /**
+     * Het opslaan van het reading frame waarin het ORF is gevonden, samen met de strand waarin het ORF zit (+ of -)
+     * @param readingframe      De reading frame waarin het ORF is gevonden met de strand (+1, +2, +3, -1, -2, -3)
+     */
+    public void setReadingframe(int readingframe) {
+        this.readingframe = readingframe;
+    }
 
     /**
      * Het ophalen van het ID van het gevonden ORF

@@ -6,14 +6,14 @@ public class Elements {
     private int start;
     private int stop;
     private String strand;
-    private int phase;
 
 
-    Elements(int start, int end, String strand, int phase) {
+
+    Elements(int start, int end, String strand) {
         this.start = start;
         this.stop = end;
         this.strand = strand;
-        this.phase = phase;
+
     }
 
     public int getStart() {
@@ -40,11 +40,4 @@ public class Elements {
         this.strand = strand;
     }
 
-    public int getPhase() {
-        return phase;
-    }
-
-    public void setPhase(int phase) {
-        this.phase = phase;
-    }
 }

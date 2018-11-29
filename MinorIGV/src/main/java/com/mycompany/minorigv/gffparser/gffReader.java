@@ -53,19 +53,19 @@ public class gffReader {
                 // Als er in de regel in kolom 3 gene, mRNA, exon, CDS of region staat, bevat de regel relevante data dat wordt opgeslagen.
                 if (line.split("\\t")[2].equals("gene")) {
                     HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new Gene(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
+                    feat = new Gene(columns[1], Integer.parseInt(columns[3]), Integer.parseInt(columns[4]), columns[5], columns[6], columns[7], attribute);
                 } else if (line.split("\\t")[2].equals("mRNA")) {
                     HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new mRNA(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
+                    feat = new mRNA(columns[1], Integer.parseInt(columns[3]), Integer.parseInt(columns[4]), columns[5], columns[6], columns[7], attribute);
                 } else if (line.split("\\t")[2].equals("exon")) {
                     HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new Exon(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
+                    feat = new Exon(columns[1], Integer.parseInt(columns[3]), Integer.parseInt(columns[4]), columns[5], columns[6], columns[7], attribute);
                 } else if (line.split("\\t")[2].equals("CDS")) {
                     HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new CDS(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
+                    feat = new CDS(columns[1], Integer.parseInt(columns[3]), Integer.parseInt(columns[4]), columns[5], columns[6], columns[7], attribute);
                 } else if (line.split("\\t")[2].equals("region")) {
                     HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new Region(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
+                    feat = new Region(columns[1], Integer.parseInt(columns[3]), Integer.parseInt(columns[4]), columns[5], columns[6], columns[7], attribute);
                 }
                 chrom.addFeature(feat);
             }
