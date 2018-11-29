@@ -41,12 +41,12 @@ public class InformationUser {
 
         getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
         makeCompStrand compStrand = new makeCompStrand();
-        String seqComp = new StringBuilder(compStrand.getReverseComplement(chromosoom.getSeqTemp())).reverse().toString();
-        chromosoom.setListORF(seqComp);
+//        String seqComp = new StringBuilder(compStrand.getReverseComplement(chromosoom.getSeqTemp())).reverse().toString();
+//        chromosoom.setListORF(seqComp);
         //String seqComp = getSeqComp(chromosoom);
         //getORFuser(chromosoom, chromosoom_id, seqComp);
-        getAAuser(chromosoom, seqComp);
-        writeORF(chromosoom, seqComp);
+//        getAAuser(chromosoom, seqComp);
+//        writeORF(chromosoom, seqComp);
     }
 
     /**
