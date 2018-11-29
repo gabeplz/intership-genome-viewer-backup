@@ -43,6 +43,19 @@ public class TranslationManeger {
 
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
 
+ /**
+ *
+ * @author jrobinso, Stan Wehkamp
+ * 
+ * returns een hashmap
+ * 
+ * start method passes arguments die nodig zijn voor de constructors van CodonTable, AminoAcidSequence en naar de methode getaminoacid binnen de class
+ * contains static classes to translate amino acids and make reverse complemantary sequence 
+ * 
+ * @param sequence
+ * @param comp_sequence
+ * @return
+ */
     public static HashMap<String, Object> start(String sequence, String comp_sequence) {
         // namen = namen van codontabel
         String[] namen = {"chromosome1", "kaas", "baas"};

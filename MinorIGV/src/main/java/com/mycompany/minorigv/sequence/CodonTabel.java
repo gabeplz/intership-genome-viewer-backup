@@ -58,6 +58,7 @@ public class CodonTabel {
     }
 
 
+
     public static CodonTabel build(Integer key, String[] names, String[] base, String aas, String startString) {
 
             String base1 = base[0];
