@@ -120,7 +120,7 @@ public class TranslationManager {
      * @param huidigeTabel
      * @return 
      */
-    static String getAminoAcids(Strand direction, String sequence, CodonTabel huidigeTabel) {
+    public static String getAminoAcids(Strand direction, String sequence, CodonTabel huidigeTabel) {
         // in de toekomst vervang codontabel met key in codontabel hashmap
 
         // Sequence must be divisible by 3. It is the responsibility of the

@@ -1,6 +1,6 @@
 package com.mycompany.minorigv.gffparser;
 import com.mycompany.minorigv.sequence.AminoAcidSequence;
-import com.mycompany.minorigv.sequence.TranslationManeger;
+import com.mycompany.minorigv.sequence.TranslationManager;
 import com.mycompany.minorigv.sequence.findORF;
 import com.mycompany.minorigv.sequence.makeCompStrand;
 
@@ -112,7 +112,7 @@ public class InformationUser {
      * @param chr       Chromosoom object van het gekozen chromosoom van de gebruiker.
      */
     public void getAAuser(Chromosome chr){
-        TranslationManeger translator = new TranslationManeger();
+        TranslationManager translator = new TranslationManager();
         HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), chr.getSeqComp().toUpperCase());
 
         chr.setReadingframe(readingframes);
