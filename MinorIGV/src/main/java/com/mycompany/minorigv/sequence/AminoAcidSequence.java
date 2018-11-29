@@ -29,10 +29,6 @@ public class AminoAcidSequence {
         return sequence;
     }
 
-//    public boolean hasNonNullSequence() {
-//        return nonNullSequence;
-//    }
-
     public Integer getCodonTableKey() {
         return codonTableKey;
     }

@@ -9,7 +9,7 @@ public class makeCompStrand {
     * @param sequence
     * @return 
     */ 
-    public String getReverseComplement(String sequence) {
+    public static String getReverseComplement(String sequence) {
 
 
         char[] complement = new char[sequence.length()];
@@ -29,6 +29,18 @@ public class makeCompStrand {
                     break;
                 case 'G':
                     complement[jj] = 'C';
+                    break;
+                case 't':
+                    complement[jj] = 'a';
+                    break;
+                case 'a':
+                    complement[jj] = 't';
+                    break;
+                case 'c':
+                    complement[jj] = 'g';
+                    break;
+                case 'g':
+                    complement[jj] = 'c';
                     break;
                 default:
                     complement[jj] = c;

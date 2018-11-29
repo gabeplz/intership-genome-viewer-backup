@@ -36,115 +36,107 @@ import java.util.Set;
  * bevat method "build" om arguments te genereren voor de constuctor
  */
 public class CodonTabel {
-    private Integer key;
-    private String[] names;
-    private Set<String> starts;
-    private Map<String, String> codonMap;
+	private Integer key;
+	private String[] names;
+	private Set<String> starts;
+	private Map<String, String> codonMap;
 
-        /**
-     * genereerd de argumenten codonMap en Starts voor de CodonTable constructor en returnt een new CodonTable
-     * @param key
-     * @param names
-     * @param base
-     * @param aas
-     * @param startString
-     * @return 
-     */
-    public CodonTabel(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
-        this.key = key;                 //functions as id for the table and as key for the hasmap that will contaion codonTable objects
-        this.names = names;             // array voor de namen van de codontabel
-        this.starts = starts;           // alternative start aminozuren
-        this.codonMap = codonMap;       // hasmap key: codon als sting, value: aminoacid als string
-    }
+	/**
+	 * genereerd de argumenten codonMap en Starts voor de CodonTable constructor en returnt een new CodonTable
+	 * @param key functions as id for the table and as key for the hasmap that will contaion codonTable objects
+	 * @param names array voor de namen van de codontabel
+	 * @param base alternative start aminozuren
+	 * @param aas hashmap key: codon als sting, value: aminoacid als string
+	 * @param startString
+	 * @return 
+	 */
+	public CodonTabel(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
+		this.key = key;                 //
+		this.names = names;             // 
+		this.starts = starts;           // 
+		this.codonMap = codonMap;       // 
+	}
 
+	public static CodonTabel build(Integer key, String[] names, String[] base, String aas, String startString) {
 
+		String base1 = base[0];
+		String base2 = base[1];
+		String base3 = base[2];
 
-    public static CodonTabel build(Integer key, String[] names, String[] base, String aas, String startString) {
+		//   checkLengths(base1, base2, base3, aas, startString);
 
-            String base1 = base[0];
-            String base2 = base[1];
-            String base3 = base[2];
-            
-         //   checkLengths(base1, base2, base3, aas, startString);
+		Map<String, String> codonMap = new HashMap<String, String>(aas.length());
+		Set<String> starts = new HashSet<String>(aas.length());
 
-            Map<String, String> codonMap = new HashMap<String, String>(aas.length());
-            Set<String> starts = new HashSet<String>(aas.length());
+		for (int cc = 0; cc < aas.length(); cc++) {
+			String codon = base1.substring(cc, cc + 1) + base2.substring(cc, cc + 1) + base3.substring(cc, cc + 1);
+			String aa = aas.substring(cc, cc +1);
+			//                AminoAcid aa = AANameMap.get(aas.substring(cc, cc + 1));
 
-            for (int cc = 0; cc < aas.length(); cc++) {
-                String codon = base1.substring(cc, cc + 1) + base2.substring(cc, cc + 1) + base3.substring(cc, cc + 1);
-                String aa = aas.substring(cc, cc +1);
-//                AminoAcid aa = AANameMap.get(aas.substring(cc, cc + 1));
+			codonMap.put(codon, aa);
 
-                codonMap.put(codon, aa);
+			if (startString.charAt(cc) == 'M') {
+				starts.add(aa);
+			}
+		}
 
-                if (startString.charAt(cc) == 'M') {
-                    starts.add(aa);
-                }
-            }
+		return new CodonTabel(key, names, starts, codonMap);
+	}
 
-            return new CodonTabel(key, names, starts, codonMap);
-        }
+	/**
+	 * @return the key
+	 */
+	public Integer getKey() {
+		return key;
+	}
 
-    /**
-     * @return the key
-     */
-    public Integer getKey() {
-        return key;
-    }
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(Integer key) {
+		this.key = key;
+	}
 
-    /**
-     * @param key the key to set
-     */
-    public void setKey(Integer key) {
-        this.key = key;
-    }
+	/**
+	 * @return the names
+	 */
+	public String[] getNames() {
+		return names;
+	}
 
-    /**
-     * @return the names
-     */
-    public String[] getNames() {
-        return names;
-    }
+	/**
+	 * @param names the names to set
+	 */
+	public void setNames(String[] names) {
+		this.names = names;
+	}
 
-    /**
-     * @param names the names to set
-     */
-    public void setNames(String[] names) {
-        this.names = names;
-    }
+	/**
+	 * @return the starts
+	 */
+	public Set<String> getStarts() {
+		return starts;
+	}
 
-    /**
-     * @return the starts
-     */
-    public Set<String> getStarts() {
-        return starts;
-    }
+	/**
+	 * @param starts the starts to set
+	 */
+	public void setStarts(Set<String> starts) {
+		this.starts = starts;
+	}
 
-    /**
-     * @param starts the starts to set
-     */
-    public void setStarts(Set<String> starts) {
-        this.starts = starts;
-    }
+	/**
+	 * @return the codonMap
+	 */
+	public Map<String, String> getCodonMap() {
+		return codonMap;
+	}
 
-    /**
-     * @return the codonMap
-     */
-    public Map<String, String> getCodonMap() {
-        return codonMap;
-    }
-
-    /**
-     * @param codonMap the codonMap to set
-     */
-    public void setCodonMap(Map<String, String> codonMap) {
-        this.codonMap = codonMap;
-    }
-
-
-
-
-
-
+	/**
+	 * @param codonMap the codonMap to set
+	 */
+	public void setCodonMap(Map<String, String> codonMap) {
+		this.codonMap = codonMap;
+	}
 }
 

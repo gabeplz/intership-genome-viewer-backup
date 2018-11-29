@@ -24,25 +24,30 @@
  */
 package com.mycompany.minorigv.sequence;
 
-import com.mycompany.minorigv.gffparser.Chromosome;
-
 import java.util.*;
+
+import com.mycompany.minorigv.gffparser.main;
 
 
 /**
  * @author jrobinso. Stan Wehkamp
  */
-public class TranslationManeger {
+public class TranslationManager {
 
-    public static final String[] BASE_SEQUENCES = {"TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
-            "TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
-            "TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
+    public static final String[] BASE_SEQUENCES = {	"TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
+    												"TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
+    												"TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
 
     public static final String TEST_AMINOVOLGORDE = "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG";     // TEST_AMINOVOLGORDE, TEST_AMINOSTARTS worden in de toekomst uit een file gegenereed
-    public static final String TEST_AMINOSTARTS = "---M---------------M---------------M----------------------------";
+    public static final String TEST_AMINOSTARTS = 	"---M---------------M---------------M----------------------------";
 
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
 
+    
+    public static CodonTabel buildDefault() {
+		return CodonTabel.build(1,new String[]{"hoi","hai"}, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
+		
+	}
  /**
  *
  * @author jrobinso, Stan Wehkamp
@@ -60,7 +65,7 @@ public class TranslationManeger {
         // namen = namen van codontabel
         String[] namen = {"chromosome1", "kaas", "baas"};
         // maak codontabel aan
-        CodonTabel numer1 = CodonTabel.build(1, namen, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
+        CodonTabel numer1 = buildDefault();
 
         int start = 0;                          //huidig onodig gecompliceerde maneer om de volgede variabelen de volgende waardes te geven:
         int mod = start % 3;                    // n1 = 0, n2 = 1, n2 = 2
@@ -100,6 +105,12 @@ public class TranslationManeger {
     private static int normalize3(int n) {
         return n == 3 ? 0 : n;
     }
+    
+    public static void main(String[] args) {
+		String seq = "GGTCTCTCTGGTTAGACCAGATCTGAGCCTGGGAGCTCTCTGGCTAACTAGGGAACCCACTGCTTAAGCC";
+		CodonTabel tabel = buildDefault();
+		System.out.println(getAminoAcids(Strand.NEGATIVE,seq,tabel));
+	}
 
      /**
      * retuns een string van aminozuren gegenereed van een nucleotide sequentie en een codontabel. de enum strand zort ervoor dat de sequentie word gebruikt zoal het is of gereversed word
@@ -114,16 +125,16 @@ public class TranslationManeger {
 
         // Sequence must be divisible by 3. It is the responsibility of the
         // calling program to send a sequence properly aligned.
-        int readLength = sequence.length() / 3;
+        int readLength = sequence.length()/3;
         List<String> acids = new ArrayList<String>(readLength);
-
+        
         if (direction == Strand.NEGATIVE) {
-            sequence = new StringBuilder(sequence).reverse().toString();
+            sequence = makeCompStrand.getReverseComplement(sequence);
         }
         
         for (int i = 0; i <= sequence.length() - 3; i += 3) {
             String codon = sequence.substring(i, i + 3).toUpperCase();
-            String aa = huidigeTabel.getCodonMap().get(codon);
+            String aa = toAA(codon, huidigeTabel);
             acids.add(aa);
         }
 
@@ -133,5 +144,11 @@ public class TranslationManeger {
 
         String listString = String.join("", acids);     // veranderd de arraylist in een string
         return listString;
+    }
+    
+    
+    
+    public static String toAA(String codon,CodonTabel table) {
+    	return table.getCodonMap().get(codon);
     }
 }
