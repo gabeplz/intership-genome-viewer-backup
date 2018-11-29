@@ -132,8 +132,9 @@ public class Chromosome {
 //        makeCompStrand compStrand = new makeCompStrand();
 //        String seqComp = new StringBuilder(compStrand.getReverseComplement(getSeqTemp())).reverse().toString();
         // ORFs zoeken in de template en complementaire strand.
+        String Comp = new StringBuilder(seqComp).reverse().toString();
         listORF = findORF.searchORF(getId(), getSeqTemp());
-        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp");
+        ArrayList orfs_comp = findORF.searchORF(getId(), Comp, "comp");
         listORF.addAll(orfs_comp);
         this.listORF = listORF;
     }

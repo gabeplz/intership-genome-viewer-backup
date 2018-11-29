@@ -123,7 +123,6 @@ public class InformationUser {
      */
     public void writeORF(Chromosome chr, String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
         //Wegschrijven ORFs
-        String Comp = new StringBuilder(seqComp).reverse().toString();
         System.out.println(seqComp);
         System.out.println(chr.getSeqTemp());
         ArrayList<ORF> listORF = chr.getListORF();
@@ -133,9 +132,7 @@ public class InformationUser {
             if(o.getReadingframe() > 0){
                 writer.println(chr.getSeqTemp().substring(o.getStart(), o.getStop()));
             }else{
-                int stopPositie = chr.getSeqTemp().length() - o.getStop();
-                int startPositie = chr.getSeqTemp().length() - o.getStart();
-                writer.println(Comp.substring(startPositie, stopPositie));
+                writer.println(seqComp.substring(o.getStop(), o.getStart()));
             }
         }
         writer.close();
