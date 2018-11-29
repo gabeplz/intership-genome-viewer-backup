@@ -40,8 +40,13 @@ public class InformationUser {
         }
 
         getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
-        getORFuser(chromosoom, chromosoom_id);
-        getAAuser(chromosoom);
+        makeCompStrand compStrand = new makeCompStrand();
+        String seqComp = new StringBuilder(compStrand.getReverseComplement(chromosoom.getSeqTemp())).reverse().toString();
+        chromosoom.setListORF(seqComp);
+        //String seqComp = getSeqComp(chromosoom);
+        //getORFuser(chromosoom, chromosoom_id, seqComp);
+        getAAuser(chromosoom, seqComp);
+        writeORF(chromosoom, seqComp);
     }
 
     /**
@@ -68,41 +73,31 @@ public class InformationUser {
         }
     }
 
-    /**
-     * Het maken van de complementaire strand. Ophalen en opslaan van de ORFs uit de sequentie
-     * van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
-     *
-     * @param chr               Het object van het gekozen chromosoom (door de gebruiker)
-     * @param chromosoom_id     Het ID van de het gekozen chromosoom
-     * @throws FileNotFoundException
-     * @throws UnsupportedEncodingException
-     */
-    public void getORFuser(Chromosome chr, String chromosoom_id) throws FileNotFoundException, UnsupportedEncodingException {
-        // Complementaire strand maken
-        makeCompStrand compStrand = new makeCompStrand();
-        String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
 
-        String compSeq = new StringBuilder(comp).reverse().toString();
-        chr.setSeqComp(compSeq);
+//    public String getSeqComp(Chromosome chr){
+//        // Complementaire strand maken
+//        makeCompStrand compStrand = new makeCompStrand();
+//        String seqComp = new StringBuilder(compStrand.getReverseComplement(chr.getSeqTemp())).reverse().toString();
+//        return seqComp;
+//    }
 
-        // ORFs zoeken in de template en complementaire strand.
-        ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
-        ArrayList orfs_comp = findORF.searchORF(chromosoom_id,chr.getSeqComp(), "comp");
-        orfs.addAll(orfs_comp);
-
-        chr.setListORF(orfs);
-
-        // Wegschrijven ORFs
-        ArrayList<ORF> listORF = chr.getListORF();
-        PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
-        for(ORF o: listORF){
-            writer.println(">ORF" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop());
-            writer.println(o.getDNA_ORF());
-        }
-        writer.close();
-
-
-    }
+//    /**
+//     * Het maken van de complementaire strand. Ophalen en opslaan van de ORFs uit de sequentie
+//     * van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
+//     *
+//     * @param chr               Het object van het gekozen chromosoom (door de gebruiker)
+//     * @param chromosoom_id     Het ID van de het gekozen chromosoom
+//     * @throws FileNotFoundException
+//     * @throws UnsupportedEncodingException
+//     */
+//    public void getORFuser(Chromosome chr, String chromosoom_id, String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
+////        // ORFs zoeken in de template en complementaire strand.
+////        ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
+////        ArrayList orfs_comp = findORF.searchORF(chromosoom_id, seqComp, "comp");
+////        orfs.addAll(orfs_comp);
+////
+////        chr.setListORF(orfs);
+//    }
 
     /**
      * Het vertalen van de sequentie uit het fasta bestand (chromosoom/contig sequentie) naar een aminozuursequentie
@@ -110,13 +105,39 @@ public class InformationUser {
      *
      * @param chr       Chromosoom object van het gekozen chromosoom van de gebruiker.
      */
-    public void getAAuser(Chromosome chr){
+    public HashMap<String, Object> getAAuser(Chromosome chr, String seqComp){
         TranslationManeger translator = new TranslationManeger();
-        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), chr.getSeqComp().toUpperCase());
+        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), seqComp.toUpperCase());
 
-        chr.setReadingframe(readingframes);
+        //chr.setReadingframe(readingframes);
 
-        AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
+        //AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
+        return readingframes;
+    }
 
+    /**
+     *
+     * @param chr
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public void writeORF(Chromosome chr, String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
+        //Wegschrijven ORFs
+        String Comp = new StringBuilder(seqComp).reverse().toString();
+        System.out.println(seqComp);
+        System.out.println(chr.getSeqTemp());
+        ArrayList<ORF> listORF = chr.getListORF();
+        PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+        for(ORF o: listORF){
+            writer.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop());
+            if(o.getReadingframe() > 0){
+                writer.println(chr.getSeqTemp().substring(o.getStart(), o.getStop()));
+            }else{
+                int stopPositie = chr.getSeqTemp().length() - o.getStop();
+                int startPositie = chr.getSeqTemp().length() - o.getStart();
+                writer.println(Comp.substring(startPositie, stopPositie));
+            }
+        }
+        writer.close();
     }
 }

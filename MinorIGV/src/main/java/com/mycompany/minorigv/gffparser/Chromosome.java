@@ -1,5 +1,10 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.minorigv.sequence.findORF;
+import com.mycompany.minorigv.sequence.makeCompStrand;
+
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,7 +20,7 @@ public class Chromosome {
     private String seqTemp;
     private ArrayList<ORF> listORF;
     private HashMap<String, Object> readingframe;
-    private String seqComp;
+    //private String seqComp;
 
     /**
      * De constructor.
@@ -44,13 +49,13 @@ public class Chromosome {
      * @param id        Het id van het chromosoom/contig
      * @param seqTemp   Sequentie van de template strand
      * @param listORF   Lijst met alle ORFs gevonden
-     * @param seqComp   Sequentie van de complementaire strand
+     * //@param seqComp   Sequentie van de complementaire strand
      */
-    public Chromosome(String id, String seqTemp, ArrayList<ORF> listORF, String seqComp){
+    public Chromosome(String id, String seqTemp, ArrayList<ORF> listORF){
         this.id = id;
         this.seqTemp = seqTemp;
         this.listORF = listORF;
-        this.seqComp = seqComp;
+        //this.seqComp = seqComp;
     }
 
     /**
@@ -123,26 +128,38 @@ public class Chromosome {
      * Het genereerd de ArrayList met daarin de ORFs
      * @param listORF is een ArrayList met daarin de ORFs.
      */
-    public void setListORF(ArrayList<ORF> listORF) {
+    public void setListORF(String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
+//        makeCompStrand compStrand = new makeCompStrand();
+//        String seqComp = new StringBuilder(compStrand.getReverseComplement(getSeqTemp())).reverse().toString();
+        // ORFs zoeken in de template en complementaire strand.
+        listORF = findORF.searchORF(getId(), getSeqTemp());
+        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp");
+        listORF.addAll(orfs_comp);
         this.listORF = listORF;
     }
 
-    /**
-     * Het ophalen van de complementaire strand sequentie (DNA)
-     * @return      De DNA sequentie van de complementaire strand
-     */
-    public String getSeqComp() {
-        return seqComp;
-    }
-
-    /**
-     * Het opslaan van de complementaire strand (DNA sequentie)
-     * @param seqComp   De complementaire DNA sequentie
-     */
-    public void setSeqComp(String seqComp) {
-        this.seqComp = seqComp;
-
-    }
+//    /**
+//     * Het ophalen van de complementaire strand sequentie (DNA)
+//     * @return      De DNA sequentie van de complementaire strand
+//     */
+//    public String getSeqComp() {
+//        return seqComp;
+//    }
+//
+//    /**
+//     * Het opslaan van de complementaire strand (DNA sequentie)
+//     * @param seqComp   De complementaire DNA sequentie
+//     */
+//    public void setSeqComp(String seqComp) {
+//        //this.seqComp = seqComp;
+//        // Complementaire strand maken
+//        makeCompStrand compStrand = new makeCompStrand();
+//        String comp = compStrand.getReverseComplement(getSeqTemp().toUpperCase());
+//
+//        String seqComp = new StringBuilder(comp).reverse().toString();
+//        //setSeqComp(compSeq);
+//
+//    }
 
     /**
      * Hashmap met als key de readingframes (RF1, RF2, ..., RF6) en als value de aminozuursequentie

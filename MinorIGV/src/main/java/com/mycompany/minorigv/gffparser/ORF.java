@@ -8,10 +8,10 @@ public class ORF {
     private int start;
     private int stop;
     private int readingframe;
-    private int idORF;
+    private String idORF;
     private int aaStart;
     private int aaStop;
-    private String DNA_ORF;
+    //private String DNA_ORF;
 
     /**
      *
@@ -23,16 +23,16 @@ public class ORF {
      * @param idORF             Het ID dat wordt meegegeven aan het ORF om ORFs te kunnen onderscheiden
      * @param aaStart           Start positie van het aminozuur
      * @param aaStop            Stop positie van het aminozuur
-     * @param DNA_ORF           De DNA sequentie van het gevonden ORF
+     * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
      */
-    public ORF(int start, int stop, int readingframe, int idORF, int aaStart, int aaStop, String DNA_ORF) {
+    public ORF(int start, int stop, int readingframe, String idORF, int aaStart, int aaStop) {
         this.start = start;
         this.stop = stop;
         this.readingframe = readingframe;
         this.idORF = idORF;
         this.aaStart = aaStart;
         this.aaStop = aaStop;
-        this.DNA_ORF = DNA_ORF;
+        //this.DNA_ORF = DNA_ORF;
     }
 
     /**
@@ -89,7 +89,7 @@ public class ORF {
      * Het ophalen van het ID van het gevonden ORF
      * @return      Een ID voor het ORF
      */
-    public int getIdORF() {
+    public String getIdORF() {
         return idORF;
     }
 
@@ -97,7 +97,7 @@ public class ORF {
      * Het opslaan van het ID van het gevonden ORF
      * @param idORF     ID van het ORF
      */
-    public void setIdORF(int idORF) {
+    public void setIdORF(String idORF) {
         this.idORF = idORF;
     }
 
@@ -133,19 +133,19 @@ public class ORF {
         this.aaStop = aaStop;
     }
 
-    /**
-     * Het ophalen van de DNA sequentie van het ORF
-     * @return          De DNA sequentie van het ORF
-     */
-    public String getDNA_ORF() {
-        return DNA_ORF;
-    }
-
-    /**
-     * Het opslaan van de DNA sequentie van het ORF
-     * @param DNA_ORF   De DNA sequentie van het ORF
-     */
-    public void setDNA_ORF(String DNA_ORF) {
-        this.DNA_ORF = DNA_ORF;
-    }
+//    /**
+//     * Het ophalen van de DNA sequentie van het ORF
+//     * @return          De DNA sequentie van het ORF
+//     */
+//    public String getDNA_ORF() {
+//        return DNA_ORF;
+//    }
+//
+//    /**
+//     * Het opslaan van de DNA sequentie van het ORF
+//     * @param DNA_ORF   De DNA sequentie van het ORF
+//     */
+//    public void setDNA_ORF(String DNA_ORF) {
+//        this.DNA_ORF = DNA_ORF;
+//    }
 }

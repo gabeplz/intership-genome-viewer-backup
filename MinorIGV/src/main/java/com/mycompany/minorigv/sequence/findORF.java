@@ -50,7 +50,9 @@ public class findORF {
             int aaStart = (int) Math.ceil(start/3.0);
             int aaStop = (int) Math.ceil(stop/3.0);
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
+            String id_ORF = "ORF" + idORF +"_T";
+
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop);
             listORF.add(ORF_Object);
         }
         return listORF;
@@ -74,8 +76,8 @@ public class findORF {
         ArrayList<ORF> listORF = new ArrayList<>();
 
         while(match.find()){
-            int start = seq.length() - match.start() -3;   // Positie van het startcodon op de orginele sequentie (+)
-            int stop = seq.length() - match.end() -3;      // Positie van het stopcodon op de orginele sequentie (+)
+            int start = seq.length() - match.start();   // Positie van het startcodon op de orginele sequentie (+)
+            int stop = seq.length() - match.end();      // Positie van het stopcodon op de orginele sequentie (+)
             int readingframe;
             idORF++;
 
@@ -94,7 +96,9 @@ public class findORF {
             int aaStart = (int) Math.ceil(start/3.0);
             int aaStop = (int) Math.ceil(stop/3.0);
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, idORF, aaStart, aaStop, match.group());
+            String id_ORF = "ORF" + idORF +"_C";
+
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop);
             listORF.add(ORF_Object);
 
         }
