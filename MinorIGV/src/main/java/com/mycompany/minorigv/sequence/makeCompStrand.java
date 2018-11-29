@@ -9,7 +9,7 @@ public class makeCompStrand {
     * @param sequence
     * @return 
     */ 
-    public String getReverseComplement(String sequence) {
+    public static String getReverseComplement(String sequence) {
         char[] complement = new char[sequence.length()];
         int jj = complement.length;
         for (int ii = 0; ii < sequence.length(); ii++) {

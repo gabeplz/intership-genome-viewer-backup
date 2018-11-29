@@ -128,13 +128,11 @@ public class Chromosome {
      * Het genereerd de ArrayList met daarin de ORFs
      * @param listORF is een ArrayList met daarin de ORFs.
      */
-    public void setListORF(String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
-//        makeCompStrand compStrand = new makeCompStrand();
-//        String seqComp = new StringBuilder(compStrand.getReverseComplement(getSeqTemp())).reverse().toString();
+    public void setListORF() throws FileNotFoundException, UnsupportedEncodingException {
         // ORFs zoeken in de template en complementaire strand.
-        String Comp = new StringBuilder(seqComp).reverse().toString();
+        String seqComp = makeCompStrand.getReverseComplement(getSeqTemp());
         listORF = findORF.searchORF(getId(), getSeqTemp());
-        ArrayList orfs_comp = findORF.searchORF(getId(), Comp, "comp");
+        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp");
         listORF.addAll(orfs_comp);
         this.listORF = listORF;
     }
