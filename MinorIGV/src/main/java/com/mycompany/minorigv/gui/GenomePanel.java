@@ -116,7 +116,6 @@ public class GenomePanel extends JPanel implements Observer {
 	}
 
 	public void changedContext(){
-		System.out.println(cont.getChromosomeNames());
 		DefaultComboBoxModel model = new DefaultComboBoxModel( cont.getChromosomeNames() );
 		Chromosome.setModel( model );
 

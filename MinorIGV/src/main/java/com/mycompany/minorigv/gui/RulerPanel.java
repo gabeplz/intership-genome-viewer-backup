@@ -37,14 +37,6 @@ public class RulerPanel extends JPanel {
 			g.drawLine(pos,20,pos,0);
 
 		}
-
-		System.out.println(calculateStepSize(length));
-	}
-
-	public static void main(String[] args){
-
-		System.out.println(calculateStepSize(2000001));
-
 	}
 
 	public static int calculateStepSize(int length){
