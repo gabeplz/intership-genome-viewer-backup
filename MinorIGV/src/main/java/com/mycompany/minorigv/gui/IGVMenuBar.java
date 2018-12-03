@@ -1,5 +1,8 @@
 package com.mycompany.minorigv.gui;
 
+import com.mycompany.minorigv.FastaFileChooser;
+import com.mycompany.minorigv.FastaFileReader;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,12 +13,15 @@ import javax.swing.JMenuItem;
 
 public class IGVMenuBar extends JMenuBar {
 
+	private Context cont;
+
 	public void init()
 
 	{
 		
 		this.setPreferredSize(new Dimension(200,25));
 		this.setMinimumSize(new Dimension(100,25));
+
 
 		// Define all the items for the menu bar that will have sub items
 		JMenu Files, Tools;
@@ -85,9 +91,19 @@ public class IGVMenuBar extends JMenuBar {
 	}
 	// test button action listener
 	private void loadReferenceAction() {
+		try{
+		FastaFileChooser fasta = new FastaFileChooser();
+		String path = fasta.fastafile();
+		cont.addFasta(path);
+
+
+
 
 		System.out.println("load reference test");
+	}catch (Exception e){}
 	}
+
+
 	private void OpenDataAction() {
 		System.out.println("load data test");
 	}
@@ -99,6 +115,10 @@ public class IGVMenuBar extends JMenuBar {
 	}
 	private void BlastAction() {
 		System.out.println("BLAST");
+	}
+
+	public void setContext(Context cont) {
+		this.cont = cont;
 	}
 
 }

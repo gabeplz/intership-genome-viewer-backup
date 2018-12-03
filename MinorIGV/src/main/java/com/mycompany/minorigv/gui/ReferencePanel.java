@@ -39,7 +39,7 @@ public class ReferencePanel extends JPanel {
 			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, 20);
 
 			this.chooseLetterColor(g,revComp.charAt(j));
-			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 40);
+			DrawingTools.drawCenteredChar(g2, revComp.charAt(i), x_pos, 40);
 			g.setColor(Color.BLACK);
 		}
 
@@ -85,10 +85,10 @@ public class ReferencePanel extends JPanel {
 	 */
 	public static String getReverseComplement(String sequence) {
 		char[] complement = new char[sequence.length()];
-		int jj = complement.length;
+		int jj = 0;
 		for (int ii = 0; ii < sequence.length(); ii++) {
 			char c = sequence.charAt(ii);
-			jj--;
+
 			switch (c) {
 			case 'T':
 				complement[jj] = 'A';
@@ -117,6 +117,7 @@ public class ReferencePanel extends JPanel {
 			default:
 				complement[jj] = c;
 			}
+			jj++;
 		}
 		return new String(complement);
 	}

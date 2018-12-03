@@ -34,33 +34,33 @@ public class CodonPanel extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
+
 		String seq = cont.getSubSequentie();
 		int start = cont.getStart();
 		int stop = cont.getStop();
-		
+
 		seq = forward ? seq : makeCompStrand.getReverseComplement(seq);
-		
+
 		Strand direction = forward ? Strand.POSITIVE : Strand.NEGATIVE;
-		
+
 		CodonTabel huidigeTabel = TranslationManager.buildDefault();
-		
+
 		int k = forward ? +1 : -1;
-		
-		
+
+
 		for (int f = 0; f < 3; f++) {
 			String aaSeq = TranslationManager.getAminoAcids(Strand.POSITIVE,seq.substring(f),huidigeTabel);
 			int aa = 0;
 			for (int i = f; i < seq.length()-2; i+=3) {
-				
+
 				int j = forward ? i : seq.length()-1-i;
-				
+
 				int[] info = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(),seq.length(), j+k);
 				int x_pos = info[1];
-				
+
 				int width = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(), j+1.5)[1];
 				width -= DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(),j-1.5)[1];
-				
+
 				if(j%2 > 0) {
 					g.setColor(new Color(42, 112, 150));
 				}
@@ -72,7 +72,7 @@ public class CodonPanel extends JPanel{
 
 				DrawingTools.drawFilledRect(g, x_pos, 20+20*(y),width+1, 20);
 				g.setColor(Color.BLACK);
-				
+
 				DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,20+20*(y));
 				aa++;
 			}
