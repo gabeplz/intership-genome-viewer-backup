@@ -102,13 +102,6 @@ public class Organisms {
         this.chromosomes.put(chr.getId(),chr);
 }
 
-//    /**
-//     * Het genereerd een ArrayList met daarin de chromosomen die zich in het organisme bevinden.
-//     * @param chromosomes is een ArrayList met daarin de chromosomen.
-//     */
-//    //public void setChromosomes(ArrayList<Chromosome> chromosomes) {
-//    //    this.chromosomes = chromosomes;
-//    //}
 
     @Override
     public String toString() {

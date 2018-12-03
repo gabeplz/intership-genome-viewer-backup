@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gffparser;
 import com.mycompany.minorigv.sequence.TranslationManeger;
 import com.mycompany.minorigv.sequence.makeCompStrand;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -35,13 +36,13 @@ public class InformationUser {
             e.printStackTrace();
         }
 
-//        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
+        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
         chromosoom.setListORF();
         getORFsUser(chromosoom, start, stop);
-//        makeCompStrand compStrand = new makeCompStrand();
-//        String seqComp = compStrand.getReverseComplement(chromosoom.getSeqTemp().toUpperCase());
-//        getAAuser(chromosoom, seqComp);
-        //writeORF(chromosoom, seqComp);
+        makeCompStrand compStrand = new makeCompStrand();
+        String seqComp = compStrand.getReverseComplement(chromosoom.getSeqTemp().toUpperCase());
+        getAAuser(chromosoom, seqComp);
+        writeORF(chromosoom, seqComp);
     }
 
     /**
@@ -69,8 +70,14 @@ public class InformationUser {
         }
     }
 
+    /**
+     * Het verkrijgen van de objecten van orfs die binnen een bepaalde range vallen.
+     *
+     * @param chromosoom        Object met het gewenste chromosoom object
+     * @param start             Start positie vanaf waar de gebruiker wilt zoeken
+     * @param stop              Stop positie tot waar de gebruiker wilt zoeken
+     */
     public void getORFsUser(Chromosome chromosoom, int start, int stop){
-
         ArrayList<ORF> orfsFilteredList = chromosoom.getORFsBetween(start, stop);
 
         for(ORF o: orfsFilteredList){
@@ -87,15 +94,14 @@ public class InformationUser {
     public HashMap<String, Object> getAAuser(Chromosome chr, String seqComp){
         TranslationManeger translator = new TranslationManeger();
         HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), seqComp.toUpperCase());
-        //chr.setReadingframe(readingframes);
 
-        //AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
         return readingframes;
     }
 
     /**
+     * Wegschrijven ORFs in een fasta bestand.
      *
-     * @param chr
+     * @param chr       Object van het gewenste chromosoom.
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */

@@ -11,7 +11,6 @@ public class ORF {
     private String idORF;
     private int aaStart;
     private int aaStop;
-    //private String DNA_ORF;
 
     /**
      *
@@ -32,7 +31,6 @@ public class ORF {
         this.idORF = idORF;
         this.aaStart = aaStart;
         this.aaStop = aaStop;
-        //this.DNA_ORF = DNA_ORF;
     }
 
     /**
@@ -133,19 +131,4 @@ public class ORF {
         this.aaStop = aaStop;
     }
 
-//    /**
-//     * Het ophalen van de DNA sequentie van het ORF
-//     * @return          De DNA sequentie van het ORF
-//     */
-//    public String getDNA_ORF() {
-//        return DNA_ORF;
-//    }
-//
-//    /**
-//     * Het opslaan van de DNA sequentie van het ORF
-//     * @param DNA_ORF   De DNA sequentie van het ORF
-//     */
-//    public void setDNA_ORF(String DNA_ORF) {
-//        this.DNA_ORF = DNA_ORF;
-//    }
 }
