@@ -23,14 +23,13 @@
  * THE SOFTWARE.
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mycompany.minorigv.sequence;
 
 /**
- * @author jrobinso
+ * @author jrobinso, stan Wehkamp
+ * 
+ * bevat de constructor voor AminoAcid en een method om een string te vergelijken met de strings van de instance variabelen
  */
 public class AminoAcid {
 
@@ -41,25 +40,43 @@ public class AminoAcid {
     private char symbol;
 
     public static AminoAcid NULL_AMINO_ACID = new AminoAcid("", "", ' ');
-
+    /**
+     * 
+     * @param fullName      string  die staat voor de volledige naam van het aminozuur
+     * @param abbrevName    string die staat voor de drieletterige afkorting van het aminozuur
+     * @param symbol        char die staat voor de eenletterige afkorting van het aminozuur
+     */
     AminoAcid(String fullName, String abbrevName, char symbol) {
         this.fullName = fullName;
         this.abbrevName = abbrevName;
         this.symbol = symbol;
     }
-
+    /**
+     * 
+     * @return fullName string
+     */
     public String getFullName() {
         return fullName;
     }
-
+    /**
+     * 
+     * @return abbrevName string die staat voor de 3 letterige afkorting van het aminozuur
+     */
     public String getShortName() {
         return abbrevName;
     }
-
+    /**
+     * 
+     * @return symbol char
+     */
     public char getSymbol() {
         return symbol;
     }
-
+    /**
+     * vergelijkt de meegegeven string met de fullName, abbrevName(de shortname) en symbol (een letterige afkorting voor aminozuur)
+     * @param mutAA string
+     * @return True or False
+     */
     public boolean equalsByName(String mutAA) {
         return fullName.equals(mutAA) || abbrevName.equals(mutAA)
                 || String.valueOf(symbol).equals(mutAA);
