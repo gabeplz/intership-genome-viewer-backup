@@ -35,19 +35,17 @@ public class findORF {
             int start = match.start();      // Positie startcodon
             int stop = match.end();         // Positie stopcodon
             idORF++;
-            //int readingframe = Integer.MIN_VALUE;
+            int readingframe = Integer.MIN_VALUE;
 
-            int readingframe = start % 3;
-            String strand = "+";
-//            if((start % 3) == 0){
-//                readingframe = +1;
-//            }else if((start % 3) == 1){
-//                readingframe = +2;
-//            }else if((start % 3) == 2){
-//                readingframe = +3;
-//            }else{
-//                System.out.println("Geen ORF gevonden.");
-//            }
+            if((start % 3) == 0){
+                readingframe = +1;
+            }else if((start % 3) == 1){
+                readingframe = +2;
+            }else if((start % 3) == 2){
+                readingframe = +3;
+            }else{
+                System.out.println("Geen ORF gevonden.");
+            }
 
             // Positie van de start aminozuur en stop aminozuur bepalen.
             int aaStart = (int) Math.ceil(start/3.0);
@@ -55,7 +53,7 @@ public class findORF {
 
             String id_ORF = "ORF" + idORF +"_T";
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, strand, id_ORF, aaStart, aaStop);
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop);
             listORF.add(ORF_Object);
         }
         return listORF;
@@ -81,10 +79,19 @@ public class findORF {
         while(match.find()){
             int start = seq.length() - match.start();   // Positie van het startcodon op de orginele sequentie (+)
             int stop = seq.length() - match.end();      // Positie van het stopcodon op de orginele sequentie (+)
+            int readingframe;
             idORF++;
 
-            int readingframe = start % 3;
-            String strand = "-";
+            if((start % 3) == 0){
+                readingframe = -1;
+            }else if((start % 3) == 1){
+                readingframe = -2;
+            }else if((start % 3) == 2){
+                readingframe = -3;
+            }else{
+                readingframe = Integer.MIN_VALUE;
+                System.out.println("Geen ORF gevonden.");
+            }
 
             // Positie van de start aminozuur en stop aminozuur bepalen.
             int aaStart = (int) Math.ceil(start/3.0);
@@ -92,7 +99,7 @@ public class findORF {
 
             String id_ORF = "ORF" + idORF +"_C";
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, strand, id_ORF, aaStart, aaStop);
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop);
             listORF.add(ORF_Object);
 
         }

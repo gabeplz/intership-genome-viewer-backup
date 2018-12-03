@@ -4,7 +4,10 @@ package com.mycompany.minorigv.gffparser;
  * In de sequentie van een chromosoom/contig wordt er gezocht naar Open Reading Frames (ORFs) en
  * informatie van een ORF en de sequentie zelf worden opgeslagen in een object.
  */
-public class ORF extends Elements{
+public class ORF {
+    private int start;
+    private int stop;
+    private int readingframe;
     private String idORF;
     private int aaStart;
     private int aaStop;
@@ -22,63 +25,65 @@ public class ORF extends Elements{
      * @param aaStop            Stop positie van het aminozuur
      * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
      */
-    public ORF(int start, int stop, int readingframe, String strand, String idORF, int aaStart, int aaStop) {
-        super(start, stop, strand, readingframe);
+    public ORF(int start, int stop, int readingframe, String idORF, int aaStart, int aaStop) {
+        this.start = start;
+        this.stop = stop;
+        this.readingframe = readingframe;
         this.idORF = idORF;
         this.aaStart = aaStart;
         this.aaStop = aaStop;
         //this.DNA_ORF = DNA_ORF;
     }
 
-//    /**
-//     * Het ophalen van de startpositie van de eerste nucleotide van het startcodon
-//     *
-//     * @return      De start positie van de eerste nucleotide van het startcodon
-//     */
-//    public int getStart() {
-//        return start;
-//    }
-//
-//    /**
-//     * Het opslaan van de startpositie van de eerste nucleotide van het startcodon
-//     *
-//     * @param start De start positie van de eerste nucleotide van het startcodon
-//     */
-//    public void setStart(int start) {
-//        this.start = start;
-//    }
-//
-//    /**
-//     * Het ophalen van de stop positie van de eerste nucleotide van het stopcodon
-//     * @return      De stop positie van de eerste nucleotide van het stopcodon
-//     */
-//    public int getStop() {
-//        return stop;
-//    }
-//
-//    /**
-//     * Het opslaan van de stop positie van de eerste nucleotide van het stopcodon
-//     * @param stop   De stop positie van de eerste nucleotide van het stopcodon
-//     */
-//    public void setStop(int stop) {
-//        this.stop = stop;
-//    }
+    /**
+     * Het ophalen van de startpositie van de eerste nucleotide van het startcodon
+     *
+     * @return      De start positie van de eerste nucleotide van het startcodon
+     */
+    public int getStart() {
+        return start;
+    }
 
-//    /**
-//     * Het ophalen van het reading frame waarin het ORF is gevonden
-//     * @return      De reading frame van het ORF met de strand (+1, +2, +3, -1, -2, -3)
-//     */
-//    public int getReadingframe() {
-//        return readingframe;
-//    }
-//
-//    /**
-//     * Het opslaan van het reading frame waarin het ORF is gevonden, samen met de strand waarin het ORF zit (+ of -)
-//     * @param readingframe      De reading frame waarin het ORF is gevonden met de strand (+1, +2, +3, -1, -2, -3)
-//     */
-//    public void setReadingframe(int readingframe) {
-//        this.readingframe = readingframe;
-//    }
+    /**
+     * Het opslaan van de startpositie van de eerste nucleotide van het startcodon
+     *
+     * @param start De start positie van de eerste nucleotide van het startcodon
+     */
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    /**
+     * Het ophalen van de stop positie van de eerste nucleotide van het stopcodon
+     * @return      De stop positie van de eerste nucleotide van het stopcodon
+     */
+    public int getStop() {
+        return stop;
+    }
+
+    /**
+     * Het opslaan van de stop positie van de eerste nucleotide van het stopcodon
+     * @param stop   De stop positie van de eerste nucleotide van het stopcodon
+     */
+    public void setStop(int stop) {
+        this.stop = stop;
+    }
+
+    /**
+     * Het ophalen van het reading frame waarin het ORF is gevonden
+     * @return      De reading frame van het ORF met de strand (+1, +2, +3, -1, -2, -3)
+     */
+    public int getReadingframe() {
+        return readingframe;
+    }
+
+    /**
+     * Het opslaan van het reading frame waarin het ORF is gevonden, samen met de strand waarin het ORF zit (+ of -)
+     * @param readingframe      De reading frame waarin het ORF is gevonden met de strand (+1, +2, +3, -1, -2, -3)
+     */
+    public void setReadingframe(int readingframe) {
+        this.readingframe = readingframe;
+    }
 
     /**
      * Het ophalen van het ID van het gevonden ORF

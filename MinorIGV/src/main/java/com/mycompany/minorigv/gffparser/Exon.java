@@ -9,6 +9,8 @@ import java.util.HashMap;
  *
  */
 public class Exon extends Feature{
+    private HashMap attributes;
+
     /**
      * Het opslaan van alle informatie van het exon in een object.
      * Contstructor.
@@ -23,5 +25,27 @@ public class Exon extends Feature{
      */
     Exon(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
         super(seqid, start, end, score, strand, phase, attributes);
+        this.attributes = attributes;
     }
+
+    /**
+     * Ophalen van de attributen/informatie van een exon.
+     *
+     * @return     HashMap met als key de omschrijving van de informatie (bijv. name) en
+     *             als value de specifieke informatie van het exon (bijv. PAU8).
+     */
+    public HashMap getAttributes() {
+        return attributes;
+    }
+
+    /**
+     *
+     * @param attributes    Het maken van de HashMap met daarin de informatie: als key de omschrijving van de informatie (bijv. name)
+     *                      en als value de specifieke informatie van het exon (bijv. PAU8).
+     */
+    public void setAttributes(HashMap attributes) {
+        this.attributes = attributes;
+    }
+
+
 }

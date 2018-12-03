@@ -1,6 +1,5 @@
 package com.mycompany.minorigv.gffparser;
 
-import javax.swing.text.html.parser.Element;
 import java.util.HashMap;
 
 /**
@@ -9,13 +8,13 @@ import java.util.HashMap;
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
-public class Feature extends Elements {
+public class Feature {
     private String id;
-//    private String start;
-//    private String stop;
+    private String start;
+    private String stop;
     private String score;
-//    private String strand;
-//    private String phase;
+    private String strand;
+    private String phase;
     private HashMap attributes;
 
     /**
@@ -28,9 +27,12 @@ public class Feature extends Elements {
      * @param phase     Het geeft het readingframe aan waarin het feature voorkomt (0,1,2).
      */
     Feature(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(Integer.parseInt(start), Integer.parseInt(end), strand, Integer.parseInt(phase));
         this.id = seqid;
+        this.start = start;
+        this.stop = end;
         this.score = score;
+        this.strand = strand;
+        this.phase = phase;
         this.attributes = attributes;
     }
 
@@ -50,37 +52,37 @@ public class Feature extends Elements {
         this.id = id;
     }
 
-//    /**
-//     * Het returned de start positie van een feature.
-//     * @return      start is de positie waar de feature begint. Start is een Integer
-//     */
-//    public int getStart() {
-//        return Integer.parseInt(start);
-//    }
-//
-//    /**
-//     * Het genereerd de start positie van een feature.
-//     * @param start is de positie waar de feature begint.
-//     */
-//    public void setStart(String start) {
-//        this.start = start;
-//    }
-//
-//    /**
-//     * Het returned de stop positie van een feature.
-//     * @return      stop is de positie waar de feature eindigd. Stop is een Integer.
-//     */
-//    public int getStop() {
-//        return Integer.parseInt(stop);
-//    }
-//
-//    /**
-//     * Het genereerd de stop positie van een feature.
-//     * @param stop  is de positie waar de feature eindigd.
-//     */
-//    public void setStop(String stop) {
-//        this.stop = stop;
-//    }
+    /**
+     * Het returned de start positie van een feature.
+     * @return      start is de positie waar de feature begint. Start is een Integer
+     */
+    public int getStart() {
+        return Integer.parseInt(start);
+    }
+
+    /**
+     * Het genereerd de start positie van een feature.
+     * @param start is de positie waar de feature begint.
+     */
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    /**
+     * Het returned de stop positie van een feature.
+     * @return      stop is de positie waar de feature eindigd. Stop is een Integer.
+     */
+    public int getStop() {
+        return Integer.parseInt(stop);
+    }
+
+    /**
+     * Het genereerd de stop positie van een feature.
+     * @param stop  is de positie waar de feature eindigd.
+     */
+    public void setStop(String stop) {
+        this.stop = stop;
+    }
 
     /**
      * Het returned de score van een feature.
@@ -98,37 +100,37 @@ public class Feature extends Elements {
         this.score = score;
     }
 
-//    /**
-//     * Het returned de strand waarop de feature zich bevindt.
-//     * @return      strand zegt of de feature aanwezig is in de strand (+) of complementaire strand (-). Strand is een String.
-//     */
-//    public String getStrand() {
-//        return strand;
-//    }
-//
-//    /**
-//     * Het genereerd de strand waarop de feature zich bevindt.
-//     * @param strand  zegt of de feature aanwezig is in de strand (+) of complementaire strand (-)
-//     */
-//    public void setStrand(String strand) {
-//        this.strand = strand;
-//    }
-//
-//    /**
-//     * Het returned de phase van de feature.
-//     * @return      phase geeft het readingframe aan waarin het feature voorkomt (0,1,2). Phase is een String.
-//     */
-//    public String getPhase() {
-//        return phase;
-//    }
-//
-//    /**
-//     * Het genereerd de phase van de feature.
-//     * @param phase geeft het readingframe aan waarin het feature voorkomt (0,1,2).
-//     */
-//    public void setPhase(String phase) {
-//        this.phase = phase;
-//    }
+    /**
+     * Het returned de strand waarop de feature zich bevindt.
+     * @return      strand zegt of de feature aanwezig is in de strand (+) of complementaire strand (-). Strand is een String.
+     */
+    public String getStrand() {
+        return strand;
+    }
+
+    /**
+     * Het genereerd de strand waarop de feature zich bevindt.
+     * @param strand  zegt of de feature aanwezig is in de strand (+) of complementaire strand (-)
+     */
+    public void setStrand(String strand) {
+        this.strand = strand;
+    }
+
+    /**
+     * Het returned de phase van de feature.
+     * @return      phase geeft het readingframe aan waarin het feature voorkomt (0,1,2). Phase is een String.
+     */
+    public String getPhase() {
+        return phase;
+    }
+
+    /**
+     * Het genereerd de phase van de feature.
+     * @param phase geeft het readingframe aan waarin het feature voorkomt (0,1,2).
+     */
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
 
     /**
      * Ophalen van de attributen/informatie van een feature.
