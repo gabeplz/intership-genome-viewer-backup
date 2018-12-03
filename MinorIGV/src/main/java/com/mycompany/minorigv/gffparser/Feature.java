@@ -15,7 +15,7 @@ public class Feature extends Elements {
 //    private String stop;
     private String score;
 //    private String strand;
-    private String phase;
+//    private String phase;
     private HashMap attributes;
 
     /**
@@ -27,12 +27,11 @@ public class Feature extends Elements {
      * @param strand    Of de feature aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase     Het geeft het readingframe aan waarin het feature voorkomt (0,1,2).
      */
-    Feature(String seqid, int start, int end, String score, String strand, String phase, HashMap attributes) {
-        super(start, end, strand);
+    Feature(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        super(Integer.parseInt(start), Integer.parseInt(end), strand, Integer.parseInt(phase));
         this.id = seqid;
         this.score = score;
         this.attributes = attributes;
-        this.phase = phase;
     }
 
     /**
@@ -115,21 +114,21 @@ public class Feature extends Elements {
 //        this.strand = strand;
 //    }
 //
-    /**
-     * Het returned de phase van de feature.
-     * @return      phase geeft het readingframe aan waarin het feature voorkomt (0,1,2). Phase is een String.
-     */
-    public String getPhase() {
-        return phase;
-    }
-
-    /**
-     * Het genereerd de phase van de feature.
-     * @param phase geeft het readingframe aan waarin het feature voorkomt (0,1,2).
-     */
-    public void setPhase(String phase) {
-        this.phase = phase;
-    }
+//    /**
+//     * Het returned de phase van de feature.
+//     * @return      phase geeft het readingframe aan waarin het feature voorkomt (0,1,2). Phase is een String.
+//     */
+//    public String getPhase() {
+//        return phase;
+//    }
+//
+//    /**
+//     * Het genereerd de phase van de feature.
+//     * @param phase geeft het readingframe aan waarin het feature voorkomt (0,1,2).
+//     */
+//    public void setPhase(String phase) {
+//        this.phase = phase;
+//    }
 
     /**
      * Ophalen van de attributen/informatie van een feature.

@@ -23,7 +23,7 @@ public class Region extends Feature{
      * @param phase         Het geeft het reading frame aan waarin de Region voorkomt (0,1,2 of ".")
      * @param attributes    HashMap met daarin de informatie over een Region.
      */
-    Region(String seqid, int start, int end, String score, String strand, String phase, HashMap attributes) {
+    Region(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
         super(seqid, start, end, score, strand, phase, attributes);
     }
 }
