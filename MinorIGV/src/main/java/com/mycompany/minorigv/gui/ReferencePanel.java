@@ -17,7 +17,6 @@ public class ReferencePanel extends JPanel {
 		super.paintComponent(g);
 
 		if(cont == null) return;
-		System.out.println("yeet");
 
 		Graphics2D g2 = (Graphics2D) g;
 

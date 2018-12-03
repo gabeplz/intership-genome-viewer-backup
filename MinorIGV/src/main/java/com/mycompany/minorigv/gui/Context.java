@@ -100,7 +100,6 @@ public class Context extends Observable {
 	}
 	
 	public String getSubSequentie() {
-		System.out.println(curChromosome);
 		return this.curChromosome.getSeqTemp().substring(start, stop);
 		
 	}

@@ -105,7 +105,7 @@ public class GUI implements Observer {
 
 		
 		CodonPanel codonPanel1 = new CodonPanel();
-		 System.out.println(true);
+
 		codonPanel1.init(true);
 
 		organism.add(codonPanel1);
@@ -115,7 +115,7 @@ public class GUI implements Observer {
 		organism.add(refpanel1);
 
 		CodonPanel codonPanel2 = new CodonPanel();
-		System.out.println(false);
+
 		codonPanel2.init(false);
 
 		organism.add(codonPanel2);
@@ -140,7 +140,6 @@ public class GUI implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("ree");
 		frame.validate();
 		frame.repaint();
 
