@@ -28,9 +28,7 @@ public class ReferencePanel extends JPanel {
 
 		double disBetween = dim.getWidth() / length;
 		String revComp = getReverseComplement(seq);
-		int j = length;
 		for(int i = 0; i < length; i++  ) {
-			j--;
 			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
 			int x_pos = info[1];
 
@@ -38,7 +36,7 @@ public class ReferencePanel extends JPanel {
 
 			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, 20);
 
-			this.chooseLetterColor(g,revComp.charAt(j));
+			this.chooseLetterColor(g,revComp.charAt(i));
 			DrawingTools.drawCenteredChar(g2, revComp.charAt(i), x_pos, 40);
 			g.setColor(Color.BLACK);
 		}
