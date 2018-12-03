@@ -1,15 +1,11 @@
 package com.mycompany.minorigv.gffparser;
-import com.mycompany.minorigv.sequence.AminoAcidSequence;
 import com.mycompany.minorigv.sequence.TranslationManeger;
-import com.mycompany.minorigv.sequence.findORF;
 import com.mycompany.minorigv.sequence.makeCompStrand;
-
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 
 
 /**
@@ -39,14 +35,13 @@ public class InformationUser {
             e.printStackTrace();
         }
 
-        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
-        makeCompStrand compStrand = new makeCompStrand();
-//        String seqComp = new StringBuilder(compStrand.getReverseComplement(chromosoom.getSeqTemp())).reverse().toString();
-//        chromosoom.setListORF(seqComp);
-        //String seqComp = getSeqComp(chromosoom);
-        //getORFuser(chromosoom, chromosoom_id, seqComp);
+//        getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
+        chromosoom.setListORF();
+        getORFsUser(chromosoom, start, stop);
+//        makeCompStrand compStrand = new makeCompStrand();
+//        String seqComp = compStrand.getReverseComplement(chromosoom.getSeqTemp().toUpperCase());
 //        getAAuser(chromosoom, seqComp);
-//        writeORF(chromosoom, seqComp);
+        //writeORF(chromosoom, seqComp);
     }
 
     /**
@@ -69,35 +64,19 @@ public class InformationUser {
             // Lijst met alle Keys
             attributes.keySet();
             // Ophalen values
-            attributes.get("locus_tag");
+            System.out.println(attributes.get("locus_tag"));
+
         }
     }
 
+    public void getORFsUser(Chromosome chromosoom, int start, int stop){
 
-//    public String getSeqComp(Chromosome chr){
-//        // Complementaire strand maken
-//        makeCompStrand compStrand = new makeCompStrand();
-//        String seqComp = new StringBuilder(compStrand.getReverseComplement(chr.getSeqTemp())).reverse().toString();
-//        return seqComp;
-//    }
+        ArrayList<ORF> orfsFilteredList = chromosoom.getORFsBetween(start, stop);
 
-//    /**
-//     * Het maken van de complementaire strand. Ophalen en opslaan van de ORFs uit de sequentie
-//     * van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
-//     *
-//     * @param chr               Het object van het gekozen chromosoom (door de gebruiker)
-//     * @param chromosoom_id     Het ID van de het gekozen chromosoom
-//     * @throws FileNotFoundException
-//     * @throws UnsupportedEncodingException
-//     */
-//    public void getORFuser(Chromosome chr, String chromosoom_id, String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
-////        // ORFs zoeken in de template en complementaire strand.
-////        ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
-////        ArrayList orfs_comp = findORF.searchORF(chromosoom_id, seqComp, "comp");
-////        orfs.addAll(orfs_comp);
-////
-////        chr.setListORF(orfs);
-//    }
+        for(ORF o: orfsFilteredList){
+            o.getStart();
+        }
+    }
 
     /**
      * Het vertalen van de sequentie uit het fasta bestand (chromosoom/contig sequentie) naar een aminozuursequentie
@@ -108,7 +87,6 @@ public class InformationUser {
     public HashMap<String, Object> getAAuser(Chromosome chr, String seqComp){
         TranslationManeger translator = new TranslationManeger();
         HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), seqComp.toUpperCase());
-
         //chr.setReadingframe(readingframes);
 
         //AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");

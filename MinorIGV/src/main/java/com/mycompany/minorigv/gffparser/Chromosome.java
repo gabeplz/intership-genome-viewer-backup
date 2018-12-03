@@ -39,10 +39,6 @@ public class Chromosome {
         this.features = features;
     }
 
-//    public Chromosome(String comp, HashMap<String, Object> readingframe){
-//        this.comp = comp;
-//        this.readingframe = readingframe;
-//    }
 
     /**
      * De constructor.
@@ -126,7 +122,6 @@ public class Chromosome {
 
     /**
      * Het genereerd de ArrayList met daarin de ORFs
-     * @param listORF is een ArrayList met daarin de ORFs.
      */
     public void setListORF() throws FileNotFoundException, UnsupportedEncodingException {
         // ORFs zoeken in de template en complementaire strand.
@@ -177,7 +172,7 @@ public class Chromosome {
     }
 
     /**
-     * Alle features die tussen de start en stop positie voorkomen wordem om eem ArrayList gezet.
+     * Alle features die tussen de start en stop positie voorkomen wordenom eem ArrayList gezet.
      * @param start     Start positie van de feature op het chromosoom.
      * @param stop      Stop positie van de feature op het chromosoom
      * @return          Een lijst met de features die voldoen aan de start en stop
@@ -208,6 +203,7 @@ public class Chromosome {
         ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
         for (Feature feat : featureList){
             String klas = feat.getClass().toString();
+            System.out.println(klas);
             for (String optie : SelectedFeatures){
                 if (klas.contains(optie)){
                     featureFilteredList.add(feat);
@@ -216,6 +212,29 @@ public class Chromosome {
         }
         return featureFilteredList;
     }
+
+    /**
+     * Alle ORFs die tussen de start en stop positie voorkomen worden om eem ArrayList gezet.
+     * @param start     Startpositie waar vandaan de orfs gezocht moeten worden
+     * @param stop      Stoppositie tot waar de orfs gezocht moeten worden
+     * @return          Een lijst met de orfs die voldoen aan de start en stop
+     */
+    public ArrayList<ORF> getORFsBetween(int start, int stop){
+        ArrayList<ORF> orfsFilteredList = new ArrayList<>();
+
+        for(ORF o : listORF){
+            if (o.getStop() > start && o.getStop() < stop){
+                orfsFilteredList.add(o);
+            }else if(o.getStart() > start && o.getStart() < stop){
+                orfsFilteredList.add(o);
+            }else if(o.getStart() < start && o.getStop() > stop){
+                orfsFilteredList.add(o);
+            }
+        }
+
+        return orfsFilteredList;
+    }
+
 
 
     @Override
