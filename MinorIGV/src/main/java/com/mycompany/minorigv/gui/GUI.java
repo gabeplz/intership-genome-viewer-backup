@@ -1,5 +1,7 @@
 package com.mycompany.minorigv.gui;
 
+import com.mycompany.minorigv.gffparser.Feature;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -45,14 +47,14 @@ public class GUI implements Observer {
 	/**
 	 * Create the application.
 	 */
-	public GUI() {
+	public GUI() throws Exception {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize() throws Exception {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 640, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,9 +103,11 @@ public class GUI implements Observer {
 		RulerPanel liniaal = new RulerPanel();
 		liniaal.init();
 		organism.add(liniaal);
-		
 
-		
+		FeaturePanel featuresForward = new FeaturePanel();
+		featuresForward.init(true);
+		organism.add(featuresForward);
+
 		CodonPanel codonPanel1 = new CodonPanel();
 
 		codonPanel1.init(true);
@@ -120,10 +124,9 @@ public class GUI implements Observer {
 
 		organism.add(codonPanel2);
 
-		
-		FeaturePanel features = new FeaturePanel();
-		features.init();
-		organism.add(features);
+		FeaturePanel featuresReverse = new FeaturePanel();
+		featuresReverse.init(false);
+		organism.add(featuresReverse);
 		
 		context = new Context("hoi");
 		refpanel1.setContext(context);
@@ -132,7 +135,8 @@ public class GUI implements Observer {
 		liniaal.setContext(context);
 		organismPanel.setContext(context);
 		igvMenuBar.setContext(context);
-
+		featuresForward.setContext(context);
+		featuresReverse.setContext(context);
 		context.addObserver(this);
 		
 		

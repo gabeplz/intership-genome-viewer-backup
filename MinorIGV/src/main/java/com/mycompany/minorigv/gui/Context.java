@@ -3,9 +3,7 @@ package com.mycompany.minorigv.gui;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.gffparser.Chromosome;
-import com.mycompany.minorigv.gffparser.Feature;
-import com.mycompany.minorigv.gffparser.Organisms;
+import com.mycompany.minorigv.gffparser.*;
 
 public class Context extends Observable {
 
@@ -50,8 +48,7 @@ public class Context extends Observable {
 
 	}
 	
-	public Context(String test) {
-		
+	public Context(String test, String tes1) throws Exception {
 		ArrayList<Chromosome> testList;
 		testList = new ArrayList<Chromosome>();
 
@@ -65,9 +62,47 @@ public class Context extends Observable {
 		}catch (Exception e){
 			System.out.println("oeps");
 		}
+
 		start = 0;
-		stop = 50;
+		stop = 100;
+
+
 	}
+
+	public Context(String test) throws Exception {
+		//// ----- information user ----- ////
+		start = 5;
+		stop = 35;
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		String path_gff = classLoader.getResource("voorbeeldgff.gff").getFile();
+		String path_fasta = classLoader.getResource("GCF_000146045.2_R64_genomic.fna").getFile();
+
+		gffReader lees = new gffReader();
+		organism = lees.readData(path_gff);
+
+		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path_fasta);
+
+		for(String id : fastaMap.keySet()){
+			organism.addSequence(id,fastaMap.get(id));
+		}
+
+		String chromosoom_id = "NC_001133.9";
+		ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
+
+		try {
+			curChromosome = organism.getChromosome(chromosoom_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ArrayList<Feature> featureList = curChromosome.getFeaturesBetween(start,stop);
+		this.CurrentFeatureList = curChromosome.filterFeatures(featureList, keuze_gebruiker);
+
+		//// ----- information user ----- ////
+
+
+	}
+
+
 	public void addFasta(String path) throws Exception{
 		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path);
 
@@ -132,5 +167,4 @@ public class Context extends Observable {
 	}
 
 
-		
 }

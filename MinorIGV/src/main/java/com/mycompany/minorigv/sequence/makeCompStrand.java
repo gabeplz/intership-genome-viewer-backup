@@ -33,7 +33,7 @@ public class makeCompStrand {
     * @param sequence een string die een nucleotide sequentie voorsteld.
     * @return complement een string die een nucleotide sequentie voorsteld.
     */ 
-    public String getReverseComplement(String sequence) {
+    public static String getReverseComplement(String sequence) {
 
 
         char[] complement = new char[sequence.length()];

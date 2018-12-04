@@ -57,7 +57,7 @@ public class Feature {
      * @return      start is de positie waar de feature begint. Start is een Integer
      */
     public int getStart() {
-        return Integer.parseInt(start);
+        return Integer.parseInt(start)-1;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Feature {
      * @return      stop is de positie waar de feature eindigd. Stop is een Integer.
      */
     public int getStop() {
-        return Integer.parseInt(stop);
+        return Integer.parseInt(stop)-1;
     }
 
     /**
