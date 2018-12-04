@@ -5,10 +5,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.naming.ContextNotEmptyException;
 import javax.swing.JPanel;
 
-public class ReferencePanel extends JPanel {
+import com.mycompany.minorigv.sequence.makeCompStrand;
+
+public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 	//Hardcoded String ff want moeten nog Context objecten hebben
 	Context cont;
@@ -16,7 +21,12 @@ public class ReferencePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if(cont == null) return;
+		try {
+			cont.getSubSequentie();
+		}
+		catch (Exception e) {
+			return; //geen sequentie.
+		}
 
 		Graphics2D g2 = (Graphics2D) g;
 
@@ -26,7 +36,7 @@ public class ReferencePanel extends JPanel {
 		int length = cont.getStop()-cont.getStart();
 
 		double disBetween = dim.getWidth() / length;
-		String revComp = getReverseComplement(seq);
+		String revComp = makeCompStrand.getReverseComplement(seq);
 		for(int i = 0; i < length; i++  ) {
 			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
 			int x_pos = info[1];
@@ -74,50 +84,6 @@ public class ReferencePanel extends JPanel {
 		}
 
 	}
-
-	/**
-	 * ripperino IGV
-	 * @param sequence
-	 * @return
-	 */
-	public static String getReverseComplement(String sequence) {
-		char[] complement = new char[sequence.length()];
-		int jj = 0;
-		for (int ii = 0; ii < sequence.length(); ii++) {
-			char c = sequence.charAt(ii);
-
-			switch (c) {
-			case 'T':
-				complement[jj] = 'A';
-				break;
-			case 'A':
-				complement[jj] = 'T';
-				break;
-			case 'C':
-				complement[jj] = 'G';
-				break;
-			case 'G':
-				complement[jj] = 'C';
-				break;
-			case 't':
-				complement[jj] = 'a';
-				break;
-			case 'a':
-				complement[jj] = 't';
-				break;
-			case 'c':
-				complement[jj] = 'g';
-				break;
-			case 'g':
-				complement[jj] = 'c';
-				break;
-			default:
-				complement[jj] = c;
-			}
-			jj++;
-		}
-		return new String(complement);
-	}
 	// initiatie van het paneel waarin de sequenties worden getekent
 	public void init() {
 
@@ -129,5 +95,14 @@ public class ReferencePanel extends JPanel {
 
 	public void setContext(Context cont) {
 		this.cont = cont;
+		cont.addPropertyChangeListener("subSequentie", this);
+		cont.addPropertyChangeListener("curChromosome",this);
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		this.invalidate();
+		this.repaint();
+		
 	}
 }

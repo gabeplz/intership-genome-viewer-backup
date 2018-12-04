@@ -19,7 +19,7 @@ import java.util.Observer;
  * @author kahuub
  * Date: 19/11/18
  */
-public class GUI implements Observer {
+public class GUI {
 
 	private JFrame frame;
 	private ReferencePanel ReferencePaneel;
@@ -125,23 +125,12 @@ public class GUI implements Observer {
 		features.init();
 		organism.add(features);
 		
-		context = new Context("hoi");
+		context = new Context();
 		refpanel1.setContext(context);
 		codonPanel1.setContext(context);
 		codonPanel2.setContext(context);
 		liniaal.setContext(context);
 		organismPanel.setContext(context);
-		igvMenuBar.setContext(context);
-
-		context.addObserver(this);
-		
-		
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		frame.validate();
-		frame.repaint();
-
+		igvMenuBar.setContext(context);	
 	}
 }

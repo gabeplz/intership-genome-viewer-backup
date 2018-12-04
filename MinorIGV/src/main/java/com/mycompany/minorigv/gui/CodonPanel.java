@@ -3,6 +3,8 @@ package com.mycompany.minorigv.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
@@ -17,7 +19,7 @@ import com.mycompany.minorigv.sequence.makeCompStrand;
  * @author kahuub
  * Date: 20/11/18
  */
-public class CodonPanel extends JPanel{
+public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 	Context cont;
 	Boolean forward;
@@ -34,6 +36,13 @@ public class CodonPanel extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+		try {
+			cont.getSubSequentie();
+		}
+		catch (Exception e) {
+			return; //geen sequentie.
+		}
 
 		String seq = cont.getSubSequentie();
 		int start = cont.getStart();
@@ -83,9 +92,19 @@ public class CodonPanel extends JPanel{
 
 	public void setContext(Context cont) {
 		this.cont = cont;
+		cont.addPropertyChangeListener("subSequentie", this);
+		cont.addPropertyChangeListener("curChromosome",this);
 	}
 
 	public void setForward(Boolean forward) {
 		this.forward = forward;
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		this.revalidate();
+		this.repaint();
+		
 	}
 }

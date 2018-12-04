@@ -11,10 +11,6 @@ import java.util.*;
  */
 public class gffReader {
 
-    public String line;
-    public String ID;
-    public String ID_organism;
-
     /**
      * Het inlezen van het bestand per regel en het opslaan van data in de regels wanneer er in de derde kolom gene, mRNA,
      * exon, CDS of region staat.
@@ -23,11 +19,18 @@ public class gffReader {
      * @throws FileNotFoundException    Afvangen van een error zodra het bestand niet gevonden kan worden.
      * @throws IOException              Als er een input of output exception plaatsvindt.
      */
-    public Organisms readData(String path) throws FileNotFoundException, IOException, Exception {
+    public static Organisms readData(Organisms org, String path) throws FileNotFoundException, IOException, Exception {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String> allContigs = new ArrayList<String>();
-
-        Organisms org = new Organisms();
+        
+        String line = null;
+        String ID = null;
+        String ID_organism = null;
+        
+        if (org == null) {
+        	org = new Organisms();
+        }
+        
         Chromosome chrom = null;
         // inlezen van het bestand per regel.
         while ((line = reader.readLine()) != null) {

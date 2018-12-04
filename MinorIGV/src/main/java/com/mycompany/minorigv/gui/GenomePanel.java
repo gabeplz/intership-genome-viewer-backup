@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,7 +19,7 @@ import javax.swing.*;
  * @author kahuub
  * Date: 20/11/18
  */
-public class GenomePanel extends JPanel implements Observer {
+public class GenomePanel extends JPanel implements PropertyChangeListener{
 	private Context cont;
 	private JTextArea Organism;
 	private JComboBox Chromosome;
@@ -54,7 +56,7 @@ public class GenomePanel extends JPanel implements Observer {
 		Organism.setText("Organism");
 		Chromosome = new JComboBox();
 		Locus = new JTextArea(1,20);
-		Locus.setText("15-30");
+		//Locus.setText("0-100");
 
 		ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
 			@Override
@@ -66,16 +68,15 @@ public class GenomePanel extends JPanel implements Observer {
 		Chromosome.addActionListener(chromosomeListener);
 
 	}
+	
+	private void changeText() {
+		Locus.setText(cont.getStart() + "-" + cont.getStop());
+	}
 
 	private void changeChromosome()  {
 		try {
 			//cont.changeSize(0,2);
 			cont.changeChromosome((String) Chromosome.getSelectedItem());
-			int start = cont.getStart();
-			int stop = cont.getStop();
-			Locus.setText(start +"-" + stop);
-
-
 		}
 		catch(Exception e){
 			System.out.println("Idk what went wrong");
@@ -104,25 +105,27 @@ public class GenomePanel extends JPanel implements Observer {
 		int start = Integer.parseInt(parts[0]);
 		int stop = Integer.parseInt(parts[1]);
 		cont.changeSize(start,stop);
-
-
-
-
 	}
 	public void setContext(Context cont) {
 		this.cont = cont;
-		cont.addObserver(this);
+		cont.addPropertyChangeListener("chromosomeNameArray",this);
+		
 
 	}
 
 	public void changedContext(){
 		DefaultComboBoxModel model = new DefaultComboBoxModel( cont.getChromosomeNames() );
 		Chromosome.setModel( model );
+		
 
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		changedContext();
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		if (evt.getPropertyName().equals("chromosomeNameArray"))changedContext();
+		if (evt.getPropertyName().equals("startStop")) changeText();
+		
 	}
+
 }

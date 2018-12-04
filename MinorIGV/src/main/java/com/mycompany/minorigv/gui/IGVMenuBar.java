@@ -6,6 +6,9 @@ import com.mycompany.minorigv.FastaFileReader;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -92,14 +95,14 @@ public class IGVMenuBar extends JMenuBar {
 	// test button action listener
 	private void loadReferenceAction() {
 		try{
-		FastaFileChooser fasta = new FastaFileChooser();
-		String path = fasta.fastafile();
-		cont.addFasta(path);
+			FastaFileChooser fasta = new FastaFileChooser();
+			String path = fasta.fastafile();
+			cont.addFasta(path);
 
 
 
 
-		System.out.println("load reference test");
+			System.out.println("load reference test");
 	}catch (Exception e){}
 	}
 
@@ -119,6 +122,8 @@ public class IGVMenuBar extends JMenuBar {
 
 	public void setContext(Context cont) {
 		this.cont = cont;
+		
 	}
+	
 
 }
