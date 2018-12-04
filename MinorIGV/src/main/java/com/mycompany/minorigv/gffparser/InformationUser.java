@@ -42,7 +42,7 @@ public class InformationUser {
         makeCompStrand compStrand = new makeCompStrand();
         String seqComp = compStrand.getReverseComplement(chromosoom.getSeqTemp().toUpperCase());
         getAAuser(chromosoom, seqComp);
-        writeORF(chromosoom, seqComp);
+//        writeORF(chromosoom, seqComp);
     }
 
     /**
@@ -107,8 +107,6 @@ public class InformationUser {
      */
     public void writeORF(Chromosome chr, String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
         //Wegschrijven ORFs
-        System.out.println(seqComp);
-        System.out.println(chr.getSeqTemp());
         ArrayList<ORF> listORF = chr.getListORF();
         PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
         for(ORF o: listORF){
