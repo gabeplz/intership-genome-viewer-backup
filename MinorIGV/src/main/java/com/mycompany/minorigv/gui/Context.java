@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gui;
 
-import java.util.ArrayList;
-import java.util.Observable;
+import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.gffparser.Chromosome;
@@ -24,14 +23,31 @@ public class Context extends Observable {
 	}
 	
 	public void changeSize(int newStart, int newStop) {
-		this.start = newStart;
-		this.stop = newStop;
-		changed();
+
+		if(newStop-2 < newStart){
+			//TODO error handling
+		}
+		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
+			//TODO error handling
+		}
+		else if(newStart < 0){
+			//TODO error handling
+		}
+		else {
+			this.start = newStart;
+			this.stop = newStop;
+
+			changed();
+		}
 	}
 
 	public void changed(){
 		setChanged();
 		notifyObservers();
+	}
+
+	public Context(){
+
 	}
 	
 	public Context(String test) {
@@ -39,7 +55,7 @@ public class Context extends Observable {
 		ArrayList<Chromosome> testList;
 		testList = new ArrayList<Chromosome>();
 
-		String seq = "ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG";
+		String seq = "ATCgatcGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG";
 
 		Organisms org = new Organisms("piet");
 		org.addSequence("jan",seq);
@@ -51,6 +67,20 @@ public class Context extends Observable {
 		}
 		start = 0;
 		stop = 50;
+	}
+	public void addFasta(String path) throws Exception{
+		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path);
+
+		if (organism == null){
+			organism = new Organisms();
+		}
+
+		for(String id : fastaMap.keySet()){
+			organism.addSequence(id,fastaMap.get(id));
+		}
+
+		changed();
+
 	}
 
 	public int getLength(){
@@ -64,12 +94,21 @@ public class Context extends Observable {
 
 	public void changeChromosome(String id) throws Exception {
 		curChromosome = organism.getChromosome(id);
+
+		int stop = (100 < curChromosome.getSeqTemp().length()-1) ? 100 : curChromosome.getSeqTemp().length()-1;
+		changeSize(0,stop);
 	}
 	
 	public String getSubSequentie() {
-		System.out.println(curChromosome);
 		return this.curChromosome.getSeqTemp().substring(start, stop);
 		
+	}
+
+	public String[] getChromosomeNames(){
+		Set<String> namesSet = this.organism.getChromosomes().keySet();
+		String[] nameArray = namesSet.toArray(new String[namesSet.size()]);
+		Arrays.sort(nameArray);
+		return nameArray;
 	}
 
 	public Organisms getOrganism() {

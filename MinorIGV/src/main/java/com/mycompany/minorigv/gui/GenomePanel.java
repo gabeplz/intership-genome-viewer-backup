@@ -5,10 +5,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 
 /**
@@ -17,10 +17,10 @@ import javax.swing.JTextArea;
  * @author kahuub
  * Date: 20/11/18
  */
-public class GenomePanel extends JPanel{
+public class GenomePanel extends JPanel implements Observer {
 	private Context cont;
 	private JTextArea Organism;
-	private JTextArea Chromosome;
+	private JComboBox Chromosome;
 	private JTextArea Locus;
 	private JButton ZoomIn;
 	private JButton ZoomOut;
@@ -52,12 +52,38 @@ public class GenomePanel extends JPanel{
 		
 		Organism = new JTextArea(1,20);
 		Organism.setText("Organism");
-		Chromosome = new JTextArea(1,20);
-		Chromosome.setText("Chromosome");
+		Chromosome = new JComboBox();
 		Locus = new JTextArea(1,20);
 		Locus.setText("15-30");
+
+		ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				changeChromosome();
+			}
+		};
+
+		Chromosome.addActionListener(chromosomeListener);
+
 	}
-	
+
+	private void changeChromosome()  {
+		try {
+			//cont.changeSize(0,2);
+			cont.changeChromosome((String) Chromosome.getSelectedItem());
+			int start = cont.getStart();
+			int stop = cont.getStop();
+			Locus.setText(start +"-" + stop);
+
+
+		}
+		catch(Exception e){
+			System.out.println("Idk what went wrong");
+
+		}
+
+	}
+
 	private void makeZoomButtons() {
 		
 		ZoomIn = new JButton("+");
@@ -78,10 +104,25 @@ public class GenomePanel extends JPanel{
 		int start = Integer.parseInt(parts[0]);
 		int stop = Integer.parseInt(parts[1]);
 		cont.changeSize(start,stop);
+
+
+
+
 	}
 	public void setContext(Context cont) {
 		this.cont = cont;
+		cont.addObserver(this);
 
 	}
 
+	public void changedContext(){
+		DefaultComboBoxModel model = new DefaultComboBoxModel( cont.getChromosomeNames() );
+		Chromosome.setModel( model );
+
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		changedContext();
+	}
 }

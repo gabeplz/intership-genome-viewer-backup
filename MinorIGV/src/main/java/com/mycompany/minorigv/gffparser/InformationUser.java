@@ -1,5 +1,7 @@
 package com.mycompany.minorigv.gffparser;
-import com.mycompany.minorigv.sequence.TranslationManeger;
+import com.mycompany.minorigv.sequence.AminoAcidSequence;
+import com.mycompany.minorigv.sequence.TranslationManager;
+import com.mycompany.minorigv.sequence.findORF;
 import com.mycompany.minorigv.sequence.makeCompStrand;
 
 import java.io.FileNotFoundException;
@@ -7,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 
 /**
@@ -92,7 +95,7 @@ public class InformationUser {
      * @param chr       Chromosoom object van het gekozen chromosoom van de gebruiker.
      */
     public HashMap<String, Object> getAAuser(Chromosome chr, String seqComp){
-        TranslationManeger translator = new TranslationManeger();
+        TranslationManager translator = new TranslationManager();
         HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), seqComp.toUpperCase());
 
         return readingframes;
