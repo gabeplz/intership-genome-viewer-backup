@@ -1,13 +1,16 @@
 package com.mycompany.minorigv.gui;
 
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.print.DocFlavor;
 import javax.swing.JPanel;
 
 /**
  * builds and draws the panel with the ruler.
  */
-public class RulerPanel extends JPanel {
+public class RulerPanel extends JPanel implements PropertyChangeListener{
 
 	Context conti;			//contains the start stop and length of the sequence on which the ruler will be fitted
 
@@ -85,6 +88,14 @@ public class RulerPanel extends JPanel {
 	 */
 	public void setContext(Context conti) {
 		this.conti = conti;
+		conti.addPropertyChangeListener("range", this);
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		this.invalidate();
+		this.repaint();
+		
 	}
 
 }
