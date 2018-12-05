@@ -3,6 +3,8 @@ package com.mycompany.minorigv.gui;
 import com.mycompany.minorigv.gffparser.Feature;
 
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,7 +17,7 @@ import javax.swing.JPanel;
  * Date: 20/11/18
  *
  */
-public class FeaturePanel extends JPanel {
+public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	Context cont;
 	boolean forward;
 	private ArrayList<Integer> y_coord_forw = new ArrayList<>(Arrays.asList(20,40));
@@ -30,7 +32,10 @@ public class FeaturePanel extends JPanel {
 	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		ArrayList<Feature> featureFilteredList = new ArrayList<>();
+
+		if (cont.getOrganism() == null)return;
+
+		Feature[] featureFilteredList = null;
 
 		try {
 			// Alle features die gekozen zijn door de gebruiker tussen een start en stop positie.
@@ -38,6 +43,10 @@ public class FeaturePanel extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+
+
+        System.out.println(featureFilteredList.length);
 
 		for (Feature feat : featureFilteredList){
 			// Als in het object naam Gene voorkomt dan worden de genen gemapt.
@@ -65,6 +74,7 @@ public class FeaturePanel extends JPanel {
 	 */
 	public void setContext(Context context) {
 		this.cont = context;
+		context.addPropertyChangeListener("currentFeatureList",this);
 	}
 
 	/**
@@ -124,4 +134,9 @@ public class FeaturePanel extends JPanel {
 		}
 	}
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        this.invalidate();
+        this.repaint();
+    }
 }

@@ -16,7 +16,7 @@ public class main {
         path_fasta = classLoader.getResource("GCF_000146045.2_R64_genomic.fna").getFile();
 
         gffReader lees = new gffReader();
-        Organisms org = lees.readData(path_gff);
+        Organisms org = lees.readData(null,path_gff);
 
         HashMap<String,String> fastaMap = FastaFileReader.getSequences(path_fasta);
 

@@ -21,7 +21,7 @@ import java.util.Observer;
  * @author kahuub
  * Date: 19/11/18
  */
-public class GUI implements Observer {
+public class GUI {
 
 	private JFrame frame;
 	private ReferencePanel ReferencePaneel;
@@ -47,14 +47,14 @@ public class GUI implements Observer {
 	/**
 	 * Create the application.
 	 */
-	public GUI() throws Exception {
+	public GUI() {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() throws Exception {
+	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 640, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,7 +67,8 @@ public class GUI implements Observer {
 
 		IGVMenuBar igvMenuBar = new IGVMenuBar();
 		igvMenuBar.init();
-		
+		igvMenuBar.featureMenu();
+
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		//gbc_panel.insets = new Insets(0, 0, 0, 0);
 		gbc_panel.fill = GridBagConstraints.BOTH;
@@ -128,9 +129,7 @@ public class GUI implements Observer {
 		featuresReverse.init(false);
 		organism.add(featuresReverse);
 
-        markORF orf = new markORF();
-		
-		context = new Context("hoi");
+		context = new Context();
 		refpanel1.setContext(context);
 		codonPanel1.setContext(context);
 		codonPanel2.setContext(context);
@@ -139,19 +138,6 @@ public class GUI implements Observer {
 		igvMenuBar.setContext(context);
 		featuresForward.setContext(context);
 		featuresReverse.setContext(context);
-        orf.setContext(context);
-		context.addObserver(this);
-
-
-        orf.init();
-		
-		
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		frame.validate();
-		frame.repaint();
 
 	}
 }
