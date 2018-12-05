@@ -12,7 +12,7 @@ public class Context extends Observable {
 	private ArrayList<Feature> CurrentFeatureList;
 	private int start;
 	private int stop;
-	
+	private ArrayList<String> keuze_gebruiker;
 	public Context(Organisms organism) {
 		this.organism = organism;
 		this.curChromosome = organism.getChromosomes().get(0);
@@ -87,7 +87,7 @@ public class Context extends Observable {
 		}
 
 		String chromosoom_id = "NC_001134.8";
-		ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("mRNA");}};
+		this.keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("mRNA");}};
 
 		try {
 			curChromosome = organism.getChromosome(chromosoom_id);
@@ -117,7 +117,9 @@ public class Context extends Observable {
 		changed();
 
 	}
-
+	public ArrayList<String> getChoicesUser(){
+		return keuze_gebruiker;
+	}
 	public int getLength(){
 		return stop-start;
 	}
