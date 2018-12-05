@@ -55,10 +55,12 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 
     }
 
+
+    //Converteren user input naar pc input door middel van -1 zodat een user input can 1 door de pc word gezien als index0
     private void parseInput() {
-        String positions = Locus.getText();
+        String positions = Locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
         String[] parts = positions.split("-");
-        start = Integer.parseInt(parts[0]) - 1;
+        start = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
         stop = Integer.parseInt(parts[1]) - 1;
     }
 
@@ -80,6 +82,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         Chromosome.addActionListener(chromosomeListener);
 
     }
+
 
     private void changeChromosome() {
         try {
