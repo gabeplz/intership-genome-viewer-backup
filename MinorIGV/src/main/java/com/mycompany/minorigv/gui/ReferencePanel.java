@@ -38,6 +38,7 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		double disBetween = dim.getWidth() / length;
 		String revComp = makeCompStrand.getReverseComplement(seq);
 		for(int i = 0; i < length; i++  ) {
+			int j = length-i-1;
 			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
 			int x_pos = info[1];
 
@@ -45,8 +46,8 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, 20);
 
-			this.chooseLetterColor(g,revComp.charAt(i));
-			DrawingTools.drawCenteredChar(g2, revComp.charAt(i), x_pos, 40);
+			this.chooseLetterColor(g,revComp.charAt(j));
+			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 40);
 			g.setColor(Color.BLACK);
 		}
 
