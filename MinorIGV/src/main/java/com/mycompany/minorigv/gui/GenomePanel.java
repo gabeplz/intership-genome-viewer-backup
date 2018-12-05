@@ -52,7 +52,6 @@ public class GenomePanel extends JPanel implements Observer {
 
     }
 
-
     //Converteren user input naar pc input door middel van -1 zodat een user input can 1 door de pc word gezien als index0
     private void parseInput() {
         String positions = Locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
@@ -79,7 +78,6 @@ public class GenomePanel extends JPanel implements Observer {
         Chromosome.addActionListener(chromosomeListener);
 
     }
-
 
     private void changeChromosome() {
         try {
@@ -156,7 +154,6 @@ public class GenomePanel extends JPanel implements Observer {
         cont.changeSize(start, stop);
         Locus.setText(start + "-" + stop);
     }
-
 
     public void setContext(Context cont) {
         this.cont = cont;

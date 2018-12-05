@@ -80,7 +80,6 @@ public class CodonPanel extends JPanel{
 		}
 	}
 
-
 	public void setContext(Context cont) {
 		this.cont = cont;
 	}
