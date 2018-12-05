@@ -12,7 +12,7 @@ import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.gffReader;
 
-public class Context implements Serializable {
+public class Context implements Serializable, PropertyChangeListener {
 
 	private Organisms organism;
 	private Chromosome curChromosome;
@@ -55,7 +55,7 @@ public class Context implements Serializable {
 			this.setStop(newStop);
 			
 		}
-		pcs.firePropertyChange("subSequentie", "", this.getSubSequentie());
+		pcs.firePropertyChange("range", null, null);
 	}
 
 	/**
@@ -106,6 +106,7 @@ public class Context implements Serializable {
 		this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
 		this.setCurrentFeatureList(null); //resetten featureList
 		defaultSize(); //defaulten qua size
+		pcs.firePropertyChange("fasta", null, null);
 
 	}
 
@@ -137,8 +138,8 @@ public class Context implements Serializable {
 		this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
 		this.setCurrentFeatureList(null); //resetten featureList
 		defaultSize(); //defaulten qua size
+		pcs.firePropertyChange("gff", null, null);
 		
-		//TODO REEE Observer/observable.
 
 	}
 
@@ -167,6 +168,11 @@ public class Context implements Serializable {
 
 	}
 
+	private void setCurrentFeatureList(ArrayList<Feature> featuresBetween) {
+		this.currentFeatureList = featuresBetween;
+		
+	}
+
 	/**
 	 * Functie die het Chromosoom wisselt.
 	 * @param id het String ID om het chromosoom te kiezen.
@@ -176,7 +182,7 @@ public class Context implements Serializable {
 		this.setCurChromosome(organism.getChromosome(id));
 		
 		if(this.stop > this.curChromosome.getSeqTemp().length()-1) defaultSize();
-	
+		pcs.firePropertyChange("chromosome", null, null);
 	}
 
 	/**
@@ -244,30 +250,22 @@ public class Context implements Serializable {
 	public void setCurChromosome(Chromosome curChromosome) {
 		Chromosome oldValue = this.curChromosome;
 		this.curChromosome = curChromosome;
-		pcs.firePropertyChange("curChromosome", oldValue, this.curChromosome);
+		pcs.firePropertyChange("chromosome", oldValue, this.curChromosome);
 	}
 	
 	public Chromosome getCurChromosome() {
 		return curChromosome;
 	}
 
-	public void setCurrentFeatureList(ArrayList<Feature> currentFeatureList) {
-		ArrayList<Feature> oldValue = this.currentFeatureList;
-		this.currentFeatureList = currentFeatureList;
-		pcs.firePropertyChange("currentFeatureList", oldValue, this.currentFeatureList);
-	}
-
-	public void setStart(int start) {
-		int oldValue = this.start;
+	private void setStart(int start) {
+		
 		this.start = start;
-		pcs.firePropertyChange("start", oldValue, this.start);
+		
 	}
 
-	public void setStop(int stop) {
-		assert stop <= this.getFullLenght()-1;
-		int oldValue = this.stop;
+	private void setStop(int stop) {
+		assert stop <= this.getFullLenght()-1;	
 		this.stop = stop;
-		pcs.firePropertyChange("stop", oldValue, this.stop);
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -285,4 +283,16 @@ public class Context implements Serializable {
     public void removePropertyChangeListener(String topic, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(topic,listener);
     }
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		String name = evt.getPropertyName();
+		if(name.equals("fasta") ||
+		   name.equals("gff") ||
+		   name.equals("organism")
+		   )
+		{this.setChromosomeNames();}
+		
+	}
 }

@@ -92,8 +92,8 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 	public void setContext(Context cont) {
 		this.cont = cont;
-		cont.addPropertyChangeListener("subSequentie", this);
-		cont.addPropertyChangeListener("curChromosome",this);
+		cont.addPropertyChangeListener("range", this);
+		cont.addPropertyChangeListener("chromosome",this);
 	}
 
 	public void setForward(Boolean forward) {

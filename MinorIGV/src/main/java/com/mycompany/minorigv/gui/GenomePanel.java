@@ -16,116 +16,169 @@ import javax.swing.*;
 /**
  * Class voor interactie met de gebruiker ten behoeve van het verduidelijken welk gedeelte van de sequentie
  * door de gebruiker aanschouwt wordt.
+ *
  * @author kahuub
  * Date: 20/11/18
  */
-public class GenomePanel extends JPanel implements PropertyChangeListener{
-	private Context cont;
-	private JTextArea Organism;
-	private JComboBox Chromosome;
-	private JTextArea Locus;
-	private JButton ZoomIn;
-	private JButton ZoomOut;
-	private JButton Search;
-	
-	public void init() {
-		
-		this.setBackground(Color.CYAN);
-		this.setLayout(new FlowLayout());
-		this.setPreferredSize(new Dimension(200,50));
-		
-		makeTextAreas();
-		makeZoomButtons();
-		addElements();
-		
-	}
-	
-	private void addElements() {
-		this.add(Organism);
-		this.add(Chromosome);
-		this.add(Locus);
-		this.add(ZoomIn);
-		this.add(ZoomOut);
-		this.add(Search);
-		
-	}
 
-	private void makeTextAreas() {
-		
-		Organism = new JTextArea(1,20);
-		Organism.setText("Organism");
-		Chromosome = new JComboBox();
-		Locus = new JTextArea(1,20);
-		//Locus.setText("0-100");
+public class GenomePanel extends JPanel implements PropertyChangeListener {
+    private Context cont;
+    private JTextArea Organism;
+    private JComboBox Chromosome;
+    private JTextArea Locus;
+    private JButton ZoomIn;
+    private JButton ZoomOut;
+    private JButton Search;
+    private int start;
+    private int stop;
 
-		ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				changeChromosome();
-			}
-		};
 
-		Chromosome.addActionListener(chromosomeListener);
+    public void init() {
 
-	}
-	
-	private void changeText() {
-		Locus.setText(cont.getStart() + "-" + cont.getStop());
-	}
+        this.setBackground(Color.CYAN);
+        this.setLayout(new FlowLayout());
+        this.setPreferredSize(new Dimension(200, 50));
 
-	private void changeChromosome()  {
-		try {
-			//cont.changeSize(0,2);
-			cont.changeChromosome((String) Chromosome.getSelectedItem());
-		}
-		catch(Exception e){
-			System.out.println("Idk what went wrong");
+        makeTextAreas();
+        makeZoomButtons();
+        addElements();
 
-		}
+    }
 
-	}
+    private void addElements() {
+        this.add(Organism);
+        this.add(Chromosome);
+        this.add(Locus);
+        this.add(ZoomIn);
+        this.add(ZoomOut);
+        this.add(Search);
 
-	private void makeZoomButtons() {
-		
-		ZoomIn = new JButton("+");
+    }
 
-		ZoomOut = new JButton("-");
-		Search = new JButton("Search");
-		Search.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SearchAction();
-			}
-		});
-		
-	}
-	private void SearchAction(){
-		String positions = Locus.getText();
-		String[] parts = positions.split("-");
-		int start = Integer.parseInt(parts[0]);
-		int stop = Integer.parseInt(parts[1]);
-		cont.changeSize(start,stop);
-	}
-	public void setContext(Context cont) {
-		this.cont = cont;
-		cont.addPropertyChangeListener("chromosomeNameArray",this);
-		
+    private void parseInput() {
+        String positions = Locus.getText();
+        String[] parts = positions.split("-");
+        start = Integer.parseInt(parts[0]) - 1;
+        stop = Integer.parseInt(parts[1]) - 1;
+    }
 
-	}
+    private void makeTextAreas() {
 
-	public void changedContext(){
-		DefaultComboBoxModel model = new DefaultComboBoxModel( cont.getChromosomeNames() );
-		Chromosome.setModel( model );
-		
+        Organism = new JTextArea(1, 20);
+        Organism.setText("Organism");
+        Chromosome = new JComboBox();
+        Locus = new JTextArea(1, 20);
+        Locus.setText("1-100");
 
-	}
+        ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeChromosome();
+            }
+        };
+
+        Chromosome.addActionListener(chromosomeListener);
+
+    }
+
+    private void changeChromosome() {
+        try {
+            //cont.changeSize(0,2);
+            cont.changeChromosome((String) Chromosome.getSelectedItem());
+
+        } catch (Exception e) {
+            System.out.println("Idk what went wrong");
+
+        }
+
+    }
+
+    private void makeZoomButtons() {
+
+        ZoomIn = new JButton("+");
+        ZoomIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ZoomInAction();
+            }
+        });
+
+        ZoomOut = new JButton("-");
+        ZoomOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ZoomOutAction();
+            }
+        });
+
+        Search = new JButton("Search");
+        Search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SearchAction();
+            }
+        });
+
+    }
+
+    private void SearchAction() {
+        parseInput();
+        cont.changeSize(start, stop);
+    }
+
+    private void ZoomInAction() {
+        parseInput();
+        int length = stop - start;
+        if (length > 10) {
+            int scale = (int) Math.round(length * 0.1);
+            start = start + scale +1;
+            stop = stop - scale +1;
+
+            cont.changeSize(start, stop);
+        }
+    }
+
+    private void ZoomOutAction() {
+        parseInput();
+        int length = stop - start;
+        //if (length*0.1 <= cont.getLength()
+        int scale = (int) Math.round(length * 0.1);
+        start = start - scale +1;
+        stop = stop + scale +1;
+        if (start <= 0) {
+            start = 0;
+            }
+        cont.changeSize(start, stop);
+    }
+
+
+    public void setContext(Context cont) {
+        this.cont = cont;
+        cont.addPropertyChangeListener("chromosomeNameArray", this);
+        cont.addPropertyChangeListener("range",this);
+        
+
+    }
+    
+    private void syncSize() {
+    	this.Locus.setText((cont.getStart()+1)+"-"+(cont.getStop()+1));
+    }
+
+    public void changedContext() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel(cont.getChromosomeNames());
+        Chromosome.setModel(model);
+
+    }
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		
-		if (evt.getPropertyName().equals("chromosomeNameArray"))changedContext();
-		if (evt.getPropertyName().equals("startStop")) changeText();
-		
+		if (evt.getPropertyName().equals("chromosomeNameArray")) {
+			changedContext();
+			syncSize();
+		}
+		else if(evt.getPropertyName().equals("range")) {
+			syncSize();
+		}	
 	}
-
 }
