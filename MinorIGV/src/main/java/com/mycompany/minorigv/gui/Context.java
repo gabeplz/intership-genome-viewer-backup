@@ -71,8 +71,8 @@ public class Context extends Observable {
 
 	public Context(String test) throws Exception {
 		//// ----- information user ----- ////
-		start = 5;
-		stop = 35;
+		start = 7000;
+		stop = 7800;
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		String path_gff = classLoader.getResource("voorbeeldgff.gff").getFile();
 		String path_fasta = classLoader.getResource("GCF_000146045.2_R64_genomic.fna").getFile();
@@ -86,7 +86,7 @@ public class Context extends Observable {
 			organism.addSequence(id,fastaMap.get(id));
 		}
 
-		String chromosoom_id = "NC_001133.9";
+		String chromosoom_id = "NC_001134.8";
 		ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
 
 		try {

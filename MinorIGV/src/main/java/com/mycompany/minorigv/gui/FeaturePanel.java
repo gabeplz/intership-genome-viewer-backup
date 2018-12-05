@@ -40,21 +40,22 @@ public class FeaturePanel extends JPanel {
 				start = feat.getStart() - cont.getStart();
 				stop = feat.getStop() - cont.getStart();
 				String strand = feat.getStrand();
-				System.out.println(strand);
+
 				int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
 				int[] info_stop = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
 				if(strand.equals("+") && forward == true){
-					// Start is waar op de x-as, lengthGene is hoe lang de balk moet zijn, height is de dikte van de balk.
 					g.setColor(Color.ORANGE);
-					g.fillRect(info[1], 30, info_stop[1]-info[1], 15);
+					// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
+					g.fillRect(info[1], dim.height-20, info_stop[1]-info[1], 15);
 					g.setColor(Color.BLACK);
 
 					// locus tag in midden van gen visualiseren.
 					int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-					g.drawString(tag, ((info_stop[1]+info[1])/2)-centerTag, 43);
+					g.drawString(tag, ((info_stop[1]+info[1])/2)-centerTag, dim.height - 8);
 				}else if(strand.equals("-") && forward == false){
-					// Start is waar op de x-as, lengthGene is hoe lang de balk moet zijn, height is de dikte van de balk.
 					g.setColor(Color.ORANGE);
+
+					// Het op de goede positie zetten van de genen.
 					g.fillRect(info[1], 4, info_stop[1]-info[1], 15);
 					g.setColor(Color.BLACK);
 
@@ -66,6 +67,7 @@ public class FeaturePanel extends JPanel {
 			}
 		}
 	}
+
 	public void init(boolean forward) {
 		this.forward = forward;
 		this.setBackground(Color.lightGray);
