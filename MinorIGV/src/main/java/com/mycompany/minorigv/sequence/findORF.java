@@ -77,8 +77,8 @@ public class findORF {
         ArrayList<ORF> listORF = new ArrayList<>();
 
         while(match.find()){
-            int start = seq.length() - match.start();   // Positie van het startcodon op de orginele sequentie (+)
-            int stop = seq.length() - match.end();      // Positie van het stopcodon op de orginele sequentie (+)
+            int stop = seq.length() - match.start();   // Positie van het startcodon op de orginele sequentie (+)
+            int start = seq.length() - match.end();      // Positie van het stopcodon op de orginele sequentie (+)
             int readingframe;
             idORF++;
 

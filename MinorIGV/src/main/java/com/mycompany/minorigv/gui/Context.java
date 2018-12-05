@@ -1,5 +1,6 @@
 package com.mycompany.minorigv.gui;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
@@ -84,6 +85,7 @@ public class Context extends Observable {
 
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
+			organism.getChromosome(id).setListORF();
 		}
 
 		String chromosoom_id = "NC_001134.8";
@@ -164,6 +166,10 @@ public class Context extends Observable {
 
 	public int getStop() {
 		return stop;
+	}
+
+	public ArrayList<ORF> getCurORFList(){
+		return curChromosome.getListORF();
 	}
 
 

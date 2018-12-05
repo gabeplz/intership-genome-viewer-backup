@@ -127,6 +127,8 @@ public class GUI implements Observer {
 		FeaturePanel featuresReverse = new FeaturePanel();
 		featuresReverse.init(false);
 		organism.add(featuresReverse);
+
+        markORF orf = new markORF();
 		
 		context = new Context("hoi");
 		refpanel1.setContext(context);
@@ -137,7 +139,11 @@ public class GUI implements Observer {
 		igvMenuBar.setContext(context);
 		featuresForward.setContext(context);
 		featuresReverse.setContext(context);
+        orf.setContext(context);
 		context.addObserver(this);
+
+
+        orf.init();
 		
 		
 	}
