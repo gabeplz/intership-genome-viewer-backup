@@ -87,7 +87,7 @@ public class Context extends Observable {
 		}
 
 		String chromosoom_id = "NC_001134.8";
-		ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("Region");}};
+		ArrayList<String> keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("CDS"); add("mRNA");}};
 
 		try {
 			curChromosome = organism.getChromosome(chromosoom_id);
