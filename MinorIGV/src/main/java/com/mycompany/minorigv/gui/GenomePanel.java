@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,7 +20,8 @@ import javax.swing.*;
  * @author kahuub
  * Date: 20/11/18
  */
-public class GenomePanel extends JPanel implements Observer {
+
+public class GenomePanel extends JPanel implements PropertyChangeListener {
     private Context cont;
     private JTextArea Organism;
     private JComboBox Chromosome;
@@ -66,7 +69,7 @@ public class GenomePanel extends JPanel implements Observer {
         Organism.setText("Organism");
         Chromosome = new JComboBox();
         Locus = new JTextArea(1, 20);
-        Locus.setText("15-30");
+        Locus.setText("1-100");
 
         ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
             @Override
@@ -83,10 +86,6 @@ public class GenomePanel extends JPanel implements Observer {
         try {
             //cont.changeSize(0,2);
             cont.changeChromosome((String) Chromosome.getSelectedItem());
-            int start = cont.getStart();
-            int stop = cont.getStop();
-            Locus.setText(start + "-" + stop);
-
 
         } catch (Exception e) {
             System.out.println("Idk what went wrong");
@@ -137,7 +136,6 @@ public class GenomePanel extends JPanel implements Observer {
             stop = stop - scale +1;
 
             cont.changeSize(start, stop);
-            Locus.setText(start + "-" + stop);
         }
     }
 
@@ -152,13 +150,18 @@ public class GenomePanel extends JPanel implements Observer {
             start = 0;
             }
         cont.changeSize(start, stop);
-        Locus.setText(start + "-" + stop);
     }
 
     public void setContext(Context cont) {
         this.cont = cont;
-        cont.addObserver(this);
+        cont.addPropertyChangeListener("chromosomeNameArray", this);
+        cont.addPropertyChangeListener("range",this);
+        
 
+    }
+    
+    private void syncSize() {
+    	this.Locus.setText((cont.getStart()+1)+"-"+(cont.getStop()+1));
     }
 
     public void changedContext() {
@@ -167,8 +170,15 @@ public class GenomePanel extends JPanel implements Observer {
 
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        changedContext();
-    }
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		if (evt.getPropertyName().equals("chromosomeNameArray")) {
+			changedContext();
+			syncSize();
+		}
+		else if(evt.getPropertyName().equals("range")) {
+			syncSize();
+		}	
+	}
 }

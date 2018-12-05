@@ -10,6 +10,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.*;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 
 public class IGVMenuBar extends JMenuBar {
@@ -145,10 +151,14 @@ public class IGVMenuBar extends JMenuBar {
 	// test button action listener
 	private void loadReferenceAction() {
 		try{
-		FastaFileChooser fasta = new FastaFileChooser();
-		String path = fasta.fastafile();
-		cont.addFasta(path);
-		System.out.println("load reference test");
+			FastaFileChooser fasta = new FastaFileChooser();
+			String path = fasta.fastafile();
+			cont.addFasta(path);
+
+
+
+
+			System.out.println("load reference test");
 	}catch (Exception e){}
 	}
 	private void OpenDataAction() {
