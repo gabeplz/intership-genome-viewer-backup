@@ -36,11 +36,13 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		int length = cont.getStop()-cont.getStart();
 
 		double disBetween = dim.getWidth() / length;
+		System.out.println(disBetween);
 		String revComp = makeCompStrand.getReverseComplement(seq);
 		for(int i = 0; i < length; i++  ) {
 			int j = length-i-1;
 			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
 			int x_pos = info[1];
+			System.out.println(x_pos);
 
 			this.chooseLetterColor(g,seq.charAt(i));
 
