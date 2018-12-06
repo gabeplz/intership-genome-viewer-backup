@@ -203,9 +203,9 @@ public class IGVMenuBar extends JMenuBar {
 	private void regionAction() {
 		Boolean m = Region.isSelected();
 		if (m == true){
-			featureArray.add("Region");
+			featureArray.add("region");
 		}else{
-			featureArray.remove("Region");
+			featureArray.remove("region");
 		}
 		System.out.println(featureArray);
         tellContext();
@@ -213,9 +213,9 @@ public class IGVMenuBar extends JMenuBar {
 	private void exonAction() {
 		Boolean m = Exon.isSelected();
 		if (m == true){
-			featureArray.add("EXON");
+			featureArray.add("exon");
 		}else{
-			featureArray.remove("EXON");
+			featureArray.remove("exon");
 		}
 		System.out.println(featureArray);
         tellContext();

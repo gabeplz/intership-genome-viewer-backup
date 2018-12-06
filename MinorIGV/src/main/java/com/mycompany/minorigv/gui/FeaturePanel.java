@@ -13,17 +13,17 @@ import javax.swing.JPanel;
 /**
  * Class voor de visualisatie van verschillende features zoals MRNA/Genen/Telomeren etc die te vinden zijn
  * in GFF(Generic feature format) Files.
- * @author kahuub
+ * @author kahuub en Amber Janssen Groesbeek
  * Date: 20/11/18
  *
  */
 public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	Context cont;
 	boolean forward;
-	private ArrayList<Integer> y_coord_forw = new ArrayList<>(Arrays.asList(20,40));
-	private ArrayList<Integer> y_text_forw = new ArrayList<>(Arrays.asList(8,28));
-	private ArrayList<Integer> y_coord_rev = new ArrayList<>(Arrays.asList(4,25));
-	private ArrayList<Integer> y_text_rev = new ArrayList<>(Arrays.asList(15,37));
+	private ArrayList<Integer> y_coord_forw = new ArrayList<>(Arrays.asList(20,60));
+	private ArrayList<Integer> y_text_forw = new ArrayList<>(Arrays.asList(8,48));
+	private ArrayList<Integer> y_coord_rev = new ArrayList<>(Arrays.asList(4,45));
+	private ArrayList<Integer> y_text_rev = new ArrayList<>(Arrays.asList(15,57));
 
 	/**
 	 * Alle features binnen een gewenst start-stop positie ophalen en deze weergeven in de GUI.
@@ -44,17 +44,34 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			e.printStackTrace();
 		}
 
+
+        int latest_stop_genes = 0;
+		int latest_stop_mrna = 0;
+		int overlap_coord_genes = 0;
+		int overlap_coord_mrna = 0;
 		ArrayList<String> choices_user = cont.getChoicesUser();
 		for (Feature feat : featureFilteredList){
 			// Als in het object naam Gene voorkomt dan worden de genen gemapt.
 			if(feat instanceof Gene){
+
+			    if(feat.getStart() < latest_stop_genes && overlap_coord_genes == 0){
+                    overlap_coord_genes = 18;
+                }else{
+                    overlap_coord_genes = 0;
+                }
 				int index = choices_user.indexOf("Gene");
-				drawFeatures(feat,g, (String) feat.getAttributes().get("locus_tag"), index, Color.ORANGE, Color.black);
+				latest_stop_genes = drawFeatures(feat,g, (String) feat.getAttributes().get("locus_tag"), index, Color.ORANGE, Color.black, overlap_coord_genes);
+
 			// Als in het object naam mRNA voorkomt dan word mRNA gemapt
 			}else if(feat instanceof mRNA){
+			    if(feat.getStart() < latest_stop_mrna && overlap_coord_mrna == 0){
+                    overlap_coord_mrna = 22;
+                }else{
+                    overlap_coord_mrna = 0;
+                }
 				// Ophalen welke index van de coordinaten er gepakt moet worden.
 				int index = choices_user.indexOf("mRNA");
-				drawFeatures(feat,g, (String) feat.getAttributes().get("Name"), index, Color.BLUE, Color.white);
+				latest_stop_mrna = drawFeatures(feat,g, (String) feat.getAttributes().get("Name"), index, Color.BLUE, Color.white, overlap_coord_mrna);
 			}
 		}
 	}
@@ -69,15 +86,21 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	 * @param colorFeature	Kleur van het balkje voor een Feature
 	 * @param colorText		Kleur van de tekst in een balkje.
 	 */
-	public void drawFeatures(Feature feat, Graphics g, String tag, int index, Color colorFeature, Color colorText){
+	public int drawFeatures(Feature feat, Graphics g, String tag, int index, Color colorFeature, Color colorText, int overlap_coord){
 		int start, stop;
 		Dimension dim = this.getSize();
 		int length = cont.getLength();
 
-		start = feat.getStart() - cont.getStart();
+//		if(feat.getStart() < latest_stop && overlap_coord == 0){
+//		    overlap_coord = 18;
+//        }else{
+//            overlap_coord = 0;
+//        }
+
+
+        start = feat.getStart() - cont.getStart();
 		stop = feat.getStop() - cont.getStart();
 		String strand = feat.getStrand();
-
 		int[] info_start = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
 		int[] info_stop = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
 
@@ -85,48 +108,47 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 		if(strand.equals("+") && forward == true){
 			g.setColor(colorFeature);
 			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
-			g.fillRect(info_start[1], dim.height-y_coord_forw.get(index), info_stop[1]-info_start[1], 15);
+			g.fillRect(info_start[1], (dim.height-y_coord_forw.get(index))+overlap_coord, info_stop[1]-info_start[1], 15);
 			g.setColor(colorText);
 
-			sizeLettertype(g, tag, info_stop[1], info_start[1]);
+			// Kleiner lettertype bij een kleiner balkje
+			if(g.getFontMetrics().stringWidth(tag) > info_stop[1]-info_start[1]){
+				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+			}else{
+				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			}
 
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, dim.height - y_text_forw.get(index));
+			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, (dim.height - y_text_forw.get(index))+overlap_coord);
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
 		}else if(strand.equals("-") && forward == false){
 			g.setColor(colorFeature);
 
 			// Het op de goede positie zetten van de genen.
-			g.fillRect(info_start[1], y_coord_rev.get(index), info_stop[1]-info_start[1], 15);
+			g.fillRect(info_start[1], y_coord_rev.get(index)+overlap_coord, info_stop[1]-info_start[1], 15);
 			g.setColor(colorText);
 
-			sizeLettertype(g, tag, info_stop[1], info_start[1]);
+			// Kleiner lettertype bij een kleiner balkje
+			if(g.getFontMetrics().stringWidth(tag) > info_stop[1]-info_start[1]){
+				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+			}else{
+				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			}
 
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, y_text_rev.get(index));
+			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, y_text_rev.get(index) + overlap_coord);
 		}
+
+		return feat.getStop();
 	}
 
 	/**
-	 * Lettertype in de balkjes van de Features vaststellen.
 	 *
-	 * @param g				Waarin getekend wordt
-	 * @param tag			De naam die in de balkjes van de Feature komen te staan
-	 * @param info_stop		Integer waar het balkje van de Feature stopt
-	 * @param info_start	Integer waar het balkje van de Feature begint.
+	 * @param forward	boolean voor welke panel: True voor forward panel, False voor reverse panel.
 	 */
-	public void sizeLettertype(Graphics g, String tag, int info_stop, int info_start){
-		// Kleiner lettertype bij een kleiner balkje
-		if(g.getFontMetrics().stringWidth(tag) > info_stop-info_start){
-			g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		}else{
-			g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		}
-	}
-
 	public void init(boolean forward) {
 		this.forward = forward;
 		this.setBackground(Color.lightGray);
