@@ -407,4 +407,8 @@ public class Context implements Serializable, PropertyChangeListener {
         }
 
 	}
+
+	public String getSequentie() {
+		return curChromosome.getSeqTemp();
+	}
 }

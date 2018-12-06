@@ -29,18 +29,59 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		}
 
 		Graphics2D g2 = (Graphics2D) g;
-
 		Dimension dim = this.getSize();
 		String seq = cont.getSubSequentie();
+		int length = cont.getLength();
 
-		int length = cont.getStop()-cont.getStart();
+		int width = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), length);
 
-		double disBetween = dim.getWidth() / length;
+		if (width > 7){
+		    drawLetters(g,seq);
+        }
+        else if(width >= 1 ){
+            drawNuc(g,seq);
+        }
+
+
+	}
+
+    private void drawNuc(Graphics g, String seq) {
+
+        Graphics2D g2 = (Graphics2D) g;
+        Dimension dim = this.getSize();
+        seq = cont.getSubSequentie();
+        int length = cont.getLength();
+
+        String revComp = makeCompStrand.getReverseComplement(seq);
+
+        for(int i = 0; i < length; i++  ) {
+            int j = length-i-1;
+            
+            int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);
+
+            this.chooseLetterColor(g,seq.charAt(i));
+            //DrawingTools.drawCenteredFilledRect(g2, x_pos,x_width, 20);
+
+            this.chooseLetterColor(g,revComp.charAt(j));
+           // DrawingTools.drawCenteredFilledRect(g2, x_pos, 40);
+
+            g.setColor(Color.BLACK);
+        }
+
+    }
+
+    private void drawLetters(Graphics g, String seq){
+
+		Graphics2D g2 = (Graphics2D) g;
+		Dimension dim = this.getSize();
+		seq = cont.getSubSequentie();
+		int length = cont.getLength();
+
 		String revComp = makeCompStrand.getReverseComplement(seq);
 		for(int i = 0; i < length; i++  ) {
 			int j = length-i-1;
-			int[] info = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, i);
-			int x_pos = info[1];
+			
+			int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);
 
 			this.chooseLetterColor(g,seq.charAt(i));
 
@@ -50,6 +91,7 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 40);
 			g.setColor(Color.BLACK);
 		}
+
 
 	}
 

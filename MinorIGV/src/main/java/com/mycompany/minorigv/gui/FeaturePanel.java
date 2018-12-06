@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.gffparser.Feature;
+import com.mycompany.minorigv.sequence.Strand;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -90,20 +91,20 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 		start = feat.getStart() - cont.getStart();
 		stop = feat.getStop() - cont.getStart();
-		String strand = feat.getStrand();
+		Strand strand = feat.getStrand();
 
-		int[] info_start = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
-		int[] info_stop = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
+		int start_pos = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
+		int stop_pos = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
 
 		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
-		if(strand.equals("+") && forward == true){
+		if(strand == Strand.POSITIVE && forward == true){
 			g.setColor(Color.ORANGE);
 			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
-			g.fillRect(info_start[1], dim.height-y_coord_forw.get(index), info_stop[1]-info_start[1], 15);
+			g.fillRect(start_pos, dim.height-y_coord_forw.get(index), stop_pos-start_pos, 15);
 			g.setColor(Color.BLACK);
 
 			// Kleiner lettertype bij een kleiner balkje
-			if(g.getFontMetrics().stringWidth(tag) > info_stop[1]-info_start[1]){
+			if(g.getFontMetrics().stringWidth(tag) > stop_pos-start_pos){
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 			}else{
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
@@ -111,18 +112,18 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, dim.height - y_text_forw.get(index));
+			g.drawString(tag, ((stop_pos+start_pos)/2)-centerTag, dim.height - y_text_forw.get(index));
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
-		}else if(strand.equals("-") && forward == false){
+		}else if(strand == Strand.NEGATIVE && forward == false){
 			g.setColor(Color.ORANGE);
 
 			// Het op de goede positie zetten van de genen.
-			g.fillRect(info_start[1], y_coord_rev.get(index), info_stop[1]-info_start[1], 15);
+			g.fillRect(start_pos, y_coord_rev.get(index), stop_pos-start_pos, 15);
 			g.setColor(Color.BLACK);
 
 			// Kleiner lettertype bij een kleiner balkje
-			if(g.getFontMetrics().stringWidth(tag) > info_stop[1]-info_start[1]){
+			if(g.getFontMetrics().stringWidth(tag) > stop_pos-start_pos){
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 			}else{
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
@@ -130,7 +131,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, y_text_rev.get(index));
+			g.drawString(tag, ((stop_pos+start_pos)/2)-centerTag, y_text_rev.get(index));
 		}
 	}
 

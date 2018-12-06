@@ -148,9 +148,9 @@ public class TranslationManager {
             acids.add(aa);
         }
 
-        if (direction == Strand.NEGATIVE) {     // aminozuur sequentie word omgedraaid voor visualisatie doeleinden 
-            Collections.reverse(acids);         // de output is dus achterstevoren met de volgorde waarin ze in een biologische omgeving getransleerd zouden worden     
-        }
+        //if (direction == Strand.NEGATIVE) {     // aminozuur sequentie word omgedraaid voor visualisatie doeleinden 
+        //    Collections.reverse(acids);         // de output is dus achterstevoren met de volgorde waarin ze in een biologische omgeving getransleerd zouden worden     
+        //}
 
         String listString = String.join("", acids);     // veranderd de arraylist in een string
         return listString;

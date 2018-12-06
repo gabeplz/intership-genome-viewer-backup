@@ -49,8 +49,8 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 
 		for (int j = first; j < stop; j+= stepSize){
 
-			int[] info = DrawingTools.calculateLetterPosition(this.getWidth(), length,Double.valueOf(j-start)); //scales the positions (in sequence) to the width of the panel
-			int pos = info[1];
+			 
+			int pos = (int) DrawingTools.calculateLetterPosition(this.getWidth(), length,Double.valueOf(j-start)); //scales the positions (in sequence) to the width of the panel
 			g.drawLine(pos,40,pos,30);								// draws line on the ruler
 			g.drawString(String.valueOf(j + 1) + "bp", pos, 30);		// draws the nucleotide position(in sequence) above the line
 
@@ -79,7 +79,7 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 		}
 
 		return -1;
-		//1-2-5-10-20-50-100-200-500-1000-2000-5000-10.000
+		//1-2-5-10-20-50-100-200-500-1000-2000-5000-10000
 	}
 
 	/**

@@ -22,11 +22,11 @@ import com.mycompany.minorigv.sequence.makeCompStrand;
 public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 	Context cont;
-	Boolean forward;
+	Strand strand;
 
 
-	public void init(Boolean strand) {
-		this.forward = strand;
+	public void init(Strand strand) {
+		this.strand = strand;
 		//this.setBackground(Color.ORANGE);
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
@@ -36,74 +36,126 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
-		try {
-			cont.getSubSequentie();
+
+		String seq;
+		try { 
+			seq = cont.getSequentie(); 
 		}
-		catch (Exception e) {
-			return; //geen sequentie.
+		catch (Exception e){
+			return;
 		}
 
-		String seq = cont.getSubSequentie();
-		int start = cont.getStart();
-		int stop = cont.getStop();
+		if(strand == Strand.POSITIVE) {
+			drawPositive(g,seq);
+		}
+		else {
+			drawNegative(g,seq);
+		}
 
-		seq = forward ? seq : makeCompStrand.getReverseComplement(seq);
+	}
 
-		Strand direction = forward ? Strand.POSITIVE : Strand.NEGATIVE;
+	private void drawNegative(Graphics g, String seq) {
+
+		int start = cont.getStart(); 					//start van het beeld.
+		int stop = cont.getStop(); 						//stop van het beeld.
+		int length = cont.getLength();					//lengte subsequentie.
+		int PanelWidth = (int) getSize().getWidth(); 	//breedte paneel
 
 		CodonTabel huidigeTabel = TranslationManager.buildDefault();
 
-		int k = forward ? +1 : -1;
+		for (int f = 0; f < 3; f++) { //TODO Berekenen van het frame adhv de stop.
+			int frameStart = cont.getFullLenght() -stop -f;
+			int frame = frameStart % 3; //TODO eigen functie.
+			
 
+			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel);
+			
 
-		for (int f = 0; f < 3; f++) {
-			String aaSeq = TranslationManager.getAminoAcids(Strand.POSITIVE,seq.substring(f),huidigeTabel);
-			int aa = 0;
-			for (int i = f; i < seq.length()-2; i+=3) {
+			int aa = 0; // aa teller
+			for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) {
 
-				int j = forward ? i : seq.length()-1-i;
+				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexRef-start-2);
+				System.out.println(String.valueOf(PanelWidth)+":"+String.valueOf(length)+":"+String.valueOf(indexRef-start)+":"+String.valueOf(x_pos));
 
-				int[] info = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(),seq.length(), j+k);
-				int x_pos = info[1];
+				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
 
-				int width = DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(), j+1.5)[1];
-				width -= DrawingTools.calculateLetterPosition((int) this.getSize().getWidth(), seq.length(),j-1.5)[1];
-
-				if(j%2 > 0) {
+				if(indexRef%2 > 0) {
 					g.setColor(new Color(42, 112, 150));
 				}
 				else{
 					g.setColor(new Color(127, 191, 226));
 				}
 
-				int y = (start + j) % 3;
-
-				DrawingTools.drawFilledRect(g, x_pos, 20+20*(y),width+1, 20);
+				int height = 20+20*(2-frame);
+				DrawingTools.drawFilledRect(g, x_pos, height,width+1, 20);
 				g.setColor(Color.BLACK);
 
-				DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,20+20*(y));
+				DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,height);
 				aa++;
 			}
 
 		}
+
 	}
 
+
+
+	private void drawPositive(Graphics g, String seq) {
+
+		int start = cont.getStart(); 					//start van het beeld.
+		int stop = cont.getStop(); 						//stop van het beeld.
+		int length = cont.getLength();						//lengte subsequentie.
+		int PanelWidth = (int) getSize().getWidth(); 	//breedte paneel
+
+		CodonTabel huidigeTabel = TranslationManager.buildDefault();
+
+		for (int f = 0; f < 3; f++) {
+			int frameStart = start+f;
+			int frame = frameStart % 3; //TODO eigen functie.
+
+			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start+f,stop),huidigeTabel);
+
+			int aa = 0; // aa teller
+			for (int indexRef = frameStart; indexRef < stop-2; indexRef+=3) {
+
+				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexRef-start+1);
+				System.out.println(String.valueOf(PanelWidth)+":"+String.valueOf(length)+":"+String.valueOf(indexRef-start)+":"+String.valueOf(x_pos));
+
+				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
+
+				if(indexRef%2 > 0) {
+					g.setColor(new Color(42, 112, 150));
+				}
+				else{
+					g.setColor(new Color(127, 191, 226));
+				}
+
+				int height = 20+20*(2-frame);
+				DrawingTools.drawFilledRect(g, x_pos, height,width+1, 20);
+				g.setColor(Color.BLACK);
+
+				DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,height);
+				aa++;
+			}
+
+		}
+
+	}
 	public void setContext(Context cont) {
 		this.cont = cont;
 		cont.addPropertyChangeListener("range", this);
 		cont.addPropertyChangeListener("chromosome",this);
 	}
 
-	public void setForward(Boolean forward) {
-		this.forward = forward;
+	public void setForward(Strand strand) {
+		this.strand = strand;
 	}
-	
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		
+
 		this.revalidate();
 		this.repaint();
-		
+
 	}
 }
