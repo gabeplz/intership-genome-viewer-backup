@@ -25,7 +25,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     private Context cont;
     private JTextArea Organism;
     private JComboBox Chromosome;
-    private JTextArea Locus;
+    private JTextField Locus;
     private JButton ZoomIn;
     private JButton ZoomOut;
     private JButton Search;
@@ -68,7 +68,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         Organism = new JTextArea(1, 20);
         Organism.setText("Organism");
         Chromosome = new JComboBox();
-        Locus = new JTextArea(1, 20);
+        Locus = new JTextField(20);
+        Locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         Locus.setText("1-100");
 
         ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
