@@ -183,11 +183,12 @@ public class IGVMenuBar extends JMenuBar {
 	private void genesAction() {
 		Boolean m = Genes.isSelected();
 		if (m == true){
-			featureArray.add("Genes");
+			featureArray.add("Gene");
 		}else{
-			featureArray.remove("Genes");
+			featureArray.remove("Gene");
 		}
 		System.out.println(featureArray);
+        tellContext();
 	}
 	private void mrnaAction() {
 		Boolean m = mRNA.isSelected();
@@ -197,6 +198,7 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("mRNA");
 		}
 		System.out.println(featureArray);
+        tellContext();
 	}
 	private void regionAction() {
 		Boolean m = Region.isSelected();
@@ -206,6 +208,7 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("Region");
 		}
 		System.out.println(featureArray);
+        tellContext();
 	}
 	private void exonAction() {
 		Boolean m = Exon.isSelected();
@@ -215,6 +218,7 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("EXON");
 		}
 		System.out.println(featureArray);
+        tellContext();
 	}
 	private void cdsAction() {
 		Boolean m = CDS.isSelected();
@@ -224,12 +228,18 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("CDS");
 		}
 		System.out.println(featureArray);
+        tellContext();
 	}
 
 
 	public ArrayList<String> getFeatureArray() {
 		return featureArray;
 	}
+
+	public void tellContext(){
+	    cont.setKeuze_gebruiker(this.featureArray);
+    }
+
 	public void setContext(Context cont) {
 		this.cont = cont;
 	}

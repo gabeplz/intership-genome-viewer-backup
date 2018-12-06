@@ -9,7 +9,7 @@ import java.util.HashMap;
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  *
  */
-class Gene extends Feature{
+public class Gene extends Feature{
 
 private HashMap attributes;
 

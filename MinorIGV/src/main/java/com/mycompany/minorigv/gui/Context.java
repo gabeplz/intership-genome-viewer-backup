@@ -34,8 +34,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private ArrayList<String> keuze_gebruiker;
 
 
-	private final int DEFAULT_START = 0;
-	private final int DEFAULT_STOP = 100;
+	private final int DEFAULT_START = 2000;
+	private final int DEFAULT_STOP = 9000;
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -85,7 +85,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	public Context(){
         this.addPropertyChangeListener(this);
         this.keuze_gebruiker = new ArrayList<String>();
-        keuze_gebruiker.add("Gene");
 	}
 	
 	public Context(String test, String tes1) throws Exception {
@@ -173,7 +172,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
-			System.out.println("hoi: "+id);
 		}
 
 		setChromosomeNames(); //update chromosoom namen
@@ -242,11 +240,14 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 
+
+
 	private void updateCurrentFeatureList() {
 	    this.featStart = start;
 	    this.featStop = stop;
+
 	    ArrayList<Feature> featList = Chromosome.filterFeatures(curChromosome.getFeaturesBetween(featStart,featStop),this.keuze_gebruiker);
-		this.currentFeatureList = featList.toArray(new Feature[featList.size()]);
+	    this.currentFeatureList = featList.toArray(new Feature[featList.size()]);
 
 		pcs.firePropertyChange("currentFeatureList",null,null);
 
@@ -309,13 +310,13 @@ public class Context implements Serializable, PropertyChangeListener {
 		return organism;
 	}
 
-	public Feature[] getCurrentFeatureList() {
+	public ArrayList<Feature> getCurrentFeatureList() {
+	    return Chromosome.filterFeatures(this.curChromosome.getFeaturesBetween(start,stop),this.keuze_gebruiker);
 
-	    if(currentFeatureList == null || featStart != start || featStop != stop){
-	        updateCurrentFeatureList();
-        }
-	    return this.currentFeatureList;
+	}
 
+	public void setKeuze_gebruiker(ArrayList<String> keuzes){
+		this.keuze_gebruiker = keuzes;
 	}
 
 	public int getStart() {
@@ -402,7 +403,6 @@ public class Context implements Serializable, PropertyChangeListener {
 				)
 		{this.setChromosomeNames();}
 		if(name.equals("range")){
-            System.out.println("boi");
 		    this.updateCurrentFeatureList();
         }
 

@@ -175,6 +175,7 @@ public class Chromosome {
      */
     public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
         ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
+
         for (Feature feat : featureList){
             String klas = feat.getClass().toString();
             for (String optie : SelectedFeatures){

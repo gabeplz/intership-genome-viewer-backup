@@ -1,6 +1,6 @@
 package com.mycompany.minorigv.gui;
 
-import com.mycompany.minorigv.gffparser.Feature;
+import com.mycompany.minorigv.gffparser.*;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -35,7 +35,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 		if (cont.getOrganism() == null)return;
 
-		Feature[] featureFilteredList = null;
+		ArrayList<Feature> featureFilteredList = null;
 
 		try {
 			// Alle features die gekozen zijn door de gebruiker tussen een start en stop positie.
@@ -44,22 +44,86 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			e.printStackTrace();
 		}
 
-
-
-        System.out.println(featureFilteredList.length);
-
+		ArrayList<String> choices_user = cont.getChoicesUser();
 		for (Feature feat : featureFilteredList){
 			// Als in het object naam Gene voorkomt dan worden de genen gemapt.
-			if(feat.toString().contains("Gene")){
-				int index = cont.getChoicesUser().indexOf("Gene");
-				drawFeatures(feat,g, (String) feat.getAttributes().get("locus_tag"), index);
-
+			if(feat instanceof Gene){
+				int index = choices_user.indexOf("Gene");
+				drawFeatures(feat,g, (String) feat.getAttributes().get("locus_tag"), index, Color.ORANGE, Color.black);
 			// Als in het object naam mRNA voorkomt dan word mRNA gemapt
-			}else if(feat.toString().contains("mRNA")){
+			}else if(feat instanceof mRNA){
 				// Ophalen welke index van de coordinaten er gepakt moet worden.
-				int index = cont.getChoicesUser().indexOf("mRNA");
-				drawFeatures(feat,g, (String) feat.getAttributes().get("Name"), index);
+				int index = choices_user.indexOf("mRNA");
+				drawFeatures(feat,g, (String) feat.getAttributes().get("Name"), index, Color.BLUE, Color.white);
 			}
+		}
+	}
+
+	/**
+	 * Het tekenen van Features in de forward of reverse panel. Dit hangt af van de input van de gebruiker in de toolbar Features.
+	 *
+	 * @param feat			Het object van een Feature.
+	 * @param g				Graphics waarin getekend wordt
+	 * @param tag			Wat er in de balkjes van de Feature komt te staan (locus tag, naam, etc)
+	 * @param index			Index voor de coordinaten waar de Feature op het panel moet komen te staan
+	 * @param colorFeature	Kleur van het balkje voor een Feature
+	 * @param colorText		Kleur van de tekst in een balkje.
+	 */
+	public void drawFeatures(Feature feat, Graphics g, String tag, int index, Color colorFeature, Color colorText){
+		int start, stop;
+		Dimension dim = this.getSize();
+		int length = cont.getLength();
+
+		start = feat.getStart() - cont.getStart();
+		stop = feat.getStop() - cont.getStart();
+		String strand = feat.getStrand();
+
+		int[] info_start = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
+		int[] info_stop = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
+
+		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
+		if(strand.equals("+") && forward == true){
+			g.setColor(colorFeature);
+			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
+			g.fillRect(info_start[1], dim.height-y_coord_forw.get(index), info_stop[1]-info_start[1], 15);
+			g.setColor(colorText);
+
+			sizeLettertype(g, tag, info_stop[1], info_start[1]);
+
+			// locus tag in midden van gen visualiseren.
+			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
+			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, dim.height - y_text_forw.get(index));
+
+			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
+		}else if(strand.equals("-") && forward == false){
+			g.setColor(colorFeature);
+
+			// Het op de goede positie zetten van de genen.
+			g.fillRect(info_start[1], y_coord_rev.get(index), info_stop[1]-info_start[1], 15);
+			g.setColor(colorText);
+
+			sizeLettertype(g, tag, info_stop[1], info_start[1]);
+
+			// locus tag in midden van gen visualiseren.
+			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
+			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, y_text_rev.get(index));
+		}
+	}
+
+	/**
+	 * Lettertype in de balkjes van de Features vaststellen.
+	 *
+	 * @param g				Waarin getekend wordt
+	 * @param tag			De naam die in de balkjes van de Feature komen te staan
+	 * @param info_stop		Integer waar het balkje van de Feature stopt
+	 * @param info_start	Integer waar het balkje van de Feature begint.
+	 */
+	public void sizeLettertype(Graphics g, String tag, int info_stop, int info_start){
+		// Kleiner lettertype bij een kleiner balkje
+		if(g.getFontMetrics().stringWidth(tag) > info_stop-info_start){
+			g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		}else{
+			g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		}
 	}
 
@@ -77,62 +141,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 		context.addPropertyChangeListener("currentFeatureList",this);
 	}
 
-	/**
-	 * Het tekenen van de genen op de forward en reverse panel.
-	 *
-	 * @param feat	De features waarin een gen object staat
-	 * @param g		Graphics waarin getekend word.
-	 */
-	public void drawFeatures(Feature feat, Graphics g, String tag, int index){
-		int start, stop;
-		Dimension dim = this.getSize();
-		int length = cont.getLength();
 
-		start = feat.getStart() - cont.getStart();
-		stop = feat.getStop() - cont.getStart();
-		String strand = feat.getStrand();
-
-		int[] info_start = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
-		int[] info_stop = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
-
-		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
-		if(strand.equals("+") && forward == true){
-			g.setColor(Color.ORANGE);
-			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
-			g.fillRect(info_start[1], dim.height-y_coord_forw.get(index), info_stop[1]-info_start[1], 15);
-			g.setColor(Color.BLACK);
-
-			// Kleiner lettertype bij een kleiner balkje
-			if(g.getFontMetrics().stringWidth(tag) > info_stop[1]-info_start[1]){
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-			}else{
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			}
-
-			// locus tag in midden van gen visualiseren.
-			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, dim.height - y_text_forw.get(index));
-
-			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
-		}else if(strand.equals("-") && forward == false){
-			g.setColor(Color.ORANGE);
-
-			// Het op de goede positie zetten van de genen.
-			g.fillRect(info_start[1], y_coord_rev.get(index), info_stop[1]-info_start[1], 15);
-			g.setColor(Color.BLACK);
-
-			// Kleiner lettertype bij een kleiner balkje
-			if(g.getFontMetrics().stringWidth(tag) > info_stop[1]-info_start[1]){
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-			}else{
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			}
-
-			// locus tag in midden van gen visualiseren.
-			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, y_text_rev.get(index));
-		}
-	}
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
