@@ -32,7 +32,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	public void init()
 	{
-		
+
 		this.setPreferredSize(new Dimension(200,25));
 		this.setMinimumSize(new Dimension(100,25));
 
@@ -155,14 +155,20 @@ public class IGVMenuBar extends JMenuBar {
 			String path = fasta.fastafile();
 			cont.addFasta(path);
 
-
-
-
 			System.out.println("load reference test");
-	}catch (Exception e){}
+		}catch (Exception e){}
 	}
 	private void OpenDataAction() {
-		System.out.println("load data test");
+
+		try{
+			FastaFileChooser fasta = new FastaFileChooser();
+			String path = fasta.fastafile();
+			cont.addGFF(path);
+
+			System.out.println("load reference test");
+		}catch (Exception e){}
+
+
 	}
 	private void SaveorfAction() {
 		System.out.println("Saving ORFs");

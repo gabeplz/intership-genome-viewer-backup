@@ -40,8 +40,12 @@ public class InformationUser {
         }
 
         getFeaturesUser(chromosoom, start, stop, keuze_gebruiker);
-        getORFuser(chromosoom, chromosoom_id);
-        getAAuser(chromosoom);
+        chromosoom.setListORF();
+        getORFsUser(chromosoom, start, stop);
+        makeCompStrand compStrand = new makeCompStrand();
+        String seqComp = compStrand.getReverseComplement(chromosoom.getSeqTemp().toUpperCase());
+        getAAuser(chromosoom, seqComp);
+//        writeORF(chromosoom, seqComp);
     }
 
     /**
@@ -64,45 +68,24 @@ public class InformationUser {
             // Lijst met alle Keys
             attributes.keySet();
             // Ophalen values
-            attributes.get("locus_tag");
+            System.out.println(attributes.get("locus_tag"));
+
         }
     }
 
     /**
-     * Het maken van de complementaire strand. Ophalen en opslaan van de ORFs uit de sequentie
-     * van het fasta bestand. Wegschrijven van ORFs naar een .fasta bestand
+     * Het verkrijgen van de objecten van orfs die binnen een bepaalde range vallen.
      *
-     * @param chr               Het object van het gekozen chromosoom (door de gebruiker)
-     * @param chromosoom_id     Het ID van de het gekozen chromosoom
-     * @throws FileNotFoundException
-     * @throws UnsupportedEncodingException
+     * @param chromosoom        Object met het gewenste chromosoom object
+     * @param start             Start positie vanaf waar de gebruiker wilt zoeken
+     * @param stop              Stop positie tot waar de gebruiker wilt zoeken
      */
-    public void getORFuser(Chromosome chr, String chromosoom_id) throws FileNotFoundException, UnsupportedEncodingException {
-        // Complementaire strand maken
+    public void getORFsUser(Chromosome chromosoom, int start, int stop){
+        ArrayList<ORF> orfsFilteredList = chromosoom.getORFsBetween(start, stop);
 
-        makeCompStrand compStrand = new makeCompStrand();
-        String comp = compStrand.getReverseComplement(chr.getSeqTemp().toUpperCase());
-
-        String compSeq = new StringBuilder(comp).reverse().toString();
-        chr.setSeqComp(compSeq);
-
-        // ORFs zoeken in de template en complementaire strand.
-        ArrayList orfs = findORF.searchORF(chromosoom_id,chr.getSeqTemp());
-        ArrayList orfs_comp = findORF.searchORF(chromosoom_id,chr.getSeqComp(), "comp");
-        orfs.addAll(orfs_comp);
-
-        chr.setListORF(orfs);
-
-        // Wegschrijven ORFs
-        ArrayList<ORF> listORF = chr.getListORF();
-        PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
-        for(ORF o: listORF){
-            writer.println(">ORF" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop());
-            writer.println(o.getDNA_ORF());
+        for(ORF o: orfsFilteredList){
+            o.getStart();
         }
-        writer.close();
-
-
     }
 
     /**
@@ -111,13 +94,32 @@ public class InformationUser {
      *
      * @param chr       Chromosoom object van het gekozen chromosoom van de gebruiker.
      */
-    public void getAAuser(Chromosome chr){
+    public HashMap<String, Object> getAAuser(Chromosome chr, String seqComp){
         TranslationManager translator = new TranslationManager();
-        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), chr.getSeqComp().toUpperCase());
+        HashMap<String, Object> readingframes = translator.start(chr.getSeqTemp().toUpperCase(), seqComp.toUpperCase());
 
-        chr.setReadingframe(readingframes);
+        return readingframes;
+    }
 
-        AminoAcidSequence RF = (AminoAcidSequence) chr.getReadingframe().get("RF5");
-
+    /**
+     * Wegschrijven ORFs in een fasta bestand.
+     *
+     * @param chr       Object van het gewenste chromosoom.
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public void writeORF(Chromosome chr, String seqComp) throws FileNotFoundException, UnsupportedEncodingException {
+        //Wegschrijven ORFs
+        ArrayList<ORF> listORF = chr.getListORF();
+        PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+        for(ORF o: listORF){
+            writer.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop());
+            if(o.getReadingframe() > 0){
+                writer.println(chr.getSeqTemp().substring(o.getStart(), o.getStop()));
+            }else{
+                writer.println(seqComp.substring(o.getStop(), o.getStart()));
+            }
+        }
+        writer.close();
     }
 }

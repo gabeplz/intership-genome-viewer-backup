@@ -10,7 +10,6 @@ public class DrawingTools {
 
 	public static int[] calculateLetterPosition(int width, int amount, double i) {
 
-
 		width = width - OFFSET;
 		double rest = width % amount;
 
@@ -39,7 +38,6 @@ public class DrawingTools {
 		float font_height = fm.getHeight();
 
 		g.drawString(String.valueOf(charr), (int) (x-(font_width/2)),(int) (y+(font_height/2)));
-
 	}
 
 	public static void drawCenteredRect(Graphics g, int x, int y, double width, int height) {

@@ -1,5 +1,7 @@
 package com.mycompany.minorigv.gui;
 
+import com.mycompany.minorigv.gffparser.Feature;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -66,7 +68,7 @@ public class GUI {
 		IGVMenuBar igvMenuBar = new IGVMenuBar();
 		igvMenuBar.init();
 		igvMenuBar.featureMenu();
-		
+
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		//gbc_panel.insets = new Insets(0, 0, 0, 0);
 		gbc_panel.fill = GridBagConstraints.BOTH;
@@ -102,9 +104,11 @@ public class GUI {
 		RulerPanel liniaal = new RulerPanel();
 		liniaal.init();
 		organism.add(liniaal);
-		
 
-		
+		FeaturePanel featuresForward = new FeaturePanel();
+		featuresForward.init(true);
+		organism.add(featuresForward);
+
 		CodonPanel codonPanel1 = new CodonPanel();
 
 		codonPanel1.init(true);
@@ -121,17 +125,19 @@ public class GUI {
 
 		organism.add(codonPanel2);
 
-		
-		FeaturePanel features = new FeaturePanel();
-		features.init();
-		organism.add(features);
-		
+		FeaturePanel featuresReverse = new FeaturePanel();
+		featuresReverse.init(false);
+		organism.add(featuresReverse);
+
 		context = new Context();
 		refpanel1.setContext(context);
 		codonPanel1.setContext(context);
 		codonPanel2.setContext(context);
 		liniaal.setContext(context);
 		organismPanel.setContext(context);
-		igvMenuBar.setContext(context);	
+		igvMenuBar.setContext(context);
+		featuresForward.setContext(context);
+		featuresReverse.setContext(context);
+
 	}
 }

@@ -1,5 +1,6 @@
 package com.mycompany.minorigv.gui;
 
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -11,6 +12,7 @@ import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.gffReader;
+import com.mycompany.minorigv.gffparser.ORF;
 /**
  * Het object dat de binding realiseert tussen de GUI en de onderliggende Data.
  * @author kahuub
@@ -23,15 +25,21 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private String[] chromosomeNameArray;
 
-	private ArrayList<Feature> currentFeatureList;
+	private Feature[] currentFeatureList;
+	private int featStart;
+	private int featStop;
+
 	private int start;
 	private int stop;
+	private ArrayList<String> keuze_gebruiker;
+
+
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	/** 
+	/**
 	 * Constructor voor testing purposes.
 	 * @param organism een Organisms object
 	 */
@@ -75,15 +83,67 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * constructor voor Context ten behoeve van uitbreidbaarheid.
 	 */
 	public Context(){
+        this.addPropertyChangeListener(this);
+        this.keuze_gebruiker = new ArrayList<String>();
+        keuze_gebruiker.add("Gene");
+	}
+	
+	public Context(String test, String tes1) throws Exception {
+		ArrayList<Chromosome> testList;
+		testList = new ArrayList<Chromosome>();
+
+		String seq = "ATCgatcGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG";
+
+		Organisms org = new Organisms("piet");
+		org.addSequence("jan",seq);
+		this.organism = org;
+		try {
+			this.curChromosome = organism.getChromosome("jan");
+		}catch (Exception e){
+			System.out.println("oeps");
+		}
+
+		start = 0;
+		stop = 100;
+
 
 	}
 
-	//TODO correct maken qua effect, potentieel als meerdere contexten voor aanpassing vatbaar.
-	/**
-	 * Functie voor het toevoegen van een fasta aan de context
-	 * @param path String met hierin het pad voor de fasta.
-	 * @throws Exception
-	 */
+	public Context(String test) throws Exception {
+		//// ----- information user ----- ////
+		start = 7000;
+		stop = 7800;
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		String path_gff = classLoader.getResource("voorbeeldgff.gff").getFile();
+		String path_fasta = classLoader.getResource("GCF_000146045.2_R64_genomic.fna").getFile();
+
+	    organism = new Organisms();
+		organism = gffReader.readData(organism,path_gff);
+
+		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path_fasta);
+
+		for(String id : fastaMap.keySet()){
+			organism.addSequence(id,fastaMap.get(id));
+			organism.getChromosome(id).setListORF();
+		}
+
+		String chromosoom_id = "NC_001134.8";
+		this.keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("mRNA");}};
+
+		try {
+			curChromosome = organism.getChromosome(chromosoom_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ArrayList<Feature> featureList = curChromosome.getFeaturesBetween(start,stop);
+		//this.currentFeatureList = curChromosome.filterFeatures(featureList, keuze_gebruiker);
+
+		//// ----- information user ----- ////
+
+
+	}
+
+
 	public void addFasta(String path) throws Exception{
 
 		//Als er geen organism is, maak hem aan. eerste fasta.
@@ -118,10 +178,13 @@ public class Context implements Serializable, PropertyChangeListener {
 
 		setChromosomeNames(); //update chromosoom namen
 		this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
-		this.setCurrentFeatureList(null); //resetten featureList
+		this.updateCurrentFeatureList(); //resetten featureList
 		defaultSize(); //defaulten qua size
 		pcs.firePropertyChange("fasta", null, null); //fire the fasta event
 
+	}
+	public ArrayList<String> getChoicesUser(){
+		return keuze_gebruiker;
 	}
 
 	/**
@@ -155,7 +218,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		gffReader.readData(organism, path);
 		setChromosomeNames();
 		this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
-		this.setCurrentFeatureList(null); //resetten featureList
+		this.updateCurrentFeatureList(); //resetten featureList
 		defaultSize(); //defaulten qua size
 		pcs.firePropertyChange("gff", null, null); //fire het gff event
 
@@ -179,16 +242,13 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 
-	/**
-	 * Functie voor het aanpassen van de features.
-	 */
-	private void updateView() {
-		this.setCurrentFeatureList(curChromosome.getFeaturesBetween(start, stop));
+	private void updateCurrentFeatureList() {
+	    this.featStart = start;
+	    this.featStop = stop;
+	    ArrayList<Feature> featList = Chromosome.filterFeatures(curChromosome.getFeaturesBetween(featStart,featStop),this.keuze_gebruiker);
+		this.currentFeatureList = featList.toArray(new Feature[featList.size()]);
 
-	}
-
-	private void setCurrentFeatureList(ArrayList<Feature> featuresBetween) {
-		this.currentFeatureList = featuresBetween;
+		pcs.firePropertyChange("currentFeatureList",null,null);
 
 	}
 
@@ -249,8 +309,13 @@ public class Context implements Serializable, PropertyChangeListener {
 		return organism;
 	}
 
-	public ArrayList<Feature> getCurrentFeatureList() {
-		return currentFeatureList;
+	public Feature[] getCurrentFeatureList() {
+
+	    if(currentFeatureList == null || featStart != start || featStop != stop){
+	        updateCurrentFeatureList();
+        }
+	    return this.currentFeatureList;
+
 	}
 
 	public int getStart() {
@@ -261,6 +326,9 @@ public class Context implements Serializable, PropertyChangeListener {
 		return stop;
 	}
 
+	public ArrayList<ORF> getCurORFList(){
+		return curChromosome.getListORF();
+	}
 	public void setOrganism(Organisms organism) {
 		Organisms oldValue = this.organism;
 		this.organism = organism;
@@ -273,6 +341,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		pcs.firePropertyChange("chromosome", oldValue, this.curChromosome); //chromosome event
 	}
 
+
 	public Chromosome getCurChromosome() {
 		return curChromosome;
 	}
@@ -282,7 +351,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 	private void setStop(int stop) {
-		assert stop <= this.getFullLenght()-1;	
+		assert stop <= this.getFullLenght()-1;
 		this.stop = stop;
 	}
 
@@ -332,6 +401,10 @@ public class Context implements Serializable, PropertyChangeListener {
 				name.equals("organism")
 				)
 		{this.setChromosomeNames();}
+		if(name.equals("range")){
+            System.out.println("boi");
+		    this.updateCurrentFeatureList();
+        }
 
 	}
 }

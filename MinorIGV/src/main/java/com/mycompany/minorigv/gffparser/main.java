@@ -1,8 +1,6 @@
 package com.mycompany.minorigv.gffparser;
 import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.sequence.findORF;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -28,5 +26,6 @@ public class main {
 
         InformationUser info = new InformationUser();
         info.getInfo(org);
+
     }
 }

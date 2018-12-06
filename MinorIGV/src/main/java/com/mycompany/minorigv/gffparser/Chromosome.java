@@ -1,5 +1,10 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.minorigv.sequence.findORF;
+import com.mycompany.minorigv.sequence.makeCompStrand;
+
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,7 +20,6 @@ public class Chromosome {
     private String seqTemp;
     private ArrayList<ORF> listORF;
     private HashMap<String, Object> readingframe;
-    private String seqComp;
 
     /**
      * De constructor.
@@ -34,23 +38,17 @@ public class Chromosome {
         this.features = features;
     }
 
-//    public Chromosome(String comp, HashMap<String, Object> readingframe){
-//        this.comp = comp;
-//        this.readingframe = readingframe;
-//    }
 
     /**
      * De constructor.
      * @param id        Het id van het chromosoom/contig
      * @param seqTemp   Sequentie van de template strand
      * @param listORF   Lijst met alle ORFs gevonden
-     * @param seqComp   Sequentie van de complementaire strand
      */
-    public Chromosome(String id, String seqTemp, ArrayList<ORF> listORF, String seqComp){
+    public Chromosome(String id, String seqTemp, ArrayList<ORF> listORF){
         this.id = id;
         this.seqTemp = seqTemp;
         this.listORF = listORF;
-        this.seqComp = seqComp;
     }
 
     /**
@@ -121,27 +119,14 @@ public class Chromosome {
 
     /**
      * Het genereerd de ArrayList met daarin de ORFs
-     * @param listORF is een ArrayList met daarin de ORFs.
      */
-    public void setListORF(ArrayList<ORF> listORF) {
+    public void setListORF() throws FileNotFoundException, UnsupportedEncodingException {
+        // ORFs zoeken in de template en complementaire strand.
+        String seqComp = makeCompStrand.getReverseComplement(getSeqTemp());
+        listORF = findORF.searchORF(getId(), getSeqTemp());
+        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp");
+        listORF.addAll(orfs_comp);
         this.listORF = listORF;
-    }
-
-    /**
-     * Het ophalen van de complementaire strand sequentie (DNA)
-     * @return      De DNA sequentie van de complementaire strand
-     */
-    public String getSeqComp() {
-        return seqComp;
-    }
-
-    /**
-     * Het opslaan van de complementaire strand (DNA sequentie)
-     * @param seqComp   De complementaire DNA sequentie
-     */
-    public void setSeqComp(String seqComp) {
-        this.seqComp = seqComp;
-
     }
 
     /**
@@ -161,7 +146,7 @@ public class Chromosome {
     }
 
     /**
-     * Alle features die tussen de start en stop positie voorkomen wordem om eem ArrayList gezet.
+     * Alle features die tussen de start en stop positie voorkomen wordenom eem ArrayList gezet.
      * @param start     Start positie van de feature op het chromosoom.
      * @param stop      Stop positie van de feature op het chromosoom
      * @return          Een lijst met de features die voldoen aan de start en stop
@@ -200,6 +185,29 @@ public class Chromosome {
         }
         return featureFilteredList;
     }
+
+    /**
+     * Alle ORFs die tussen de start en stop positie voorkomen worden om eem ArrayList gezet.
+     * @param start     Startpositie waar vandaan de orfs gezocht moeten worden
+     * @param stop      Stoppositie tot waar de orfs gezocht moeten worden
+     * @return          Een lijst met de orfs die voldoen aan de start en stop
+     */
+    public ArrayList<ORF> getORFsBetween(int start, int stop){
+        ArrayList<ORF> orfsFilteredList = new ArrayList<>();
+
+        for(ORF o : listORF){
+            if (o.getStop() > start && o.getStop() < stop){
+                orfsFilteredList.add(o);
+            }else if(o.getStart() > start && o.getStart() < stop){
+                orfsFilteredList.add(o);
+            }else if(o.getStart() < start && o.getStop() > stop){
+                orfsFilteredList.add(o);
+            }
+        }
+
+        return orfsFilteredList;
+    }
+
 
 
     @Override

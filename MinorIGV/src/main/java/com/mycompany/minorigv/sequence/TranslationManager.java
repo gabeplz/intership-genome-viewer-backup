@@ -35,15 +35,18 @@ import com.mycompany.minorigv.gffparser.main;
 public class TranslationManager {
 
     public static final String[] BASE_SEQUENCES = {	"TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
-    												"TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
-    												"TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
+    							"TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
+    							"TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
 
     public static final String TEST_AMINOVOLGORDE = "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG";     // TEST_AMINOVOLGORDE, TEST_AMINOSTARTS worden in de toekomst uit een file gegenereed
     public static final String TEST_AMINOSTARTS = 	"---M---------------M---------------M----------------------------";
 
     private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
 
-    
+    /**
+     * bouwt de standaard codon tabel.
+     * @return object CodonTabel 
+     */
     public static CodonTabel buildDefault() {
 		return CodonTabel.build(1,new String[]{"hoi","hai"}, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
 		
@@ -59,7 +62,7 @@ public class TranslationManager {
  * 
  * @param sequence
  * @param comp_sequence
- * @return
+ * @return hashmap
  */
     public static HashMap<String, Object> start(String sequence, String comp_sequence) {
         // namen = namen van codontabel
@@ -67,7 +70,7 @@ public class TranslationManager {
         // maak codontabel aan
         CodonTabel numer1 = buildDefault();
 
-        int start = 0;                          //huidig onodig gecompliceerde maneer om de volgede variabelen de volgende waardes te geven:
+        int start = 0;                          // huidig onodig gecompliceerde maneer om de volgede variabelen de volgende waardes te geven:
         int mod = start % 3;                    // n1 = 0, n2 = 1, n2 = 2
         int n1 = normalize3(3 - mod);           // in de toekomst word start gebaseerd op het refrenceframe en locatie op de refsequentie
         int n2 = normalize3(n1 + 1);
@@ -101,11 +104,18 @@ public class TranslationManager {
         return readingframes;
     }
 
-
+    /**
+     * 
+     * @param n int
+     * @return 0 of n
+     */
     private static int normalize3(int n) {
         return n == 3 ? 0 : n;
     }
-    
+    /**
+     * tijdelijke main
+     * @param args 
+     */
     public static void main(String[] args) {
 		String seq = "GGTCTCTCTGGTTAGACCAGATCTGAGCCTGGGAGCTCTCTGGCTAACTAGGGAACCCACTGCTTAAGCC";
 		CodonTabel tabel = buildDefault();
@@ -113,12 +123,12 @@ public class TranslationManager {
 	}
 
      /**
-     * retuns een string van aminozuren gegenereed van een nucleotide sequentie en een codontabel. de enum strand zort ervoor dat de sequentie word gebruikt zoal het is of gereversed word
+     * retuns een string van aminozuren gegenereed van een nucleotide sequentie en een codontabel. 
      * 
-     * @param direction
-     * @param sequence
-     * @param huidigeTabel
-     * @return 
+     * @param direction de enum strand zort ervoor dat de sequentie word gebruikt zoal het is of gereversed word waneer enum NEGATIVE is
+     * @param sequence string de een nucleotide sequentie voorsteld
+     * @param huidigeTabel object CodonTabel
+     * @return string waar elk karakter een aminozuur voorsteld
      */
     public static String getAminoAcids(Strand direction, String sequence, CodonTabel huidigeTabel) {
         // in de toekomst vervang codontabel met key in codontabel hashmap
@@ -147,7 +157,12 @@ public class TranslationManager {
     }
     
     
-    
+/**
+ * zet een codon om naar een string aminozuur
+ * @param codon string bestaand uit 3 karakters. dient als key voor CodonMap
+ * @param table object CodonTabel bevat de CodonMap.
+ * @return string van 1 karakter dat een aminozuur voorsteld
+ */
     public static String toAA(String codon,CodonTabel table) {
     	return table.getCodonMap().get(codon);
     }

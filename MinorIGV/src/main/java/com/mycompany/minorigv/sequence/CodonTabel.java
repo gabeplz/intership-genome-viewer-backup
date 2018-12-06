@@ -41,29 +41,36 @@ public class CodonTabel {
 	private Set<String> starts;
 	private Map<String, String> codonMap;
 
-	/**
+        /**
+         * constructor voor CodonTabel
+         * @param key key functions as id for the table and as key for the hasmap that will contaion codonTable objects
+         * @param names array voor de namen van de codontabel
+         * @param starts set voor de alternative start aminozuren
+         * @param codonMap Map met een 3 letterige codons als key en een een letterige afkorting voor een aminozuur als value
+         */
+	public CodonTabel(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
+		this.key = key;                 
+		this.names = names;              
+		this.starts = starts;            
+		this.codonMap = codonMap;        
+	}
+	
+        /**
 	 * genereerd de argumenten codonMap en Starts voor de CodonTable constructor en returnt een new CodonTable
-	 * @param key functions as id for the table and as key for the hasmap that will contaion codonTable objects
+	 * @param key functioneerd als id voor the table and als key voor de hasmap die de CodonTable objecten gaat bevatten 
 	 * @param names array voor de namen van de codontabel
 	 * @param base alternative start aminozuren
 	 * @param aas hashmap key: codon als sting, value: aminoacid als string
 	 * @param startString
-	 * @return 
-	 */
-	public CodonTabel(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
-		this.key = key;                 //
-		this.names = names;             // 
-		this.starts = starts;           // 
-		this.codonMap = codonMap;       // 
-	}
-
+	 * @return call naar codontable contstructor (new CodonTable). als het object gemaakt word returnd het de nieuwe CodonTabel
+	 **/
 	public static CodonTabel build(Integer key, String[] names, String[] base, String aas, String startString) {
 
 		String base1 = base[0];
 		String base2 = base[1];
 		String base3 = base[2];
 
-		//   checkLengths(base1, base2, base3, aas, startString);
+		
 
 		Map<String, String> codonMap = new HashMap<String, String>(aas.length());
 		Set<String> starts = new HashSet<String>(aas.length());
