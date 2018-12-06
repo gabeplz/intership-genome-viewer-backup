@@ -35,7 +35,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 
 	private final int DEFAULT_START = 1800;
-	private final int DEFAULT_STOP = 2800;
+	private final int DEFAULT_STOP = 3000;
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
