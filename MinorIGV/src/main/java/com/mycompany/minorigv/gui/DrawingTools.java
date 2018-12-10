@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gui;
 
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.font.LineMetrics;
 
 public class DrawingTools {
@@ -27,7 +26,7 @@ public class DrawingTools {
 	 * @return de geoorloofde breedte
 	 */
 	public static double calculateLetterWidth(int width, int amount) {
-		width = width - OFFSET;
+		width = width - 2*OFFSET;
 		return ( (double) width)/( (double) amount);
 		
 	}
@@ -48,23 +47,12 @@ public class DrawingTools {
 
 		g.drawString(String.valueOf(charr), (int) (x-(font_width/2)),(int) (y+(font_height/2)));
 	}
-
-	public static void drawCenteredRect(Graphics g, int x, int y, double width, int height) {
-
-
-		int x1 = (int) (x - (int) width/2);
-		int y1 = y - height/2;
-
-		g.drawRect(x1, y1, (int) width, height);
-
-	}
 	
 	public static void drawFilledRect(Graphics g, int x, int y, double width, int height) {
 
 
-		int x1 = (int) (x - (int) width/2);
-		int y1 = y - height/2;
-
+		int x1 = (int) (x - Math.floor( width /2) );
+		int y1 = (int) (y - Math.floor( height/2) );
 		g.fillRect(x1, y1, (int) width, height);
 
 	}
