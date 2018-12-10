@@ -6,11 +6,8 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-
 import javax.swing.JPanel;
 
-import static java.util.Collections.max;
-import static java.util.Collections.sort;
 
 /**
  * Class voor de visualisatie van verschillende features zoals MRNA/Genen/Telomeren etc die te vinden zijn
@@ -23,12 +20,6 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	Context cont;
 	boolean forward;
 
-    private int latest_stop_reverse;
-    private int latest_stop_forward;
-    private HashMap<Feature, Integer> list_ov_ft = new HashMap<>();
-    private Feature feat = null;
-    private int y_cood_reverse, y_cood_forward;
-    private int y_cood_reverse_max, y_cood_forward_max;
 
 	/**
 	 * Alle features binnen een gewenst start-stop positie ophalen en deze weergeven in de GUI.
@@ -50,10 +41,11 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			e.printStackTrace();
 		}
 
-		y_cood_reverse = 4;
-		y_cood_forward = 4;
+		int y_cood_reverse = 4;
+        int y_cood_forward = 4;
 
-		ArrayList<Feature> featureGene = new ArrayList<>();
+
+        ArrayList<Feature> featureGene = new ArrayList<>();
         ArrayList<Feature> featuremRNA = new ArrayList<>();
 
         for(Feature feat : featureFilteredList) {
@@ -64,17 +56,29 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
             }
         }
 
+        ArrayList<Integer> newCoord = new ArrayList<>();
+
         if(!featureGene.isEmpty()){
-            setCoordinates(featureGene, g);
+            newCoord = setCoordinates(featureGene, g, "Gene", y_cood_reverse, y_cood_forward);
+            y_cood_reverse = newCoord.get(0);
+            y_cood_forward = newCoord.get(1);
         }if(!featuremRNA.isEmpty()){
-            setCoordinates(featuremRNA, g);
+            newCoord = setCoordinates(featuremRNA, g, "mRNA", y_cood_reverse, y_cood_forward);
+            y_cood_reverse = newCoord.get(0);
+            y_cood_forward = newCoord.get(1);
         }
-
-
 	}
 
-	public void setCoordinates(ArrayList<Feature> features, Graphics g){
-        String tag = "hoi";
+	public ArrayList<Integer> setCoordinates(ArrayList<Feature> features, Graphics g, String tag, int y_cood_reverse, int y_cood_forward){
+	    int latest_stop_reverse = 0;
+	    int latest_stop_forward = 0;
+
+        int y_cood_reverse_max = 0;
+        int y_cood_forward_max = 0;
+
+	    HashMap<Feature, Integer> list_ov_ft = new HashMap<>();
+	    Feature feat = null;
+	    ArrayList<Integer> newCoord = new ArrayList<>();
 
         for(Feature gene: features){
             if (gene.getStrand().equals("-")){
@@ -83,7 +87,6 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
                 latest_stop_reverse = feat.getStop();
 
                 y_cood_reverse_max = getMaxCoordinates(y_cood_reverse, y_cood_reverse_max);
-
             }else if(gene.getStrand().equals("+")){
                 y_cood_forward = getCoordinates(gene, latest_stop_forward, list_ov_ft, y_cood_forward, feat);
                 feat = drawFeatures(gene,g,tag, y_cood_forward);
@@ -93,8 +96,13 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
             }
         }
 
-        y_cood_forward = y_cood_forward_max + 10;
+        y_cood_forward = y_cood_forward_max + 20;
         y_cood_reverse = y_cood_reverse_max + 20;
+
+        newCoord.add(y_cood_reverse);
+        newCoord.add(y_cood_forward);
+
+        return newCoord;
     }
 
     private int getCoordinates(Feature gene, int latest_stop, HashMap<Feature, Integer> list_ov_ft, int y_cood, Feature feat){
