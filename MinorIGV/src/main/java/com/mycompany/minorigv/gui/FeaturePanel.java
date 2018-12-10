@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.swing.JPanel;
 
+import static java.util.Collections.max;
 import static java.util.Collections.sort;
 
 /**
@@ -21,10 +22,13 @@ import static java.util.Collections.sort;
 public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	Context cont;
 	boolean forward;
-	private ArrayList<Integer> y_coord_forw = new ArrayList<>(Arrays.asList(20,60));
-	private ArrayList<Integer> y_text_forw = new ArrayList<>(Arrays.asList(8,48));
-	private ArrayList<Integer> y_coord_rev = new ArrayList<>(Arrays.asList(4,45));
-	private ArrayList<Integer> y_text_rev = new ArrayList<>(Arrays.asList(15,57));
+
+    private int latest_stop_reverse;
+    private int latest_stop_forward;
+    private HashMap<Feature, Integer> list_ov_ft = new HashMap<>();
+    private Feature feat = null;
+    private int y_cood_reverse, y_cood_forward;
+    private int y_cood_reverse_max, y_cood_forward_max;
 
 	/**
 	 * Alle features binnen een gewenst start-stop positie ophalen en deze weergeven in de GUI.
@@ -46,46 +50,82 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			e.printStackTrace();
 		}
 
+		y_cood_reverse = 4;
+		y_cood_forward = 4;
+
 		ArrayList<Feature> featureGene = new ArrayList<>();
         ArrayList<Feature> featuremRNA = new ArrayList<>();
 
-        for(Feature feat : featureFilteredList){
-		    if(feat instanceof Gene){
-		        featureGene.add(feat);
-            }else if(feat instanceof mRNA){
-		        featuremRNA.add(feat);
+        for(Feature feat : featureFilteredList) {
+            if (feat instanceof Gene) {
+                featureGene.add(feat);
+            } else if (feat instanceof mRNA) {
+                featuremRNA.add(feat);
             }
         }
 
-        int latest_stop = 0;
-        HashMap<Feature, Integer> list_ov_ft = new HashMap<Feature, Integer>();
+        if(!featureGene.isEmpty()){
+            setCoordinates(featureGene, g);
+        }if(!featuremRNA.isEmpty()){
+            setCoordinates(featuremRNA, g);
+        }
 
-        int y_cood = 4;
-        Feature feat = null;
 
-        for(Feature gene: featureGene){
-            if(gene.getStart() < latest_stop){
-                list_ov_ft.put(feat, y_cood);
-                if(!list_ov_ft.isEmpty()){
-                    for(Feature f:list_ov_ft.keySet()){
-                        if(gene.getStart() < f.getStop()){
-                            y_cood += (20/ list_ov_ft.size());
-                        }else{
-                            y_cood = list_ov_ft.get(f);
-                        }
+	}
+
+	public void setCoordinates(ArrayList<Feature> features, Graphics g){
+        String tag = "hoi";
+
+        for(Feature gene: features){
+            if (gene.getStrand().equals("-")){
+                y_cood_reverse = getCoordinates(gene, latest_stop_reverse, list_ov_ft, y_cood_reverse, feat);
+                feat = drawFeatures(gene,g,tag, y_cood_reverse);
+                latest_stop_reverse = feat.getStop();
+
+                y_cood_reverse_max = getMaxCoordinates(y_cood_reverse, y_cood_reverse_max);
+
+            }else if(gene.getStrand().equals("+")){
+                y_cood_forward = getCoordinates(gene, latest_stop_forward, list_ov_ft, y_cood_forward, feat);
+                feat = drawFeatures(gene,g,tag, y_cood_forward);
+                latest_stop_forward = feat.getStop();
+
+                y_cood_forward_max = getMaxCoordinates(y_cood_forward, y_cood_forward_max);
+            }
+        }
+
+        y_cood_forward = y_cood_forward_max + 10;
+        y_cood_reverse = y_cood_reverse_max + 20;
+    }
+
+    private int getCoordinates(Feature gene, int latest_stop, HashMap<Feature, Integer> list_ov_ft, int y_cood, Feature feat){
+        if(gene.getStart() < latest_stop){
+            list_ov_ft.put(feat, y_cood);
+            if(!list_ov_ft.isEmpty()){
+                for(Feature f:list_ov_ft.keySet()){
+                    if(gene.getStart() < f.getStop()){
+                        y_cood += (20/ list_ov_ft.size());
+                    }else{
+                        y_cood = list_ov_ft.get(f);
                     }
-                }else{
-                    y_cood += 20;
                 }
             }else{
-                y_cood += 0;
-                list_ov_ft.clear();
+                y_cood += 20;
             }
-            String tag = gene.getAttributes().get("locus_tag").toString();
-            feat = drawFeatures(gene,g,tag, y_cood);
-            latest_stop = feat.getStop();
+        }else{
+            y_cood += 0;
+            list_ov_ft.clear();
         }
-	}
+
+        return y_cood;
+    }
+
+    private int getMaxCoordinates(int y_cood, int y_cood_max){
+        if(y_cood > y_cood_max){
+            return y_cood;
+        }else{
+            return y_cood_max;
+        }
+    }
 
 	/**
 	 * Het tekenen van Features in de forward of reverse panel. Dit hangt af van de input van de gebruiker in de toolbar Features.
