@@ -1,5 +1,6 @@
 package com.mycompany.minorigv.sequence;
 
+import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.ORF;
 
 import java.io.FileNotFoundException;
@@ -17,6 +18,23 @@ import java.util.regex.Pattern;
  * @author Anne van Ewijk en Amber Janssen Groesbeek.
  */
 public class findORF {
+
+
+    public static void main(String[] arg){
+        String seq = "ttttccaCAATTCACTtatttttccaataaacCTCTTCATATTAATTAACTTATTTCACATTATATAGCCCATATTCctc" +
+                     "aatatttcatttcattataCACCATACCTCCCTTTCAATCTCTTCATTCCAACCTTCAAACATAACTCAATGCGCCAACC" +
+                     "TAACAACCCTCTAACATTAACTCGCcatttatatttacaaaCTTCAACATATACTCACCTTTTCTATTACTCCTTCCCAT" +
+                     "TATTCTATTCTTAACCCATTCATACACTCAATTCAACCTTTTTCAACCCTTAAATTTAAACATCTCTCCATCTCCATCCC" +
+                     "AACGGCctattctttcaatttcatttatttttcaacacACCgctaaattcattataaaCTTCATATTTTACTCCAACTTC";
+        String SEQ = seq.toUpperCase();
+        SEQ = makeCompStrand.getReverseComplement(SEQ);
+        ArrayList<ORF> ORF = searchORF("1", SEQ, "stringg");
+        Chromosome piet = new Chromosome();
+        piet.setSeqTemp(SEQ);
+        piet.setListORF();
+        System.out.println(piet.getORFsBetween(0,piet.getSeqTemp().length()).size());
+
+    }
     /**
      * Het vinden van het ORF in drie verschillende reading frames (Template strand). Elk ORF wordt opgeslagen in een object.
      *
@@ -26,34 +44,27 @@ public class findORF {
      */
     public static ArrayList<ORF> searchORF(String id, String seq) {
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
-        Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
+        Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
         int idORF = 0;
         ArrayList<ORF> listORF = new ArrayList<>();
         // Informatie ophalen van het ORF.
         while(match.find()){
             int start = match.start();      // Positie startcodon
-            int stop = match.end();         // Positie stopcodon
+            int stop = match.start() + match.group(1).length();         // Positie stopcodon
             idORF++;
-            int readingframe = Integer.MIN_VALUE;
 
-            if((start % 3) == 0){
-                readingframe = +1;
-            }else if((start % 3) == 1){
-                readingframe = +2;
-            }else if((start % 3) == 2){
-                readingframe = +3;
-            }else{
-                System.out.println("Geen ORF gevonden.");
-            }
+            int readingframe = ORF.calcFrame(start, Strand.POSITIVE, seq.length());
+
 
             // Positie van de start aminozuur en stop aminozuur bepalen.
             int aaStart = (int) Math.ceil(start/3.0);
             int aaStop = (int) Math.ceil(stop/3.0);
 
             String id_ORF = "ORF" + idORF +"_T";
+            Strand strand = Strand.POSITIVE;
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop);
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop, strand);
             listORF.add(ORF_Object);
         }
         return listORF;
@@ -69,37 +80,30 @@ public class findORF {
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */
-    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging) throws FileNotFoundException, UnsupportedEncodingException {
+    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging) {
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
-        Pattern patroon = Pattern.compile("(ATG)(.{3})*?(TAG|TGA|TAA)", Pattern.CASE_INSENSITIVE);
+        Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE);
         Matcher match = patroon.matcher(seq);
         int idORF = 0;
         ArrayList<ORF> listORF = new ArrayList<>();
 
+
         while(match.find()){
-            int stop = seq.length() - match.start();   // Positie van het startcodon op de orginele sequentie (+)
-            int start = seq.length() - match.end();      // Positie van het stopcodon op de orginele sequentie (+)
-            int readingframe;
+            // -1 : index laatste letter.   - 1: tot ipv t/m
+            int stop = (seq.length() -1) - (match.start() - 1);   // Positie van het startcodon op de orginele sequentie (+)
+            int start = stop - match.group(1).length();           // Positie van het stopcodon op de orginele sequentie (+)
             idORF++;
 
-            if((start % 3) == 0){
-                readingframe = -1;
-            }else if((start % 3) == 1){
-                readingframe = -2;
-            }else if((start % 3) == 2){
-                readingframe = -3;
-            }else{
-                readingframe = Integer.MIN_VALUE;
-                System.out.println("Geen ORF gevonden.");
-            }
+            int readingframe = ORF.calcFrame(stop-1, Strand.NEGATIVE, seq.length());
 
             // Positie van de start aminozuur en stop aminozuur bepalen.
             int aaStart = (int) Math.ceil(start/3.0);
             int aaStop = (int) Math.ceil(stop/3.0);
 
             String id_ORF = "ORF" + idORF +"_C";
+            Strand strand = Strand.NEGATIVE;
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop);
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop, strand);
             listORF.add(ORF_Object);
 
         }

@@ -1,5 +1,7 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.minorigv.sequence.Strand;
+
 /**
  * In de sequentie van een chromosoom/contig wordt er gezocht naar Open Reading Frames (ORFs) en
  * informatie van een ORF en de sequentie zelf worden opgeslagen in een object.
@@ -11,6 +13,7 @@ public class ORF {
     private String idORF;
     private int aaStart;
     private int aaStop;
+    private Strand strand;
 
     /**
      *
@@ -24,14 +27,17 @@ public class ORF {
      * @param aaStop            Stop positie van het aminozuur
      * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
      */
-    public ORF(int start, int stop, int readingframe, String idORF, int aaStart, int aaStop) {
+    public ORF(int start, int stop, int readingframe, String idORF, int aaStart, int aaStop, Strand strand) {
         this.start = start;
         this.stop = stop;
         this.readingframe = readingframe;
         this.idORF = idORF;
         this.aaStart = aaStart;
         this.aaStop = aaStop;
+        this.strand = strand;
     }
+
+
 
     /**
      * Het ophalen van de startpositie van de eerste nucleotide van het startcodon
@@ -129,6 +135,43 @@ public class ORF {
      */
     public void setAaStop(int aaStop) {
         this.aaStop = aaStop;
+    }
+
+    @Override
+    public String toString() {
+        return "ORF{" +
+                "start=" + start +
+                ", stop=" + stop +
+                ", readingframe=" + readingframe +
+                ", strand=" + strand +
+                '}';
+    }
+
+    public Strand getStrand() {
+        return strand;
+    }
+
+    public void setStrand(Strand strand) {
+        this.strand = strand;
+    }
+
+
+    /**
+     *
+     * @param index de positie van de eerste letter (nucleoride) van een subsequentie op de forward.
+     * @param strand de POSITIVE (forward) of NEGATIVE (reverse) strand.
+     * @param lenghtSeq de lengte van de hele sequentie.
+     * @return
+     */
+    public static int calcFrame(int index, Strand strand, int lenghtSeq){
+        if(strand == Strand.POSITIVE){
+            return index % 3;
+        }else if(strand == Strand.NEGATIVE){
+            return ((lenghtSeq - 1) - index) % 3;
+        }
+        else{
+            return -1;
+        }
     }
 
 }

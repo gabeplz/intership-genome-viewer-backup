@@ -124,7 +124,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
-			organism.getChromosome(id).setListORF();
+			organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
 		}
 
 		String chromosoom_id = "NC_001134.8";
@@ -173,7 +173,8 @@ public class Context implements Serializable, PropertyChangeListener {
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
-			System.out.println("hoi: "+id);
+			organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
+			System.out.println("id: "+id + " seq0-100: "+ organism.getChromosome(id).getSeqTemp().substring(0,100));
 		}
 
 		setChromosomeNames(); //update chromosoom namen
@@ -326,9 +327,16 @@ public class Context implements Serializable, PropertyChangeListener {
 		return stop;
 	}
 
-	public ArrayList<ORF> getCurORFList(){
+	//Wanneer je alle ORFs wilt hebben (voor bijv. wegschrijven)
+	public ArrayList<ORF> getCurORFListALL(){
 		return curChromosome.getListORF();
 	}
+
+	//Wanneer je de ORFs tussen de start en stop wilt
+	public ArrayList<ORF> getCurORFListBetween(){
+		return curChromosome.getORFsBetween(start, stop);
+	}
+
 	public void setOrganism(Organisms organism) {
 		Organisms oldValue = this.organism;
 		this.organism = organism;
