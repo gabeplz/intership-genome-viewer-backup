@@ -2,16 +2,11 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.gffparser.Feature;
 
-import java.awt.Color;
-import java.awt.EventQueue;
+import java.awt.*;
 
 import javax.swing.JFrame;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import javax.swing.JScrollPane;
 
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -56,7 +51,8 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 640, 480);
+		frame.setBounds(100, 100, 760, 480);
+		frame.setMinimumSize(new Dimension(760,480));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};

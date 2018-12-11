@@ -17,7 +17,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-
+/**
+ * Class for building the Menu bar of the application
+ */
 public class IGVMenuBar extends JMenuBar {
 
 	private Context cont;
@@ -30,7 +32,11 @@ public class IGVMenuBar extends JMenuBar {
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
 
-	// function creating the first 2 menus on the menu bar
+
+
+	/**
+	 * function creating the first 2 menus on the menu bar "Files" and "Tools"
+	 */
 	public void init()
 	{
 
@@ -101,8 +107,11 @@ public class IGVMenuBar extends JMenuBar {
 	//add Tools to the menu bar
 		add(Tools);
 	}
-	// function creating the third menu item for the menu bar features
 
+
+	/**
+	 * function creating the third menu item for the menu bar "features"
+	 */
 	public void featureMenu(){
 	// create the feature menu for the menu bar
 		features = new JMenu("Features");
@@ -244,11 +253,18 @@ public class IGVMenuBar extends JMenuBar {
 		System.out.println(featureArray);
 	}
 
-
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<String> getFeatureArray() {
 		return featureArray;
 	}
 
+	/**
+	 *
+	 * @param cont
+	 */
 	public void setContext(Context cont) {
 		this.cont = cont;
 	}
