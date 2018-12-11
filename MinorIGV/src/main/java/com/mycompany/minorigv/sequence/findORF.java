@@ -19,22 +19,6 @@ import java.util.regex.Pattern;
  */
 public class findORF {
 
-
-    public static void main(String[] arg){
-        String seq = "ttttccaCAATTCACTtatttttccaataaacCTCTTCATATTAATTAACTTATTTCACATTATATAGCCCATATTCctc" +
-                     "aatatttcatttcattataCACCATACCTCCCTTTCAATCTCTTCATTCCAACCTTCAAACATAACTCAATGCGCCAACC" +
-                     "TAACAACCCTCTAACATTAACTCGCcatttatatttacaaaCTTCAACATATACTCACCTTTTCTATTACTCCTTCCCAT" +
-                     "TATTCTATTCTTAACCCATTCATACACTCAATTCAACCTTTTTCAACCCTTAAATTTAAACATCTCTCCATCTCCATCCC" +
-                     "AACGGCctattctttcaatttcatttatttttcaacacACCgctaaattcattataaaCTTCATATTTTACTCCAACTTC";
-        String SEQ = seq.toUpperCase();
-        SEQ = makeCompStrand.getReverseComplement(SEQ);
-        ArrayList<ORF> ORF = searchORF("1", SEQ, "stringg");
-        Chromosome piet = new Chromosome();
-        piet.setSeqTemp(SEQ);
-        piet.setListORF();
-        System.out.println(piet.getORFsBetween(0,piet.getSeqTemp().length()).size());
-
-    }
     /**
      * Het vinden van het ORF in drie verschillende reading frames (Template strand). Elk ORF wordt opgeslagen in een object.
      *
@@ -42,29 +26,24 @@ public class findORF {
      * @param seq   De sequentie van het chromosoom.
      * @return  listORF is een Arraylist met ORF objecten.
      */
-    public static ArrayList<ORF> searchORF(String id, String seq) {
+    public static ArrayList<ORF> searchORF(String id, String seq, int startUser, int stopUser) {
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
-        Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE);
+        Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE); //TODO koppel codontabel
         Matcher match = patroon.matcher(seq);
         int idORF = 0;
         ArrayList<ORF> listORF = new ArrayList<>();
         // Informatie ophalen van het ORF.
         while(match.find()){
-            int start = match.start();      // Positie startcodon
+            int start = match.start();                                  // Positie startcodon
             int stop = match.start() + match.group(1).length();         // Positie stopcodon
             idORF++;
 
             int readingframe = ORF.calcFrame(start, Strand.POSITIVE, seq.length());
 
-
-            // Positie van de start aminozuur en stop aminozuur bepalen.
-            int aaStart = (int) Math.ceil(start/3.0);
-            int aaStop = (int) Math.ceil(stop/3.0);
-
             String id_ORF = "ORF" + idORF +"_T";
             Strand strand = Strand.POSITIVE;
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop, strand);
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand);
             listORF.add(ORF_Object);
         }
         return listORF;
@@ -80,13 +59,12 @@ public class findORF {
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */
-    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging) {
+    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging, int startUser, int stopUser) {
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
-        Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE);
+        Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE); //TODO koppel codontabel
         Matcher match = patroon.matcher(seq);
         int idORF = 0;
         ArrayList<ORF> listORF = new ArrayList<>();
-
 
         while(match.find()){
             // -1 : index laatste letter.   - 1: tot ipv t/m
@@ -96,14 +74,10 @@ public class findORF {
 
             int readingframe = ORF.calcFrame(stop-1, Strand.NEGATIVE, seq.length());
 
-            // Positie van de start aminozuur en stop aminozuur bepalen.
-            int aaStart = (int) Math.ceil(start/3.0);
-            int aaStop = (int) Math.ceil(stop/3.0);
-
             String id_ORF = "ORF" + idORF +"_C";
             Strand strand = Strand.NEGATIVE;
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, aaStart, aaStop, strand);
+            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand);
             listORF.add(ORF_Object);
 
         }
