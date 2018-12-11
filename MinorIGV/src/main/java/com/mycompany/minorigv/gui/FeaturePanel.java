@@ -51,12 +51,12 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 	/**
 	 * Het tekenen van Features in de forward of reverse panel. Dit hangt af van de input van de gebruiker in de toolbar Features.
-	 *
-	 * @param feat			Het object van een Feature.
-	 * @param g				Graphics waarin getekend wordt
-	 * @param tag			Wat er in de balkjes van de Feature komt te staan (locus tag, naam, etc)
+	 * @param feat           Het object van een Feature.
+	 * @param g              Graphics waarin getekend wordt
+     * @param tag            Wat er in de balkjes van de Feature komt te staan (locus tag, naam, etc)
+     * @param col            Kleur van de balkjes van een Feature. Genes: Orange, mRNA: Blue
      * */
-	public Feature drawFeatures(Feature feat, Graphics g, String tag, int overlap_coord){
+	public Feature drawFeatures(Feature feat, Graphics g, String tag, int overlap_coord, Color col){
 		int start, stop, length;
 		Dimension dim = this.getSize();
 		length = cont.getLength();
@@ -70,7 +70,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
 		if(strand.equals("+") && forward == true){
-			g.setColor(Color.ORANGE);
+			g.setColor(col);
 			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
 			g.fillRect(info_start[1], dim.height-(overlap_coord+20), info_stop[1]-info_start[1], 15);
 			g.setColor(Color.BLACK);
@@ -88,7 +88,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
 		}else if(strand.equals("-") && forward == false){
-			g.setColor(Color.ORANGE);
+			g.setColor(col);
 
 			// Het op de goede positie zetten van de genen.
 			g.fillRect(info_start[1], overlap_coord, info_stop[1]-info_start[1], 15);

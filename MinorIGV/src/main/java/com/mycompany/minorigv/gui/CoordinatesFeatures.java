@@ -49,13 +49,13 @@ public class CoordinatesFeatures {
 
         // Als de lijsten niet leeg zijn, dan worden de coordinaten bepaald voor het mappen.
         if(!featureGene.isEmpty()){
-            newCoord = setCoordinates(featureGene, g, y_cood_reverse, y_cood_forward,y_cood_reverse_max,y_cood_forward_max);
+            newCoord = setCoordinates(featureGene, g, y_cood_reverse, y_cood_forward,y_cood_reverse_max,y_cood_forward_max, Color.ORANGE);
             y_cood_reverse = newCoord.get(0);
             y_cood_forward = newCoord.get(1);
             y_cood_forward_max = newCoord.get(2);
             y_cood_reverse_max = newCoord.get(3);
         }if(!featuremRNA.isEmpty()){
-            newCoord = setCoordinates(featuremRNA, g, y_cood_reverse, y_cood_forward, y_cood_reverse_max, y_cood_forward_max);
+            newCoord = setCoordinates(featuremRNA, g, y_cood_reverse, y_cood_forward, y_cood_reverse_max, y_cood_forward_max, Color.BLUE);
         }
     }
 
@@ -67,9 +67,10 @@ public class CoordinatesFeatures {
      * @param y_cood_forward        De y as coordinaat in de forward panel
      * @param y_cood_reverse_max    De hoogste y coordinaat van een getekende feature in de reverse panel
      * @param y_cood_forward_max    De hoogste y coordinaat van een getekende feature in de forward panel
+     * @param col                   Kleur van een soort feature. Genes: Orange, mRNA: Blue.
      * @return  ArrayList met op index 1: y_cood_reverse, index 2: y_cood_forward, 3: y_cood_forward_max, 4: y_cood_reverse_max.
      */
-    public ArrayList<Integer> setCoordinates(ArrayList<Feature> OneFeature, Graphics g, int y_cood_reverse, int y_cood_forward, int y_cood_reverse_max, int y_cood_forward_max){
+    public ArrayList<Integer> setCoordinates(ArrayList<Feature> OneFeature, Graphics g, int y_cood_reverse, int y_cood_forward, int y_cood_reverse_max, int y_cood_forward_max, Color col){
         int latest_stop_reverse = 0;
         int latest_stop_forward = 0;
         HashMap<Feature, Integer> list_ov_ft = new HashMap<>();
@@ -86,7 +87,7 @@ public class CoordinatesFeatures {
                 String tag = getTag(feature);
 
                 // Tekenen van de feature op de reverse strand.
-                feat = draw.drawFeatures(feature,g,tag, y_cood_reverse);
+                feat = draw.drawFeatures(feature,g,tag, y_cood_reverse, col);
 
                 // Opslaan van de stop positie van de laaste feature om overlap te achterhalen.
                 latest_stop_reverse = feat.getStop();
@@ -100,7 +101,7 @@ public class CoordinatesFeatures {
 
                 String tag = getTag(feature);
 
-                feat = draw.drawFeatures(feature,g,tag, y_cood_forward);
+                feat = draw.drawFeatures(feature,g,tag, y_cood_forward, col);
 
                 latest_stop_forward = feat.getStop();
 
