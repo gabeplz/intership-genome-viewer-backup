@@ -32,17 +32,20 @@ public class IGVMenuBar extends JMenuBar {
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
 
-
+	/**
+	 * init
+	 */
+	public void init() {
+		this.setPreferredSize(new Dimension(200, 25));
+		this.setMinimumSize(new Dimension(100, 25));
+		Menus();
+		featureMenu();
+	}
 
 	/**
 	 * function creating the first 2 menus on the menu bar "Files" and "Tools"
 	 */
-	public void init()
-	{
-
-		this.setPreferredSize(new Dimension(200,25));
-		this.setMinimumSize(new Dimension(100,25));
-
+	public void Menus(){
 	//first menu item "File"
 		Files = new JMenu("Files");
 
@@ -107,7 +110,6 @@ public class IGVMenuBar extends JMenuBar {
 	//add Tools to the menu bar
 		add(Tools);
 	}
-
 
 	/**
 	 * function creating the third menu item for the menu bar "features"

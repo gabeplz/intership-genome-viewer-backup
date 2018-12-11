@@ -63,7 +63,6 @@ public class GUI {
 
 		IGVMenuBar igvMenuBar = new IGVMenuBar();
 		igvMenuBar.init();
-		igvMenuBar.featureMenu();
 
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		//gbc_panel.insets = new Insets(0, 0, 0, 0);
