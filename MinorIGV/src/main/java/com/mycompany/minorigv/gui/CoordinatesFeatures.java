@@ -8,6 +8,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Coordinaten bepalen van elke feature, rekening gehouden met overlappende features.
+ *
+ * @author Huub en Amber Janssen Groesbeek
+ */
 public class CoordinatesFeatures {
     FeaturePanel draw;
 
@@ -79,7 +84,7 @@ public class CoordinatesFeatures {
 
         // Voor elke feature in een lijst met dezelfde features (bijv. alleen genen) wordt er gekeken op welke strand het voorkomt en wordt getekend.
         for(Feature feature: OneFeature){
-            if (feature.getStrand().equals("-")){
+            if (feature.getStrand().equals("-")){ //TODO van + Strand.POSITIVE maken.
                 // Ophalen van de coordinaten op de reverse strand van de Feature.
                 y_cood_reverse = getCoordinates(feature, latest_stop_reverse, list_ov_ft, y_cood_reverse, feat);
 
@@ -94,7 +99,7 @@ public class CoordinatesFeatures {
 
                 // Ophalen van de hoogste y-coordinaat voor het tekenen van andere Features (bijv. mRNA na genen)
                 y_cood_reverse_max = getMaxCoordinates(y_cood_reverse, y_cood_reverse_max);
-            }else if(feature.getStrand().equals("+")){
+            }else if(feature.getStrand().equals("+")){ //TODO van + Strand.POSITIVE maken.
 
                 // Ophalen van de coordinaten op de template strand van de Feature.
                 y_cood_forward = getCoordinates(feature, latest_stop_forward, list_ov_ft, y_cood_forward, feat);
@@ -151,23 +156,18 @@ public class CoordinatesFeatures {
         if(curFeature.getStart() < latest_stop){
             // Als er overlap is wordt de vorige feature (object) opgeslagen in een hashmap met als value de y as coordinaat.
             list_ov_ft.put(lastFeature, y_cood);
-            if(!list_ov_ft.isEmpty()){
-                // Als de overlap lijst niet leeg is, wordt er gekeken met welke feature de huidige feature overlap heeft.
-                for(Feature f:list_ov_ft.keySet()){
-                    if(curFeature.getStart() < f.getStop()){
-                        y_cood += (20/ list_ov_ft.size());
-                    }else{
-                        y_cood = list_ov_ft.get(f);
-                    }
+            // loopen over de overlappende features en achterhalen of er nog steeds overlapping plaatsvindt over die vorige features.
+            for(Feature f:list_ov_ft.keySet()){
+                if(curFeature.getStart() < f.getStop()){
+                    y_cood += (20/ list_ov_ft.size());
+                }else{
+                    y_cood = list_ov_ft.get(f);
                 }
-            }else{
-                y_cood += 20;
             }
         }else{
             y_cood += 0;
             list_ov_ft.clear();
         }
-
         return y_cood;
     }
 
@@ -186,6 +186,4 @@ public class CoordinatesFeatures {
             return y_cood_max;
         }
     }
-
-
 }

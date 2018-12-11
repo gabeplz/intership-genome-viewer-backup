@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 
 
 /**
- * Class voor de visualisatie van verschillende features zoals MRNA/Genen/Telomeren etc die te vinden zijn
+ * Class voor de visualisatie van verschillende features zoals mRNA/Genen/Telomeren etc die te vinden zijn
  * in GFF(Generic feature format) Files.
- * @author kahuub en Amber Janssen Groesbeek
+ * @author Huub en Amber Janssen Groesbeek
  * Date: 20/11/18
  *
  */
@@ -69,7 +69,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 		int[] info_stop = DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
 
 		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
-		if(strand.equals("+") && forward == true){
+		if(strand.equals("+") && forward == true){ //TODO van + Strand.POSITIVE maken.
 			g.setColor(col);
 			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
 			g.fillRect(info_start[1], dim.height-(overlap_coord+20), info_stop[1]-info_start[1], 15);
@@ -87,7 +87,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			g.drawString(tag, ((info_stop[1]+info_start[1])/2)-centerTag, (dim.height - (7 +overlap_coord)));
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
-		}else if(strand.equals("-") && forward == false){
+		}else if(strand.equals("-") && forward == false){ //TODO van - Strand.NEGATIVE maken.
 			g.setColor(col);
 
 			// Het op de goede positie zetten van de genen.
@@ -128,7 +128,10 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	}
 
 
-
+    /**
+     *
+     * @param evt
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         this.invalidate();

@@ -151,7 +151,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		//er is al een gff ingelezen & een fasta dus we mieteren het weg.
 		else if(curChromosome.getFeatures().size() > 0 && curChromosome.getSeqTemp() != null) {
-
 			this.setOrganism(new Organisms());
 		}
 		//er is al een gff ingelezen & niet een fasta.
@@ -198,19 +197,21 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		//er is al een gff ingelezen & een fasta dus we mieteren het weg.
 		else if(curChromosome.getFeatures() != null && curChromosome.getSeqTemp() != null) {
-			this.setOrganism(new Organisms());
+
+		    this.setOrganism(new Organisms());
+
 		}
 		//er is al een gff ingelezen & niet een fasta.
 		else if (curChromosome.getFeatures() != null && curChromosome.getSeqTemp() == null) {
-			this.setOrganism(new Organisms());
+		    this.setOrganism(new Organisms());
 		}
 		//er is geen gff ingelezen maar wel al een fasta.
 		else if (curChromosome.getFeatures() == null && curChromosome.getSeqTemp() != null) {
-			//pass
+		    //pass
 		}
 		//er is geen gff en geen fasta.
 		else if (curChromosome.getFeatures() == null && curChromosome.getSeqTemp() == null) {
-			//voor volledigheid
+		    //voor volledigheid
 		}
 
 		gffReader.readData(organism, path);
