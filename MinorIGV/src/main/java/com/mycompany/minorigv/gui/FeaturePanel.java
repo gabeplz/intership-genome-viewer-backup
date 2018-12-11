@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	Context cont;
 	boolean forward;
+    private int y_cood_reverse_max = 0;
+    private int y_cood_forward_max = 0;
 
 
 	/**
@@ -44,10 +46,10 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 		int y_cood_reverse = 4;
         int y_cood_forward = 4;
 
-
         ArrayList<Feature> featureGene = new ArrayList<>();
         ArrayList<Feature> featuremRNA = new ArrayList<>();
 
+        // Elke feature in een aparte lijst zetten
         for(Feature feat : featureFilteredList) {
             if (feat instanceof Gene) {
                 featureGene.add(feat);
@@ -56,40 +58,52 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
             }
         }
 
-        ArrayList<Integer> newCoord = new ArrayList<>();
+        ArrayList<Integer> newCoord;
 
+        // Als de lijsten niet leeg zijn, dan worden de coordinaten bepaald voor het mappen.
         if(!featureGene.isEmpty()){
-            newCoord = setCoordinates(featureGene, g, "Gene", y_cood_reverse, y_cood_forward);
+            newCoord = setCoordinates(featureGene, g, y_cood_reverse, y_cood_forward);
             y_cood_reverse = newCoord.get(0);
             y_cood_forward = newCoord.get(1);
         }if(!featuremRNA.isEmpty()){
-            newCoord = setCoordinates(featuremRNA, g, "mRNA", y_cood_reverse, y_cood_forward);
+            newCoord = setCoordinates(featuremRNA, g, y_cood_reverse, y_cood_forward);
             y_cood_reverse = newCoord.get(0);
             y_cood_forward = newCoord.get(1);
         }
 	}
 
-	public ArrayList<Integer> setCoordinates(ArrayList<Feature> features, Graphics g, String tag, int y_cood_reverse, int y_cood_forward){
+	public ArrayList<Integer> setCoordinates(ArrayList<Feature> OneFeature, Graphics g, int y_cood_reverse, int y_cood_forward){
 	    int latest_stop_reverse = 0;
 	    int latest_stop_forward = 0;
-
-        int y_cood_reverse_max = 0;
-        int y_cood_forward_max = 0;
-
 	    HashMap<Feature, Integer> list_ov_ft = new HashMap<>();
 	    Feature feat = null;
 	    ArrayList<Integer> newCoord = new ArrayList<>();
 
-        for(Feature gene: features){
-            if (gene.getStrand().equals("-")){
-                y_cood_reverse = getCoordinates(gene, latest_stop_reverse, list_ov_ft, y_cood_reverse, feat);
-                feat = drawFeatures(gene,g,tag, y_cood_reverse);
+	    // Voor elke feature in een lijst met dezelfde features (bijv. alleen genen) wordt er gekeken op welke strand het voorkomt en wordt getekend.
+        for(Feature feature: OneFeature){
+            if (feature.getStrand().equals("-")){
+                // Ophalen van de coordinaten op de reverse strand van de Feature.
+                y_cood_reverse = getCoordinates(feature, latest_stop_reverse, list_ov_ft, y_cood_reverse, feat);
+
+                // Ophalen tags
+                String tag = getTag(feature);
+
+                // Tekenen van de feature op de reverse strand.
+                feat = drawFeatures(feature,g,tag, y_cood_reverse);
+
+                // Opslaan van de stop positie van de laaste feature om overlap te achterhalen.
                 latest_stop_reverse = feat.getStop();
 
+                // Ophalen van de hoogste y-coordinaat voor het tekenen van andere Features (bijv. mRNA na genen)
                 y_cood_reverse_max = getMaxCoordinates(y_cood_reverse, y_cood_reverse_max);
-            }else if(gene.getStrand().equals("+")){
-                y_cood_forward = getCoordinates(gene, latest_stop_forward, list_ov_ft, y_cood_forward, feat);
-                feat = drawFeatures(gene,g,tag, y_cood_forward);
+            }else if(feature.getStrand().equals("+")){
+
+                // Ophalen van de coordinaten op de template strand van de Feature.
+                y_cood_forward = getCoordinates(feature, latest_stop_forward, list_ov_ft, y_cood_forward, feat);
+
+                String tag = getTag(feature);
+
+                feat = drawFeatures(feature,g,tag, y_cood_forward);
                 latest_stop_forward = feat.getStop();
 
                 y_cood_forward_max = getMaxCoordinates(y_cood_forward, y_cood_forward_max);
@@ -99,18 +113,30 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
         y_cood_forward = y_cood_forward_max + 20;
         y_cood_reverse = y_cood_reverse_max + 20;
 
+        // Returnen van de coordinaten waarna verder getekent moet worden.
         newCoord.add(y_cood_reverse);
         newCoord.add(y_cood_forward);
 
         return newCoord;
     }
 
-    private int getCoordinates(Feature gene, int latest_stop, HashMap<Feature, Integer> list_ov_ft, int y_cood, Feature feat){
-        if(gene.getStart() < latest_stop){
-            list_ov_ft.put(feat, y_cood);
+    private String getTag(Feature feature){
+	    // Als de feature een gen is wordt de locus tag als tag opgeslagen, anders de naam van de feature.
+	    if(feature instanceof Gene){
+	        return (String) feature.getAttributes().get("locus_tag");
+        }else{
+	        return (String) feature.getAttributes().get("Name");
+        }
+	}
+
+    private int getCoordinates(Feature curFeature, int latest_stop, HashMap<Feature, Integer> list_ov_ft, int y_cood, Feature lastFeature){
+        // Bepalen of er overlap is van twee features.
+	    if(curFeature.getStart() < latest_stop){
+	        // Als er overlap is wordt de vorige feature (object) opgeslagen.
+            list_ov_ft.put(lastFeature, y_cood);
             if(!list_ov_ft.isEmpty()){
                 for(Feature f:list_ov_ft.keySet()){
-                    if(gene.getStart() < f.getStop()){
+                    if(curFeature.getStart() < f.getStop()){
                         y_cood += (20/ list_ov_ft.size());
                     }else{
                         y_cood = list_ov_ft.get(f);
@@ -128,6 +154,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
     }
 
     private int getMaxCoordinates(int y_cood, int y_cood_max){
+	    // Bepalen van de hoogste waarde van de y-coordinaat, vanaf daar wordt de volgende Feature getekend.
         if(y_cood > y_cood_max){
             return y_cood;
         }else{
@@ -141,8 +168,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	 * @param feat			Het object van een Feature.
 	 * @param g				Graphics waarin getekend wordt
 	 * @param tag			Wat er in de balkjes van de Feature komt te staan (locus tag, naam, etc)
-//	 * @param index			Index voor de coordinaten waar de Feature op het panel moet komen te staan
-	 */
+     * */
 	public Feature drawFeatures(Feature feat, Graphics g, String tag, int overlap_coord){
 		int start, stop;
 		Dimension dim = this.getSize();
@@ -205,7 +231,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	}
 
 	/**
-	 *
+	 * Context instellen
 	 * @param context
 	 */
 	public void setContext(Context context) {
