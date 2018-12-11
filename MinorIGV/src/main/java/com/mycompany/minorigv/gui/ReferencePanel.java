@@ -13,11 +13,18 @@ import javax.swing.JPanel;
 
 import com.mycompany.minorigv.sequence.makeCompStrand;
 
+/**
+ * ReferencePanel draws the nucleotides of the forward en reverse strand.
+ */
 public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 	//Hardcoded String ff want moeten nog Context objecten hebben
 	Context cont;
 
+	/**
+	 * using coordinates from drawingtools this function draws nucleotides of the forward and reverse strand in the correct spot in the GUI
+	 * @param g
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -55,6 +62,9 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 	}
 
+	/**
+	 *ChooseLetterColor changes the color of a nucleotide when drawn
+	 */
 	private void chooseLetterColor(Graphics g, char c) {
 
 		switch (c) {
@@ -87,7 +97,10 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		}
 
 	}
-	// initiatie van het paneel waarin de sequenties worden getekent
+
+	/**
+	 * initiatie van het paneel waarin de sequenties worden getekent
+ 	 */
 	public void init() {
 
 		setPreferredSize(new Dimension(500,55));
@@ -96,6 +109,11 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		setBackground(Color.WHITE);
 	}
 
+	// TODO: 11/12/2018
+	/**
+	 *
+	 * @param cont
+	 */
 	public void setContext(Context cont) {
 		this.cont = cont;
 		cont.addPropertyChangeListener("range", this);
