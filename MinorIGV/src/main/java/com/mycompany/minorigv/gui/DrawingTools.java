@@ -15,8 +15,8 @@ public class DrawingTools {
 	 */
 	public static double calculateLetterPosition(int width, int amount, double i) {
 
-		width = width - OFFSET;
-		double pos = (int) (OFFSET + ((double)width/(double)amount) * i);
+		width = width - 2*OFFSET;
+		double pos = (int) (OFFSET + ((double)width/(double)(amount-1)) * i);
 		return pos;
 
 	}
@@ -27,7 +27,7 @@ public class DrawingTools {
 	 */
 	public static double calculateLetterWidth(int width, int amount) {
 		width = width - 2*OFFSET;
-		return ( (double) width)/( (double) amount);
+		return ( (double) width)/( (double) (amount-1));
 		
 	}
 

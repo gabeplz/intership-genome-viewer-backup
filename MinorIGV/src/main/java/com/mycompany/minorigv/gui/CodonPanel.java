@@ -16,6 +16,7 @@ import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 
+
 /**
  * JPanel voor de visualisatie van de verschillende reading frames passend bij het referentie genoom.
  * @author Huub en Anne
@@ -71,16 +72,34 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
             ArrayList<ORF> strandORFs = getORFs(Strand.NEGATIVE, frame);
 			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel);
 
+            int x_pos_right; //linkerkant van rechthoekje, positie op de x-as.
+            int x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, stop-f+1.5); //onthouden oude x_pos.
+
 			int aa = 0; // aa teller
 			for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) {
 				char letter = aaSeq.charAt(aa);
 
-				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexRef-start-2);
-				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
-                AA(strandORFs, g, indexRef, letter);
+				int indexSubSeq = indexRef-start-2;
+                x_pos_right = x_pos_left;
+                x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, indexSubSeq-1.5); //nieuwe x_pos bepalen.
+                System.out.println(x_pos_right);
+				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexSubSeq);
 
+				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
+
+                AA(strandORFs, g, indexRef, letter);
 				int height = 20+20*(frame);
-				DrawingTools.drawFilledRect(g, x_pos, height,width+1, 20);
+				//DrawingTools.drawFilledRect(g, x_pos_right, height,width+1, 20);
+
+
+                g.fillRect(x_pos_left,height-10,x_pos_right-x_pos_left-4,20);
+                System.out.print("indexSubSeq: " + indexSubSeq);
+                System.out.print("right: "+String.valueOf(x_pos_right));
+                System.out.print(" left: "+x_pos_left);
+                System.out.println("width: "+ (x_pos_right-x_pos_left));
+
+
+
 				g.setColor(Color.BLACK);
 
 				DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,height);

@@ -32,7 +32,6 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 			return; //geen sequentie.
 		}
 
-		Graphics2D g2 = (Graphics2D) g;
 		Dimension dim = this.getSize();       // grootte dit Paneel
 		String seq = cont.getSubSequentie();  // huidige subSequentie
 		int length = cont.getLength();        // lengte subsequentie
@@ -82,11 +81,9 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
                 width = x_pos-old_x_pos-1; //pixelbrede streep wit rechts.
             }
 
-
             this.chooseLetterColor(g,seq.charAt(i)); //letterkleur kiezen.
 
             g2.fillRect(old_x_pos,HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
-
 
             this.chooseLetterColor(g,revComp.charAt(j)); //letterkleur kiezen reverse.
             g2.fillRect(old_x_pos,HEIGHT+HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
@@ -131,31 +128,31 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
      * @param c char voor selectie.
      */
 	private void chooseLetterColor(Graphics g, char c) {
-
+		//http://phrogz.net/css/distinct-colors.html
 		switch (c) {
 		case 'T':
-			g.setColor(Color.BLUE);
+			g.setColor(new Color(128,0,255));
 			break;
 		case 'A':
-			g.setColor(Color.RED);
+			g.setColor(new Color(255,0,0));
 			break;
 		case 'C':
-			g.setColor(new Color(0 ,153, 0));
+			g.setColor(new Color(123, 215,0));
 			break;
 		case 'G':
-			g.setColor(new Color(255 ,85, 0));
+			g.setColor(new Color(0, 215, 215));
 			break;
 		case 't':
-			g.setColor(Color.BLUE);
+			g.setColor(new Color(128,0,255));
 			break;
 		case 'a':
-			g.setColor(Color.RED);
+			g.setColor(new Color(255,0,0));
 			break;
 		case 'c':
-			g.setColor(new Color(0 ,153, 0));
+			g.setColor(new Color(123, 215,0));
 			break;
 		case 'g':
-			g.setColor(new Color(255 ,85, 0));
+			g.setColor(new Color(0, 215, 215));
 			break;
 		default:
 			g.setColor(Color.BLACK);

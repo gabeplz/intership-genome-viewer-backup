@@ -117,7 +117,7 @@ public class ORF {
 
     /**
      *
-     * @param index de positie van de eerste letter (nucleoride) van een subsequentie op de forward.
+     * @param index de positie van de eerste letter (nucleotide) van een subsequentie op de forward.
      * @param strand de POSITIVE (forward) of NEGATIVE (reverse) strand.
      * @param lenghtSeq de lengte van de hele sequentie.
      * @return
