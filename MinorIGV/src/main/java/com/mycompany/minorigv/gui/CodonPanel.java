@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
-import com.mycompany.minorigv.sequence.CodonTabel;
+import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 import com.mycompany.minorigv.sequence.makeCompStrand;
@@ -47,18 +47,19 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		String seq = cont.getSubSequentie();
 		int start = cont.getStart();
 		int stop = cont.getStop();
+		CodonTable huidigeTabel = cont.getCurrentCodonTable();
 
 		seq = forward ? seq : makeCompStrand.getReverseComplement(seq);
 
 		Strand direction = forward ? Strand.POSITIVE : Strand.NEGATIVE;
 
-		CodonTabel huidigeTabel = TranslationManager.buildDefault();
+	//	CodonTable huidigeTabel = TranslationManager.buildDefault();
 
 		int k = forward ? +1 : -1;
 
-
+		System.out.println("paintcomponent in codonpanel called");
 		for (int f = 0; f < 3; f++) {
-			String aaSeq = TranslationManager.getAminoAcids(Strand.POSITIVE,seq.substring(f),huidigeTabel);
+			String aaSeq = TranslationManager.getInstance().getAminoAcids(Strand.POSITIVE,seq.substring(f),huidigeTabel);
 			int aa = 0;
 			for (int i = f; i < seq.length()-2; i+=3) {
 
@@ -93,6 +94,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		this.cont = cont;
 		cont.addPropertyChangeListener("range", this);
 		cont.addPropertyChangeListener("chromosome",this);
+//		cont.addPropertyChangeListener("CodonTable", this);
 	}
 
 	public void setForward(Boolean forward) {
@@ -104,6 +106,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		
 		this.revalidate();
 		this.repaint();
+		System.out.println("repainted");
 		
 	}
 }

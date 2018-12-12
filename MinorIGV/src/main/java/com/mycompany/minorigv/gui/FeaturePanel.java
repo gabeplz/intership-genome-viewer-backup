@@ -46,7 +46,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 
 
-        System.out.println(featureFilteredList.length);
+        System.out.println(featureFilteredList.length + "featurepanel java");
 
 		for (Feature feat : featureFilteredList){
 			// Als in het object naam Gene voorkomt dan worden de genen gemapt.

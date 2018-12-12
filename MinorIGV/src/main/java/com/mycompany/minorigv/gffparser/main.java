@@ -24,8 +24,8 @@ public class main {
             org.addSequence(id,fastaMap.get(id));
         }
 
-        InformationUser info = new InformationUser();
-        info.getInfo(org);
+//        InformationUser info = new InformationUser();
+  //      info.getInfo(org);
 
     }
 }

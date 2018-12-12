@@ -13,6 +13,9 @@ import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.gffReader;
 import com.mycompany.minorigv.gffparser.ORF;
+import com.mycompany.minorigv.sequence.CodonTable;
+import com.mycompany.minorigv.sequence.TranslationManager;
+
 /**
  * Het object dat de binding realiseert tussen de GUI en de onderliggende Data.
  * @author kahuub
@@ -24,6 +27,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private Chromosome curChromosome;
 
 	private String[] chromosomeNameArray;
+
+	private CodonTable currentCodonTable;
 
 	private Feature[] currentFeatureList;
 	private int featStart;
@@ -86,6 +91,7 @@ public class Context implements Serializable, PropertyChangeListener {
         this.addPropertyChangeListener(this);
         this.keuze_gebruiker = new ArrayList<String>();
         keuze_gebruiker.add("Gene");
+        this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
 	}
 	
 	public Context(String test, String tes1) throws Exception {
@@ -341,7 +347,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		pcs.firePropertyChange("chromosome", oldValue, this.curChromosome); //chromosome event
 	}
 
-
 	public Chromosome getCurChromosome() {
 		return curChromosome;
 	}
@@ -353,6 +358,16 @@ public class Context implements Serializable, PropertyChangeListener {
 	private void setStop(int stop) {
 		assert stop <= this.getFullLenght()-1;
 		this.stop = stop;
+	}
+
+	public CodonTable getCurrentCodonTable() {
+		return currentCodonTable;
+	}
+
+	public void setCurrentCodonTable(Integer key) {
+		CodonTable oldValue = this.currentCodonTable;
+		this.currentCodonTable = TranslationManager.getInstance().getCodonTable(key);
+		pcs.firePropertyChange("CodonTable", oldValue, currentCodonTable);
 	}
 
 	/**
