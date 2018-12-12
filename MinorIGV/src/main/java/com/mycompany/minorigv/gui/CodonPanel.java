@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTabel;
 import com.mycompany.minorigv.sequence.Strand;
@@ -26,6 +25,10 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 	Context cont;
 	Strand strand;
+
+	private final int ZOOM_SIZE_1 = 20;
+	private final int ZOOM_SIZE_2 = 14;
+	private final int ZOOM_SIZE_3 = 3;
 
 
 	public void init(Strand strand) {
@@ -48,11 +51,31 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 			return;
 		}
 
+        double letterWidth = DrawingTools.calculateLetterWidth((int) this.getSize().getWidth(), cont.getLength())*3;
+        System.out.println(letterWidth);
         if(strand == Strand.POSITIVE) {
-			drawPositive(g,seq);
+
+            if(letterWidth > ZOOM_SIZE_1){
+                drawPositive(g,seq);
+            }else if(letterWidth > ZOOM_SIZE_2){
+                drawPositive(g,seq);
+            }else if(letterWidth > ZOOM_SIZE_3){
+                drawPositive(g,seq);
+            }else{
+                drawZoomedOut(g, seq);
+            }
 		}
 		else {
-			drawNegative(g,seq);
+            if(letterWidth > ZOOM_SIZE_1){
+                drawNegative(g,seq);
+            }else if(letterWidth > ZOOM_SIZE_2){
+                drawNegative(g,seq);
+            }else if(letterWidth > ZOOM_SIZE_3){
+                drawNegative(g,seq);
+            }else{
+                drawZoomedOut(g, seq);
+            }
+
 		}
 
 	}
@@ -62,8 +85,9 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		int start = cont.getStart(); 					//start van het beeld.
 		int stop = cont.getStop(); 						//stop van het beeld.
 		int length = cont.getLength();					//lengte subsequentie.
-		int PanelWidth = (int) getSize().getWidth(); 	//breedte paneel
+		int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
 
+        double letterWidth = DrawingTools.calculateLetterWidth(panelWidth, length)*3;
 		CodonTabel huidigeTabel = TranslationManager.buildDefault(); //TODO gebruiker keuze tabel
 
 		for (int f = 0; f < 3; f++) {
@@ -73,7 +97,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel);
 
             int x_pos_right; //linkerkant van rechthoekje, positie op de x-as.
-            int x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
+            int x_pos_left = (int) DrawingTools.calculateLetterPosition( panelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
 
 			int aa = 0; // aa teller
 			for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) {
@@ -81,19 +105,22 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 				int indexSubSeq = indexRef-start-2;
                 x_pos_right = x_pos_left;
-                x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, indexSubSeq-1.5); //nieuwe x_pos bepalen.
+                x_pos_left = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq-1.5); //nieuwe x_pos bepalen.
                 System.out.println(x_pos_right);
-				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexSubSeq);
-
-                AA(strandORFs, g, indexRef, letter);
-				int height = 20+20*(frame);
+				int x_pos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq);
 
                 int width = x_pos_right-x_pos_left;
+                AA(strandORFs, g, indexRef, letter,letterWidth);
+				int height = 20+20*(frame);
+
+
                 g.fillRect(x_pos_left,height-10,width,20);
 
 				g.setColor(Color.BLACK);
 
-				DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,height);
+                if(letterWidth > ZOOM_SIZE_2){
+                    DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,height);
+                }
 				aa++;
 			}
 		}
@@ -109,7 +136,9 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		int start = cont.getStart(); 					//start van het beeld.
 		int stop = cont.getStop(); 						//stop van het beeld.
 		int length = cont.getLength();					//lengte subsequentie.
-		int PanelWidth = (int) getSize().getWidth(); 	//breedte paneel
+		int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
+
+        double letterWidth = DrawingTools.calculateLetterWidth(panelWidth, length)*3;
 
 		CodonTabel huidigeTabel = TranslationManager.buildDefault(); //TODO gebruiker keuze tabel
 
@@ -125,15 +154,17 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 			for (int indexRef = frameStart; indexRef < stop-2; indexRef+=3) {
 				char letter = aaSeq.charAt(aa);
 
-				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexRef-start+1);
-				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
-                AA(strandORFs, g, indexRef, letter);
+				int x_pos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexRef-start+1);
+				int width = (int) (DrawingTools.calculateLetterWidth(panelWidth, length)*3);
+                AA(strandORFs, g, indexRef, letter, letterWidth);
 
 				int height = 20+20*(2-frame);
 				DrawingTools.drawFilledRect(g, x_pos, height,width+1, 20);
 				g.setColor(Color.BLACK);
 
-				DrawingTools.drawCenteredChar(g,letter,x_pos,height);
+				if(letterWidth > ZOOM_SIZE_2){
+                    DrawingTools.drawCenteredChar(g,letter,x_pos,height);
+                }
 				aa++;
 			}
 		}
@@ -159,66 +190,112 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 	}
 
     /**
-     *
      * @param strandORFs  een ArrayList met van 1 frame op 1 strand alle ORFs tussen de start en stop van de gebruiker
      * @param g           graphics object g.
      * @param indexRef    de index gemapt naar de referentie.
      * @param letter      de letter van het aminozuur.
+     * @param width
      */
-    public void AA(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter){
+    public void AA(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
         if(strandORFs.size() > 0){
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
                 if (indexRef < stopORF && indexRef > startORF) {
-                    colorFrames(g, indexRef, letter, "ORF");
+                    colorFrames(g, indexRef, letter, "ORF",width);
                     break;
                 } else {
-                    colorFrames(g, indexRef, letter, "-");
+                    colorFrames(g, indexRef, letter, "-", width);
                 }
             }
         }else{
-            colorFrames(g, indexRef, letter, "-");
+            colorFrames(g, indexRef, letter, "-", width);
         }
     }
 
     /**
-     *
      * @param g
      * @param indexRef
      * @param letter
      * @param bevest
+     * @param width
      */
-	public void colorFrames(Graphics g, int indexRef, char letter, String bevest){
+	public void colorFrames(Graphics g, int indexRef, char letter, String bevest, double width){
 	    if('M' == letter){
             g.setColor(new Color(0, 153, 0));
 		}else if('*' == letter){
             g.setColor(new Color(250, 0, 0));
         }else if(bevest.equals("ORF")){
             g.setColor(new Color(255, 255, 0));
-        }else if(indexRef%2 > 0) {
-            g.setColor(new Color(42, 112, 150));
+        }else if(indexRef%2 > 0 || width < ZOOM_SIZE_1 ) {
+            g.setColor(new Color(127, 191, 226));
         }else{
-			g.setColor(new Color(127, 191, 226));
+            g.setColor(new Color(42, 112, 150));
 		}
 	}
 
 	// Haalt de ORFs op tussen start en stop
     // Haalt de ORFs op, op één van de strands en op één van de readingframes van de strands
 	public ArrayList<ORF> getORFs(Strand strand, int frame){
-		ArrayList<ORF> listORF;
-		listORF = cont.getCurORFListBetween();
+		ArrayList<ORF> listORF = cont.getCurORFListBetween();
 
         ArrayList<ORF> strandORFs = new ArrayList<>();
         for(ORF o : listORF){
             if(o.getStrand().equals(strand) && o.getReadingframe() == frame){
                 strandORFs.add(o);
-                //System.out.println(o.getReadingframe() + " | " + o.getStrand() + " | " + o.getStop()+ " | " + o.getStart());
             }
         }
         return strandORFs;
 	}
 
+    // Haalt de ORFs op tussen start en stop
+    // Haalt de ORFs op, op één van de strands en op één van de readingframes van de strands
+    public ArrayList<ORF> getORFs(Strand strand){
+        ArrayList<ORF> listORF = cont.getCurORFListBetween();
+
+        ArrayList<ORF> strandORFs = new ArrayList<>();
+        for(ORF o : listORF){
+            if(o.getStrand().equals(strand)){
+                strandORFs.add(o);
+            }
+        }
+        return strandORFs;
+    }
+
+    private static int calcHeight(Strand strand, int frame){
+
+	    if(strand == Strand.NEGATIVE){
+	        return 20+20*(frame)-10;
+        }else if(strand == Strand.POSITIVE){
+	        return 20+20*(2-frame)-10;
+        }
+        else return -1;
+
+    }
+
+    private void drawZoomedOut(Graphics g, String seq){
+
+        int start = cont.getStart(); 					//start van het beeld.
+        int stop = cont.getStop(); 						//stop van het beeld.
+        int length = cont.getLength();					//lengte subsequentie.
+        int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
+
+        int xPosLeft = (int) DrawingTools.calculateLetterPosition(panelWidth, length,start-start);
+        int xPosRight = (int) DrawingTools.calculateLetterPosition(panelWidth, length, stop-start);
+
+        g.setColor(new Color(127, 191, 226));
+        g.fillRect(xPosLeft,10,xPosRight-xPosLeft,10+3*20-10);
+
+	    ArrayList<ORF> listORF = getORFs(strand);
+	    for(ORF o : listORF){
+	        xPosLeft = (int) DrawingTools.calculateLetterPosition(panelWidth, length,o.getStart()-start);
+	        xPosRight = (int) DrawingTools.calculateLetterPosition(panelWidth, length, o.getStop()-start);
+	        int height = calcHeight(strand, o.getReadingframe());
+            g.setColor(new Color(255, 255, 0));
+	        g.fillRect(xPosLeft, height, xPosRight-xPosLeft, 20);
+	        g.setColor(Color.BLACK);
+        }
+    }
 
 
 }
