@@ -32,12 +32,12 @@ public class CoordinatesFeatures {
      */
     public void seperateFeatures(Feature[] featureFilteredList, Graphics g){
         // De coordinaten van de y as op de forward en reverse panel
-        int y_cood_reverse = 4;
-        int y_cood_forward = 4;
+        int yCoodReverse = 4;
+        int yCoodForward = 4;
 
         // Hoogste y as die is getekend zodat de volgende feature vanaf dat coordinaat pas gaat tekenen
-        int y_cood_reverse_max = 0;
-        int y_cood_forward_max = 0;
+        int yCoodReverseMax = 0;
+        int yCoodForwardMax = 0;
 
         ArrayList<Feature> featureGene = new ArrayList<>();
         ArrayList<Feature> featuremRNA = new ArrayList<>();
@@ -55,13 +55,13 @@ public class CoordinatesFeatures {
 
         // Als de lijsten niet leeg zijn, dan worden de coordinaten bepaald voor het mappen.
         if(!featureGene.isEmpty()){
-            newCoord = setCoordinates(featureGene, g, y_cood_reverse, y_cood_forward,y_cood_reverse_max,y_cood_forward_max, Color.ORANGE);
-            y_cood_reverse = newCoord.get(0);
-            y_cood_forward = newCoord.get(1);
-            y_cood_forward_max = newCoord.get(2);
-            y_cood_reverse_max = newCoord.get(3);
+            newCoord = setCoordinates(featureGene, g, yCoodReverse, yCoodForward,yCoodReverseMax,yCoodForwardMax, Color.ORANGE);
+            yCoodReverse = newCoord.get(0);
+            yCoodForward = newCoord.get(1);
+            yCoodForwardMax = newCoord.get(2);
+            yCoodReverseMax = newCoord.get(3);
         }if(!featuremRNA.isEmpty()){
-            newCoord = setCoordinates(featuremRNA, g, y_cood_reverse, y_cood_forward, y_cood_reverse_max, y_cood_forward_max, Color.BLUE);
+            newCoord = setCoordinates(featuremRNA, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.BLUE);
         }
     }
 
@@ -69,17 +69,17 @@ public class CoordinatesFeatures {
      * Coordinaten van elke feature worden bepaald en meegegeven aan een methode die de features tekent.
      * @param OneFeature            Een lijst met daarin alle objecten van één feature, bijvoorbeeld alle objecten van de feature Genes.
      * @param g                     Graphics
-     * @param y_cood_reverse        De y as coordinaat in de reverse panel
-     * @param y_cood_forward        De y as coordinaat in de forward panel
-     * @param y_cood_reverse_max    De hoogste y coordinaat van een getekende feature in de reverse panel
-     * @param y_cood_forward_max    De hoogste y coordinaat van een getekende feature in de forward panel
+     * @param yCoodReverse        De y as coordinaat in de reverse panel
+     * @param yCoodForward        De y as coordinaat in de forward panel
+     * @param yCoodReverseMax    De hoogste y coordinaat van een getekende feature in de reverse panel
+     * @param yCoodForwardMax    De hoogste y coordinaat van een getekende feature in de forward panel
      * @param col                   Kleur van een soort feature. Genes: Orange, mRNA: Blue.
-     * @return  ArrayList met op index 1: y_cood_reverse, index 2: y_cood_forward, 3: y_cood_forward_max, 4: y_cood_reverse_max.
+     * @return  ArrayList met op index 1: yCoodReverse, index 2: yCoodForward, 3: yCoodForwardMax, 4: yCoodReverseMax.
      */
-    public ArrayList<Integer> setCoordinates(ArrayList<Feature> OneFeature, Graphics g, int y_cood_reverse, int y_cood_forward, int y_cood_reverse_max, int y_cood_forward_max, Color col){
-        int latest_stop_reverse = 0;
-        int latest_stop_forward = 0;
-        HashMap<Feature, Integer> list_ov_ft = new HashMap<>();
+    public ArrayList<Integer> setCoordinates(ArrayList<Feature> OneFeature, Graphics g, int yCoodReverse, int yCoodForward, int yCoodReverseMax, int yCoodForwardMax, Color col){
+        int latestStopReverse = 0;
+        int latestStopForward = 0;
+        HashMap<Feature, Integer> listOvFt = new HashMap<>();
         Feature feat = null;
         ArrayList<Integer> newCoord = new ArrayList<>();
 
@@ -87,42 +87,42 @@ public class CoordinatesFeatures {
         for(Feature feature: OneFeature){
             if (feature.getStrand().equals(Strand.NEGATIVE)){
                 // Ophalen van de coordinaten op de reverse strand van de Feature.
-                y_cood_reverse = getCoordinates(feature, latest_stop_reverse, list_ov_ft, y_cood_reverse, feat);
+                yCoodReverse = getCoordinates(feature, latestStopReverse, listOvFt, yCoodReverse, feat);
 
                 // Ophalen tags
                 String tag = getTag(feature);
 
                 // Tekenen van de feature op de reverse strand.
-                feat = draw.drawFeatures(feature,g,tag, y_cood_reverse, col);
+                feat = draw.drawFeatures(feature,g,tag, yCoodReverse, col);
 
                 // Opslaan van de stop positie van de laaste feature om overlap te achterhalen.
-                latest_stop_reverse = feat.getStop();
+                latestStopReverse = feat.getStop();
 
                 // Ophalen van de hoogste y-coordinaat voor het tekenen van andere Features (bijv. mRNA na genen)
-                y_cood_reverse_max = getMaxCoordinates(y_cood_reverse, y_cood_reverse_max);
+                yCoodReverseMax = getMaxCoordinates(yCoodReverse, yCoodReverseMax);
             }else if(feature.getStrand().equals(Strand.POSITIVE)){
 
                 // Ophalen van de coordinaten op de template strand van de Feature.
-                y_cood_forward = getCoordinates(feature, latest_stop_forward, list_ov_ft, y_cood_forward, feat);
+                yCoodForward = getCoordinates(feature, latestStopForward, listOvFt, yCoodForward, feat);
 
                 String tag = getTag(feature);
 
-                feat = draw.drawFeatures(feature,g,tag, y_cood_forward, col);
+                feat = draw.drawFeatures(feature,g,tag, yCoodForward, col);
 
-                latest_stop_forward = feat.getStop();
+                latestStopForward = feat.getStop();
 
-                y_cood_forward_max = getMaxCoordinates(y_cood_forward, y_cood_forward_max);
+                yCoodForwardMax = getMaxCoordinates(yCoodForward, yCoodForwardMax);
             }
         }
 
-        y_cood_forward = y_cood_forward_max + 20;
-        y_cood_reverse = y_cood_reverse_max + 20;
+        yCoodForward = yCoodForwardMax + 20;
+        yCoodReverse = yCoodReverseMax + 20;
 
         // Returnen van de coordinaten waarna verder getekent moet worden.
-        newCoord.add(y_cood_reverse);
-        newCoord.add(y_cood_forward);
-        newCoord.add(y_cood_forward_max);
-        newCoord.add(y_cood_reverse_max);
+        newCoord.add(yCoodReverse);
+        newCoord.add(yCoodForward);
+        newCoord.add(yCoodForwardMax);
+        newCoord.add(yCoodReverseMax);
 
         return newCoord;
     }
@@ -146,45 +146,45 @@ public class CoordinatesFeatures {
      * Bepalen of er overlap is met features. y as coordinaten bepalen.
      *
      * @param curFeature    Huidige feature
-     * @param latest_stop   De stop positie van de laatste feature
-     * @param list_ov_ft    Lijst met features die mogelijk overlap veroorzaken
-     * @param y_cood        y coordinaat waarna verder gegaan  moet worden
+     * @param latestStop   De stop positie van de laatste feature
+     * @param listOvFt    Lijst met features die mogelijk overlap veroorzaken
+     * @param yCood        y coordinaat waarna verder gegaan  moet worden
      * @param lastFeature   Vorige feature.
      * @return              Integer van de y as coordinaat.
      */
-    private int getCoordinates(Feature curFeature, int latest_stop, HashMap<Feature, Integer> list_ov_ft, int y_cood, Feature lastFeature){
+    private int getCoordinates(Feature curFeature, int latestStop, HashMap<Feature, Integer> listOvFt, int yCood, Feature lastFeature){
         // Bepalen of er overlap is van twee features: dan is de start van de huidige feature kleiner dan de stop van de laatste feature.
-        if(curFeature.getStart() < latest_stop){
+        if(curFeature.getStart() < latestStop){
             // Als er overlap is wordt de vorige feature (object) opgeslagen in een hashmap met als value de y as coordinaat.
-            list_ov_ft.put(lastFeature, y_cood);
+            listOvFt.put(lastFeature, yCood);
             // loopen over de overlappende features en achterhalen of er nog steeds overlapping plaatsvindt over die vorige features.
-            for(Feature f:list_ov_ft.keySet()){
+            for(Feature f:listOvFt.keySet()){
                 if(curFeature.getStart() < f.getStop()){
-                    y_cood += (20/ list_ov_ft.size());
+                    yCood += (20/ listOvFt.size());
                 }else{
-                    y_cood = list_ov_ft.get(f);
+                    yCood = listOvFt.get(f);
                 }
             }
         }else{
-            y_cood += 0;
-            list_ov_ft.clear();
+            yCood += 0;
+            listOvFt.clear();
         }
-        return y_cood;
+        return yCood;
     }
 
     /**
      * Bepalen van de hoogste waarde op de y as.
      *
-     * @param y_cood        Huidige y coordinaat
-     * @param y_cood_max    Maximale y coordinaat die is getekent
+     * @param yCood        Huidige y coordinaat
+     * @param yCoodMax    Maximale y coordinaat die is getekent
      * @return              De hoogste y coordinaat
      */
-    private int getMaxCoordinates(int y_cood, int y_cood_max){
+    private int getMaxCoordinates(int yCood, int yCoodMax){
         // Bepalen van de hoogste waarde van de y-coordinaat, vanaf daar wordt de volgende Feature getekend.
-        if(y_cood > y_cood_max){
-            return y_cood;
+        if(yCood > yCoodMax){
+            return yCood;
         }else{
-            return y_cood_max;
+            return yCoodMax;
         }
     }
 }

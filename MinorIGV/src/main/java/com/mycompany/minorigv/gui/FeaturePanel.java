@@ -54,7 +54,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
      * @param tag            Wat er in de balkjes van de Feature komt te staan (locus tag, naam, etc)
      * @param col            Kleur van de balkjes van een Feature. Genes: Orange, mRNA: Blue
      * */
-	public Feature drawFeatures(Feature feat, Graphics g, String tag, int overlap_coord, Color col){
+	public Feature drawFeatures(Feature feat, Graphics g, String tag, int overlapCoord, Color col){
 		double start, stop;
 		Dimension dim = this.getSize();
 		int length = cont.getLength();
@@ -63,18 +63,18 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 		stop = feat.getStop() - cont.getStart();
 
 		Strand strand = feat.getStrand();
-		int info_start = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
-		int info_stop = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
+		int infoStart = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
+		int infoStop = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
 
 		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
 		if(strand.equals(Strand.POSITIVE) && forward == true){
 			g.setColor(col);
 			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
-			g.fillRect(info_start, dim.height-(overlap_coord+20), info_stop-info_start, 15);
+			g.fillRect(infoStart, dim.height-(overlapCoord+20), infoStop-infoStart, 15);
 			g.setColor(Color.BLACK);
 
 			// Kleiner lettertype bij een kleiner balkje
-			if(g.getFontMetrics().stringWidth(tag) > info_stop-info_start){
+			if(g.getFontMetrics().stringWidth(tag) > infoStop-infoStart){
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 			}else{
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
@@ -82,18 +82,18 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop+info_start)/2)-centerTag, (dim.height - (7 +overlap_coord)));
+			g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, (dim.height - (7 +overlapCoord)));
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
 		}else if(strand.equals(Strand.NEGATIVE) && forward == false){
 			g.setColor(col);
 
 			// Het op de goede positie zetten van de genen.
-			g.fillRect(info_start, overlap_coord, info_stop-info_start, 15);
+			g.fillRect(infoStart, overlapCoord, infoStop-infoStart, 15);
 			g.setColor(Color.BLACK);
 
 			// Kleiner lettertype bij een kleiner balkje
-			if(g.getFontMetrics().stringWidth(tag) > info_stop-info_start){
+			if(g.getFontMetrics().stringWidth(tag) > infoStop-infoStart){
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 			}else{
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
@@ -101,7 +101,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((info_stop+info_start)/2)-centerTag, overlap_coord+12);
+			g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, overlapCoord+12);
 		}
 
 		return feat;
