@@ -61,14 +61,13 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 		start = feat.getStart() - cont.getStart();
 		stop = feat.getStop() - cont.getStart();
-
 		Strand strand = feat.getStrand();
+
 		int infoStart = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, start);
 		int infoStop = (int) DrawingTools.calculateLetterPosition((int)dim.getWidth(), length, stop);
-
 		// Als de strand van het gen + is, dan wordt er op de forward panel getekend.
 		if(strand.equals(Strand.POSITIVE) && forward == true){
-			g.setColor(col);
+		    g.setColor(col);
 			// Het op de goede positie zetten van de genen, gelet op schaalbaarheid.
 			g.fillRect(infoStart, dim.height-(overlapCoord+20), infoStop-infoStart, 15);
 			g.setColor(Color.BLACK);
@@ -86,7 +85,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
 		}else if(strand.equals(Strand.NEGATIVE) && forward == false){
-			g.setColor(col);
+		    g.setColor(col);
 
 			// Het op de goede positie zetten van de genen.
 			g.fillRect(infoStart, overlapCoord, infoStop-infoStart, 15);
@@ -98,10 +97,10 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			}else{
 				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 			}
-
 			// locus tag in midden van gen visualiseren.
 			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
 			g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, overlapCoord+12);
+
 		}
 
 		return feat;

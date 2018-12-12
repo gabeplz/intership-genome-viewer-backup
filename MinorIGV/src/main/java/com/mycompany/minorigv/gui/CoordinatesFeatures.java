@@ -1,11 +1,10 @@
 package com.mycompany.minorigv.gui;
 
-import com.mycompany.minorigv.gffparser.Feature;
-import com.mycompany.minorigv.gffparser.Gene;
-import com.mycompany.minorigv.gffparser.mRNA;
+import com.mycompany.minorigv.gffparser.*;
 import com.mycompany.minorigv.sequence.Strand;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,6 +40,9 @@ public class CoordinatesFeatures {
 
         ArrayList<Feature> featureGene = new ArrayList<>();
         ArrayList<Feature> featuremRNA = new ArrayList<>();
+        ArrayList<Feature> featureExon = new ArrayList<>();
+        ArrayList<Feature> featureCDS = new ArrayList<>();
+        ArrayList<Feature> featureRegion = new ArrayList<>();
 
         // Elke feature in een aparte lijst zetten
         for(Feature feat : featureFilteredList) {
@@ -48,6 +50,14 @@ public class CoordinatesFeatures {
                 featureGene.add(feat);
             } else if (feat instanceof mRNA) {
                 featuremRNA.add(feat);
+            } else if (feat instanceof Exon){
+                featureExon.add(feat);
+            } else if (feat instanceof CDS){
+                featureCDS.add(feat);
+            } else if (feat instanceof Region){
+                featureRegion.add(feat);
+            } else {
+                // voor volledigheid
             }
         }
 
@@ -62,6 +72,25 @@ public class CoordinatesFeatures {
             yCoodReverseMax = newCoord.get(3);
         }if(!featuremRNA.isEmpty()){
             newCoord = setCoordinates(featuremRNA, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.BLUE);
+            yCoodReverse = newCoord.get(0);
+            yCoodForward = newCoord.get(1);
+            yCoodForwardMax = newCoord.get(2);
+            yCoodReverseMax = newCoord.get(3);
+        }if(!featureExon.isEmpty()){
+            newCoord = setCoordinates(featureExon, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.GREEN);
+            yCoodReverse = newCoord.get(0);
+            yCoodForward = newCoord.get(1);
+            yCoodForwardMax = newCoord.get(2);
+            yCoodReverseMax = newCoord.get(3);
+        }if(!featureCDS.isEmpty()){
+            newCoord = setCoordinates(featureCDS, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.RED);
+            yCoodReverse = newCoord.get(0);
+            yCoodForward = newCoord.get(1);
+            yCoodForwardMax = newCoord.get(2);
+            yCoodReverseMax = newCoord.get(3);
+        }if(!featureRegion.isEmpty()){
+            newCoord = setCoordinates(featureRegion, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.PINK);
+
         }
     }
 
@@ -101,7 +130,6 @@ public class CoordinatesFeatures {
                 // Ophalen van de hoogste y-coordinaat voor het tekenen van andere Features (bijv. mRNA na genen)
                 yCoodReverseMax = getMaxCoordinates(yCoodReverse, yCoodReverseMax);
             }else if(feature.getStrand().equals(Strand.POSITIVE)){
-
                 // Ophalen van de coordinaten op de template strand van de Feature.
                 yCoodForward = getCoordinates(feature, latestStopForward, listOvFt, yCoodForward, feat);
 
@@ -137,7 +165,9 @@ public class CoordinatesFeatures {
         // Als de feature een gen is wordt de locus tag als tag opgeslagen, anders de naam van de feature.
         if(feature instanceof Gene){
             return (String) feature.getAttributes().get("locus_tag");
-        }else{
+        }else if (feature instanceof Exon){
+            return (String) feature.getAttributes().get("gene");
+        }else {
             return (String) feature.getAttributes().get("Name");
         }
     }

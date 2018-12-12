@@ -229,18 +229,18 @@ public class IGVMenuBar extends JMenuBar {
 	private void regionAction() {
 		Boolean m = Region.isSelected();
 		if (m == true){
-			featureArray.add("region");
+			featureArray.add("Region");
 		}else{
-			featureArray.remove("region");
+			featureArray.remove("Region");
 		}
         tellContext();
 	}
 	private void exonAction() {
 		Boolean m = Exon.isSelected();
 		if (m == true){
-			featureArray.add("exon");
+			featureArray.add("Exon");
 		}else{
-			featureArray.remove("exon");
+			featureArray.remove("Exon");
 		}
 
         tellContext();
