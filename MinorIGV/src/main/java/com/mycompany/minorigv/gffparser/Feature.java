@@ -2,6 +2,8 @@ package com.mycompany.minorigv.gffparser;
 
 import java.util.HashMap;
 
+import com.mycompany.minorigv.sequence.Strand;
+
 /**
  * Features wordt overgeërfd door de classes CDS, Chromosome, Exon, Gene en Region.
  * Verder maakt deze class getters en setters voor id, start, stop, score, strand en phase.
@@ -13,7 +15,7 @@ public class Feature {
     private String start;
     private String stop;
     private String score;
-    private String strand;
+    private Strand strand;
     private String phase;
     private HashMap attributes;
 
@@ -31,7 +33,7 @@ public class Feature {
         this.start = start;
         this.stop = end;
         this.score = score;
-        this.strand = strand;
+        setStrand(strand);
         this.phase = phase;
         this.attributes = attributes;
     }
@@ -104,7 +106,7 @@ public class Feature {
      * Het returned de strand waarop de feature zich bevindt.
      * @return      strand zegt of de feature aanwezig is in de strand (+) of complementaire strand (-). Strand is een String.
      */
-    public String getStrand() {
+    public Strand getStrand() {
         return strand;
     }
 
@@ -113,7 +115,18 @@ public class Feature {
      * @param strand  zegt of de feature aanwezig is in de strand (+) of complementaire strand (-)
      */
     public void setStrand(String strand) {
-        this.strand = strand;
+    	
+    	switch(strand) {
+    	case "+":
+    		this.strand = Strand.POSITIVE;
+    		break;
+    	case "-":
+    		this.strand = Strand.NEGATIVE;
+    		break;
+    	default:
+    		this.strand = Strand.NONE;
+    	}
+    	
     }
 
     /**

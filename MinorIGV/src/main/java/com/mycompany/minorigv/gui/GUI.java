@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.gffparser.Feature;
+import com.mycompany.minorigv.sequence.Strand;
 
 import java.awt.*;
 
@@ -104,21 +105,21 @@ public class GUI {
 		featuresForward.init(true);
 		organism.add(featuresForward);
 
-		CodonPanel codonPanel1 = new CodonPanel();
+		CodonPanel forwardPanel = new CodonPanel();
 
-		codonPanel1.init(true);
+		forwardPanel.init(Strand.POSITIVE);
 
-		organism.add(codonPanel1);
+		organism.add(forwardPanel);
 
 		ReferencePanel refpanel1 = new ReferencePanel();
 		refpanel1.init();
 		organism.add(refpanel1);
 
-		CodonPanel codonPanel2 = new CodonPanel();
+		CodonPanel reversePanel = new CodonPanel();
 
-		codonPanel2.init(false);
+		reversePanel.init(Strand.NEGATIVE);
 
-		organism.add(codonPanel2);
+		organism.add(reversePanel);
 
 		FeaturePanel featuresReverse = new FeaturePanel();
 		featuresReverse.init(false);
@@ -126,8 +127,8 @@ public class GUI {
 
 		context = new Context();
 		refpanel1.setContext(context);
-		codonPanel1.setContext(context);
-		codonPanel2.setContext(context);
+		forwardPanel.setContext(context);
+		reversePanel.setContext(context);
 		liniaal.setContext(context);
 		organismPanel.setContext(context);
 		igvMenuBar.setContext(context);

@@ -120,13 +120,15 @@ public class Chromosome {
     /**
      * Het genereerd de ArrayList met daarin de ORFs
      */
-    public void setListORF() throws FileNotFoundException, UnsupportedEncodingException {
+    public void setListORF()  {
         // ORFs zoeken in de template en complementaire strand.
         String seqComp = makeCompStrand.getReverseComplement(getSeqTemp());
-        listORF = findORF.searchORF(getId(), getSeqTemp());
-        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp");
+        System.out.println("derperino:"+getId() + ":" + getSeqTemp().substring(0,100));
+        listORF = findORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length());
+
+        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length());
         listORF.addAll(orfs_comp);
-        this.listORF = listORF;
+
     }
 
     /**

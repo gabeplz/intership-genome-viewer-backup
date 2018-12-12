@@ -1,5 +1,7 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.minorigv.sequence.Strand;
+
 /**
  * In de sequentie van een chromosoom/contig wordt er gezocht naar Open Reading Frames (ORFs) en
  * informatie van een ORF en de sequentie zelf worden opgeslagen in een object.
@@ -9,8 +11,7 @@ public class ORF {
     private int stop;
     private int readingframe;
     private String idORF;
-    private int aaStart;
-    private int aaStop;
+    private Strand strand;
 
     /**
      *
@@ -20,17 +21,14 @@ public class ORF {
      * @param stop              Stop positie van de eerste nucleotide van het stopcodon
      * @param readingframe      In welk readingframe én strand (-/+) het ORF is gevonden.
      * @param idORF             Het ID dat wordt meegegeven aan het ORF om ORFs te kunnen onderscheiden
-     * @param aaStart           Start positie van het aminozuur
-     * @param aaStop            Stop positie van het aminozuur
      * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
      */
-    public ORF(int start, int stop, int readingframe, String idORF, int aaStart, int aaStop) {
+    public ORF(int start, int stop, int readingframe, String idORF, Strand strand) {
         this.start = start;
         this.stop = stop;
         this.readingframe = readingframe;
         this.idORF = idORF;
-        this.aaStart = aaStart;
-        this.aaStop = aaStop;
+        this.strand = strand;
     }
 
     /**
@@ -99,36 +97,49 @@ public class ORF {
         this.idORF = idORF;
     }
 
+
     /**
-     * Het ophalen van de positie van het startcodon in de aminozuursequentie
-     * @return      De positie van het startcodon in de aminozuursequentie
+     *
+     * @return
      */
-    public int getAaStart() {
-        return aaStart;
+    public Strand getStrand() {
+        return strand;
     }
 
     /**
-     * Het opslaan van de positie van het startcodon in de aminozuursequentie
-     * @param aaStart   De positie van het startcodon in de aminozuursequentie
+     *
+     * @param strand
      */
-    public void setAaStart(int aaStart) {
-        this.aaStart = aaStart;
+    public void setStrand(Strand strand) {
+        this.strand = strand;
     }
+
 
     /**
-     * Het ophalen van de positie van het stopcodon in de aminozuursequentie
-     * @return          De positie van het stopcodon in de aminozuursequentie
+     *
+     * @param index de positie van de eerste letter (nucleotide) van een subsequentie op de forward.
+     * @param strand de POSITIVE (forward) of NEGATIVE (reverse) strand.
+     * @param lenghtSeq de lengte van de hele sequentie.
+     * @return
      */
-    public int getAaStop() {
-        return aaStop;
+    public static int calcFrame(int index, Strand strand, int lenghtSeq){
+        if(strand == Strand.POSITIVE){
+            return index % 3;
+        }else if(strand == Strand.NEGATIVE){
+            return ((lenghtSeq - 1) - index) % 3;
+        }
+        else{
+            return -1;
+        }
     }
 
-    /**
-     * Het opslaan van de positie van het stopcodon in de aminozuursequentie
-     * @param aaStop    De positie van het stopcodon in de aminozuursequentie
-     */
-    public void setAaStop(int aaStop) {
-        this.aaStop = aaStop;
+    @Override
+    public String toString() {
+        return "ORF{" +
+                "start=" + start +
+                ", stop=" + stop +
+                ", readingframe=" + readingframe +
+                ", strand=" + strand +
+                '}';
     }
-
 }
