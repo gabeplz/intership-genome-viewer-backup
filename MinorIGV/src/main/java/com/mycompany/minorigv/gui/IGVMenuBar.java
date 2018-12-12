@@ -182,7 +182,6 @@ public class IGVMenuBar extends JMenuBar {
 			String path = fasta.fastafile();
 			cont.addFasta(path);
 
-			System.out.println("load reference test");
 		}catch (Exception e){}
 	}
 	private void OpenDataAction() {
@@ -192,19 +191,18 @@ public class IGVMenuBar extends JMenuBar {
 			String path = fasta.fastafile();
 			cont.addGFF(path);
 
-			System.out.println("load reference test");
 		}catch (Exception e){}
 
 
 	}
 	private void SaveorfAction() {
-		System.out.println("Saving ORFs");
+
 	}
 	private void FindorfAction() {
-		System.out.println("Finding ORFs");
+
 	}
 	private void BlastAction() {
-		System.out.println("BLAST");
+
 	}
 
 	// action performed for the choose Feature menu
@@ -212,11 +210,11 @@ public class IGVMenuBar extends JMenuBar {
 	private void genesAction() {
 		Boolean m = Genes.isSelected();
 		if (m == true){
-			featureArray.add("Genes");
+			featureArray.add("Gene");
 		}else{
-			featureArray.remove("Genes");
+			featureArray.remove("Gene");
 		}
-		System.out.println(featureArray);
+        tellContext();
 	}
 	private void mrnaAction() {
 		Boolean m = mRNA.isSelected();
@@ -225,25 +223,27 @@ public class IGVMenuBar extends JMenuBar {
 		}else{
 			featureArray.remove("mRNA");
 		}
-		System.out.println(featureArray);
+
+        tellContext();
 	}
 	private void regionAction() {
 		Boolean m = Region.isSelected();
 		if (m == true){
-			featureArray.add("Region");
+			featureArray.add("region");
 		}else{
-			featureArray.remove("Region");
+			featureArray.remove("region");
 		}
-		System.out.println(featureArray);
+        tellContext();
 	}
 	private void exonAction() {
 		Boolean m = Exon.isSelected();
 		if (m == true){
-			featureArray.add("EXON");
+			featureArray.add("exon");
 		}else{
-			featureArray.remove("EXON");
+			featureArray.remove("exon");
 		}
-		System.out.println(featureArray);
+
+        tellContext();
 	}
 	private void cdsAction() {
 		Boolean m = CDS.isSelected();
@@ -252,7 +252,8 @@ public class IGVMenuBar extends JMenuBar {
 		}else{
 			featureArray.remove("CDS");
 		}
-		System.out.println(featureArray);
+
+        tellContext();
 	}
 
 	/**
@@ -263,10 +264,10 @@ public class IGVMenuBar extends JMenuBar {
 		return featureArray;
 	}
 
-	/**
-	 *
-	 * @param cont
-	 */
+	public void tellContext(){
+	    cont.setKeuze_gebruiker(this.featureArray);
+    }
+
 	public void setContext(Context cont) {
 		this.cont = cont;
 	}

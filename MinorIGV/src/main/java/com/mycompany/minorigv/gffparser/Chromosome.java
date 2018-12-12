@@ -123,7 +123,7 @@ public class Chromosome {
     public void setListORF()  {
         // ORFs zoeken in de template en complementaire strand.
         String seqComp = makeCompStrand.getReverseComplement(getSeqTemp());
-        System.out.println("derperino:"+getId() + ":" + getSeqTemp().substring(0,100));
+
         listORF = findORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length());
 
         ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length());
@@ -177,6 +177,7 @@ public class Chromosome {
      */
     public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
         ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
+
         for (Feature feat : featureList){
             String klas = feat.getClass().toString();
             for (String optie : SelectedFeatures){

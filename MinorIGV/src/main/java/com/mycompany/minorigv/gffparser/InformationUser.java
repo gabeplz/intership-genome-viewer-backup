@@ -67,8 +67,6 @@ public class InformationUser {
             HashMap attributes = feat.getAttributes();
             // Lijst met alle Keys
             attributes.keySet();
-            // Ophalen values
-            System.out.println(attributes.get("locus_tag"));
 
         }
     }

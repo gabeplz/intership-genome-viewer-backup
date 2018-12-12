@@ -119,7 +119,6 @@ public class TranslationManager {
     public static void main(String[] args) {
 		String seq = "GGTCTCTCTGGTTAGACCAGATCTGAGCCTGGGAGCTCTCTGGCTAACTAGGGAACCCACTGCTTAAGCC";
 		CodonTabel tabel = buildDefault();
-		System.out.println(getAminoAcids(Strand.NEGATIVE,seq,tabel));
 	}
 
      /**

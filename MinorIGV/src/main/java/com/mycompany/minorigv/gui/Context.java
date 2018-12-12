@@ -34,8 +34,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private ArrayList<String> keuze_gebruiker;
 
 
-	private final int DEFAULT_START = 0;
-	private final int DEFAULT_STOP = 100;
+	private final int DEFAULT_START = 1800;
+	private final int DEFAULT_STOP = 3500;
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -58,7 +58,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	 */
 	public void changeSize(int newStart, int newStop) {
 		if(this.organism == null || this.curChromosome == null) {
-			System.out.println("yayeet");
 			return;
 		}
 
@@ -85,7 +84,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	public Context(){
         this.addPropertyChangeListener(this);
         this.keuze_gebruiker = new ArrayList<String>();
-        keuze_gebruiker.add("Gene");
 	}
 	
 	public Context(String test, String tes1) throws Exception {
@@ -152,7 +150,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		//er is al een gff ingelezen & een fasta dus we mieteren het weg.
 		else if(curChromosome.getFeatures().size() > 0 && curChromosome.getSeqTemp() != null) {
-
 			this.setOrganism(new Organisms());
 		}
 		//er is al een gff ingelezen & niet een fasta.
@@ -174,7 +171,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
 			organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
-			System.out.println("id: "+id + " seq0-100: "+ organism.getChromosome(id).getSeqTemp().substring(0,100));
 		}
 
 		setChromosomeNames(); //update chromosoom namen
@@ -205,7 +201,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		//er is al een gff ingelezen & niet een fasta.
 		else if (curChromosome.getFeatures() != null && curChromosome.getSeqTemp() == null) {
-			this.setOrganism(new Organisms());
+		    this.setOrganism(new Organisms());
 		}
 		//er is geen gff ingelezen maar wel al een fasta.
 		else if (curChromosome.getFeatures() == null && curChromosome.getSeqTemp() != null) {
@@ -312,11 +308,14 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public Feature[] getCurrentFeatureList() {
 
-	    if(currentFeatureList == null || featStart != start || featStop != stop){
-	        updateCurrentFeatureList();
+        if (currentFeatureList == null || featStart != start || featStop != stop) {
+            updateCurrentFeatureList();
         }
-	    return this.currentFeatureList;
+        return this.currentFeatureList;
+    }
 
+	public void setKeuze_gebruiker(ArrayList<String> keuzes){
+		this.keuze_gebruiker = keuzes;
 	}
 
 	public int getStart() {
@@ -331,12 +330,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	public ArrayList<ORF> getCurORFListALL(){
 		return curChromosome.getListORF();
 	}
-
-	//Wanneer je de ORFs tussen de start en stop wilt
-	public ArrayList<ORF> getCurORFListBetween(){
-		return curChromosome.getORFsBetween(start, stop);
-	}
-
 	public void setOrganism(Organisms organism) {
 		Organisms oldValue = this.organism;
 		this.organism = organism;
@@ -410,7 +403,6 @@ public class Context implements Serializable, PropertyChangeListener {
 				)
 		{this.setChromosomeNames();}
 		if(name.equals("range")){
-            System.out.println("boi");
 		    this.updateCurrentFeatureList();
         }
 
@@ -419,4 +411,9 @@ public class Context implements Serializable, PropertyChangeListener {
 	public String getSequentie() {
 		return curChromosome.getSeqTemp();
 	}
+
+    public ArrayList<ORF> getCurORFListBetween() {
+        return curChromosome.getORFsBetween(start, stop);
+	}
+
 }

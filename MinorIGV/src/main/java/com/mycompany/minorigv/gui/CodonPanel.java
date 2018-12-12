@@ -81,7 +81,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 				int indexSubSeq = indexRef-start-2;
                 x_pos_right = x_pos_left;
                 x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, indexSubSeq-1.5); //nieuwe x_pos bepalen.
-                System.out.println(x_pos_right);
 				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexSubSeq);
 
 				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
@@ -92,10 +91,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 
                 g.fillRect(x_pos_left,height-10,x_pos_right-x_pos_left-4,20);
-                System.out.print("indexSubSeq: " + indexSubSeq);
-                System.out.print("right: "+String.valueOf(x_pos_right));
-                System.out.print(" left: "+x_pos_left);
-                System.out.println("width: "+ (x_pos_right-x_pos_left));
 
 
 
@@ -222,7 +217,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
         for(ORF o : listORF){
             if(o.getStrand().equals(strand) && o.getReadingframe() == frame){
                 strandORFs.add(o);
-                //System.out.println(o.getReadingframe() + " | " + o.getStrand() + " | " + o.getStop()+ " | " + o.getStart());
             }
         }
         return strandORFs;
