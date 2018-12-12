@@ -10,7 +10,7 @@ import com.mycompany.minorigv.sequence.Strand;
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
-public class Feature {
+public class Feature implements MappableFeature {
     private String id;
     private String start;
     private String stop;
