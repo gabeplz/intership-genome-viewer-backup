@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.ORF;
-import com.mycompany.minorigv.sequence.CodonTabel;
+import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -39,8 +39,8 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		super.paintComponent(g);
 
 		String seq;
-		try { 
-			seq = cont.getSequentie(); 
+		try {
+			seq = cont.getSequentie();
 		}
 		catch (Exception e){
 			return;
@@ -62,13 +62,13 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		int length = cont.getLength();					//lengte subsequentie.
 		int PanelWidth = (int) getSize().getWidth(); 	//breedte paneel
 
-		CodonTabel huidigeTabel = TranslationManager.buildDefault(); //TODO gebruiker keuze tabel
+        CodonTable huidigeTabel = cont.getCurrentCodonTable();
 
 		for (int f = 0; f < 3; f++) {
             int frame = ORF.calcFrame(stop-1-f, Strand.NEGATIVE, cont.getFullLenght());
 
             ArrayList<ORF> strandORFs = getORFs(Strand.NEGATIVE, frame);
-			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel);
+			String aaSeq = TranslationManager.getInstance().getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel);
 
             int x_pos_right; //linkerkant van rechthoekje, positie op de x-as.
             int x_pos_left = (int) DrawingTools.calculateLetterPosition(PanelWidth, length, stop-f+1.5); //onthouden oude x_pos.
@@ -115,7 +115,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		int length = cont.getLength();					//lengte subsequentie.
 		int PanelWidth = (int) getSize().getWidth(); 	//breedte paneel
 
-		CodonTabel huidigeTabel = TranslationManager.buildDefault(); //TODO gebruiker keuze tabel
+        CodonTable huidigeTabel = cont.getCurrentCodonTable();
 
         // f teller voor de frames.
 		for (int f = 0; f < 3; f++) {
@@ -123,7 +123,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
             int frame = ORF.calcFrame(frameStart, Strand.POSITIVE, cont.getFullLenght());
 
             ArrayList<ORF> strandORFs = getORFs(Strand.POSITIVE, frame);
-			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start+f,stop),huidigeTabel);
+			String aaSeq = TranslationManager.getInstance().getAminoAcids(strand,seq.substring(start+f,stop),huidigeTabel);
 
 			int aa = 0; // aa teller
 			for (int indexRef = frameStart; indexRef < stop-2; indexRef+=3) {
@@ -143,23 +143,23 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		}
 	}
 
-
 	public void setContext(Context cont) {
 		this.cont = cont;
 		cont.addPropertyChangeListener("range", this);
 		cont.addPropertyChangeListener("chromosome",this);
+		cont.addPropertyChangeListener("CodonTable", this);
 	}
 
 	public void setForward(Strand strand) {
 		this.strand = strand;
 	}
-
+	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-
+		
 		this.revalidate();
 		this.repaint();
-
+		
 	}
 
     /**

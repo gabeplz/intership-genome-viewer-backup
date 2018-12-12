@@ -24,33 +24,116 @@
  */
 package com.mycompany.minorigv.sequence;
 
-import java.util.*;
 
-import com.mycompany.minorigv.gffparser.main;
+
+import com.mycompany.minorigv.gui.CodonPanel;
+import com.mycompany.minorigv.gui.Context;
+
+import java.util.*;
+import java.io.*;
 
 
 /**
  * @author jrobinso. Stan Wehkamp
  */
 public class TranslationManager {
+    private static final String[] BASE_SEQUENCES = {    "TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
+                                                        "TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
+                                                        "TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
+    public static final String TEST_AMINOVOLGORDE =     "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG";     // TEST_AMINOVOLGORDE, TEST_AMINOSTARTS worden in de toekomst uit een file gegenereed
+    public static final String TEST_AMINOSTARTS =       "---M---------------M---------------M----------------------------";
 
-    public static final String[] BASE_SEQUENCES = {	"TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
-    							"TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG",
-    							"TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"};
+    //static final String DEFAULT_CODON_TABLE_PATH = "C:\\Users\\Gebruiker\\Minor-IGV\\MinorIGV\\src\\main\\resources\\CodonTabels.txt";
+    static final String DEFAULT_CODON_TABLE_PATH = "\\src\\main\\resources\\CodonTabels.txt";
 
-    public static final String TEST_AMINOVOLGORDE = "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG";     // TEST_AMINOVOLGORDE, TEST_AMINOSTARTS worden in de toekomst uit een file gegenereed
-    public static final String TEST_AMINOSTARTS = 	"---M---------------M---------------M----------------------------";
+    private LinkedHashMap<Integer, CodonTable> allCodonTables = new LinkedHashMap<Integer, CodonTable>();
 
-    private LinkedHashMap<Integer, CodonTabel> allCodonTabels = new LinkedHashMap<Integer, CodonTabel>();
+
+
+
+    private static TranslationManager instance;
+
+    private TranslationManager(){    }
+
+    public static TranslationManager getInstance() {
+        if (instance == null) {
+            try {
+                TranslationManager newInstance = new TranslationManager();
+                newInstance.loadCodonTabels(DEFAULT_CODON_TABLE_PATH);
+                instance = newInstance;
+                System.out.println("new made");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+      System.out.println("existing send");
+      return instance;
+    }
+
 
     /**
      * bouwt de standaard codon tabel.
-     * @return object CodonTabel 
+     * @return object CodonTable
      */
-    public static CodonTabel buildDefault() {
-		return CodonTabel.build(1,new String[]{"hoi","hai"}, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
-		
-	}
+//    public static CodonTable buildDefault() {
+//		return CodonTable.build(1,new String[]{"hoi","hai"}, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
+//
+//	}
+
+    /**
+     *
+     * @param codonTablesPath
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+	void loadCodonTabels(String codonTablesPath) throws FileNotFoundException, IOException {
+        String localDir = System.getProperty("user.dir");
+        BufferedReader f_reader = new BufferedReader(new FileReader(localDir + DEFAULT_CODON_TABLE_PATH));
+        String line = f_reader.readLine();
+        while (line != null) {
+            // huidige line bevat de opende brace
+            line = f_reader.readLine();
+
+            //huidige line bevat de alle namen van de tabel
+            String[] tabelNamen = line.substring(line.lastIndexOf("[")+1, line.lastIndexOf("]")).replaceAll("\"", "").split(",");
+            line = f_reader.readLine();
+
+            //huidige line bevat het tabel id
+            Integer key = Integer.valueOf(line.substring(line.lastIndexOf(":") + 1, line.length() -1 ));
+            line = f_reader.readLine();
+
+            //huidige line bevat aminozuren in een specifieke volgorde om alle mogelijke codons te representeren
+            String aminoNormal = line.substring(line.lastIndexOf(":" )+2, line.length() -2);
+            line = f_reader.readLine();
+
+            //huidige line bevat alternative aminozuren in een specifieke volgorde om alle mogelijke codons te representeren
+            String aminoStarts = line.substring(line.lastIndexOf(":" )+2, line.length() -1);
+            line = f_reader.readLine();
+
+            //huidige line bevat de sluitende brace
+            line = f_reader.readLine();
+
+            CodonTable curTable = CodonTable.build(key, tabelNamen, BASE_SEQUENCES, aminoNormal, aminoStarts);
+            allCodonTables.put(curTable.getKey(), curTable);
+        }
+    }
+
+
+
+
+    public CodonTable getCodonTable (Integer key){
+        return allCodonTables.get(key);
+    }
+
+    public Collection<CodonTable> getAllCodonTables() {
+        return Collections.unmodifiableCollection(allCodonTables.values());
+    }
+
+
  /**
  *
  * @author jrobinso, Stan Wehkamp
@@ -64,11 +147,12 @@ public class TranslationManager {
  * @param comp_sequence
  * @return hashmap
  */
-    public static HashMap<String, Object> start(String sequence, String comp_sequence) {
+ /**
+    public HashMap<String, Object> start(String sequence, String comp_sequence) {
         // namen = namen van codontabel
         String[] namen = {"chromosome1", "kaas", "baas"};
         // maak codontabel aan
-        CodonTabel numer1 = buildDefault();
+        CodonTable numer1 = buildDefault();
 
         int start = 0;                          // huidig onodig gecompliceerde maneer om de volgede variabelen de volgende waardes te geven:
         int mod = start % 3;                    // n1 = 0, n2 = 1, n2 = 2
@@ -103,7 +187,7 @@ public class TranslationManager {
 
         return readingframes;
     }
-
+**/
     /**
      * 
      * @param n int
@@ -112,28 +196,19 @@ public class TranslationManager {
     private static int normalize3(int n) {
         return n == 3 ? 0 : n;
     }
-    /**
-     * tijdelijke main
-     * @param args 
-     */
-    public static void main(String[] args) {
-		String seq = "GGTCTCTCTGGTTAGACCAGATCTGAGCCTGGGAGCTCTCTGGCTAACTAGGGAACCCACTGCTTAAGCC";
-		CodonTabel tabel = buildDefault();
-	}
+
 
      /**
      * retuns een string van aminozuren gegenereed van een nucleotide sequentie en een codontabel. 
      * 
      * @param direction de enum strand zort ervoor dat de sequentie word gebruikt zoal het is of gereversed word waneer enum NEGATIVE is
      * @param sequence string de een nucleotide sequentie voorsteld
-     * @param huidigeTabel object CodonTabel
+     * @param huidigeTabel object CodonTable
      * @return string waar elk karakter een aminozuur voorsteld
      */
-    public static String getAminoAcids(Strand direction, String sequence, CodonTabel huidigeTabel) {
-        // in de toekomst vervang codontabel met key in codontabel hashmap
-
-        // Sequence must be divisible by 3. It is the responsibility of the
-        // calling program to send a sequence properly aligned.
+    public String getAminoAcids(Strand direction, String sequence, CodonTable huidigeTabel) {
+        // sequentie moet deelbaar zijn door 3
+        // het aanroepende programma is verandwoordelijk om een uitgelijnde sequentie mee te geven.
         int readLength = sequence.length()/3;
         List<String> acids = new ArrayList<String>(readLength);
         
@@ -147,8 +222,8 @@ public class TranslationManager {
             acids.add(aa);
         }
 
-        //if (direction == Strand.NEGATIVE) {     // aminozuur sequentie word omgedraaid voor visualisatie doeleinden 
-        //    Collections.reverse(acids);         // de output is dus achterstevoren met de volgorde waarin ze in een biologische omgeving getransleerd zouden worden     
+        //if (direction == Strand.NEGATIVE) {     // aminozuur sequentie word omgedraaid voor visualisatie doeleinden
+        //    Collections.reverse(acids);         // de output is dus achterstevoren met de volgorde waarin ze in een biologische omgeving getransleerd zouden worden
         //}
 
         String listString = String.join("", acids);     // veranderd de arraylist in een string
@@ -159,10 +234,10 @@ public class TranslationManager {
 /**
  * zet een codon om naar een string aminozuur
  * @param codon string bestaand uit 3 karakters. dient als key voor CodonMap
- * @param table object CodonTabel bevat de CodonMap.
+ * @param table object CodonTable bevat de CodonMap.
  * @return string van 1 karakter dat een aminozuur voorsteld
  */
-    public static String toAA(String codon,CodonTabel table) {
+    public static String toAA(String codon, CodonTable table) {
     	return table.getCodonMap().get(codon);
     }
 }

@@ -2,6 +2,8 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.sequence.CodonTable;
+import com.mycompany.minorigv.sequence.TranslationManager;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -40,6 +42,7 @@ public class IGVMenuBar extends JMenuBar {
 		this.setMinimumSize(new Dimension(100, 25));
 		Menus();
 		featureMenu();
+        condonTableMenu();
 	}
 
 	/**
@@ -271,5 +274,49 @@ public class IGVMenuBar extends JMenuBar {
 	public void setContext(Context cont) {
 		this.cont = cont;
 	}
+
+    /**
+     * maakt en voegt de translatie tabel menu aan de menubalk toe
+     * gebruikt getCodonTableMenuItem om de items te genereren
+     */
+	public void condonTableMenu(){
+	    JMenu transTableMenu = new JMenu("Translation Table");
+		ButtonGroup group = new ButtonGroup();
+        for (CodonTable codonTable : TranslationManager.getInstance().getAllCodonTables()) {
+		    JMenuItem item = getCodonTableMenuItem(codonTable);
+		    transTableMenu.add(item);
+		    group.add(item);
+	    }
+        add(transTableMenu);
+    }
+
+    /**
+     * maakt de menu items voor codonTableMenu
+     * @param codonTable
+     * @return
+     */
+	private JRadioButtonMenuItem getCodonTableMenuItem(CodonTable codonTable) {
+		JRadioButtonMenuItem item = new JRadioButtonMenuItem();
+		String fullName = codonTable.getNames()[0];
+		String shortName = fullName;
+		if (fullName.length() > 40) {
+			shortName = fullName.substring(0, 37) + "...";
+			item.setToolTipText(fullName);
+		}
+		item.setText(shortName);
+		final Integer curKey = codonTable.getKey();
+        item.setSelected(item.getText().contentEquals("Standard"));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				cont.setCurrentCodonTable(curKey);
+
+
+			}
+		});
+		return item;
+	}
+
 
 }
