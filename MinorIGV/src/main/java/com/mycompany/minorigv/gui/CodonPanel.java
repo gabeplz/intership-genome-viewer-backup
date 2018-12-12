@@ -73,7 +73,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel);
 
             int x_pos_right; //linkerkant van rechthoekje, positie op de x-as.
-            int x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, stop-f+1.5); //onthouden oude x_pos.
+            int x_pos_left = (int) DrawingTools.calculateLetterPosition( PanelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
 
 			int aa = 0; // aa teller
 			for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) {
@@ -85,20 +85,11 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
                 System.out.println(x_pos_right);
 				int x_pos = (int) DrawingTools.calculateLetterPosition(PanelWidth,length, indexSubSeq);
 
-				int width = (int) Math.ceil( (DrawingTools.calculateLetterWidth(PanelWidth, length)*3));
-
                 AA(strandORFs, g, indexRef, letter);
 				int height = 20+20*(frame);
-				//DrawingTools.drawFilledRect(g, x_pos_right, height,width+1, 20);
 
-
-                g.fillRect(x_pos_left,height-10,x_pos_right-x_pos_left-4,20);
-                System.out.print("indexSubSeq: " + indexSubSeq);
-                System.out.print("right: "+String.valueOf(x_pos_right));
-                System.out.print(" left: "+x_pos_left);
-                System.out.println("width: "+ (x_pos_right-x_pos_left));
-
-
+                int width = x_pos_right-x_pos_left;
+                g.fillRect(x_pos_left,height-10,width,20);
 
 				g.setColor(Color.BLACK);
 
@@ -107,7 +98,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 			}
 		}
 	}
-
 
     /**
      *
