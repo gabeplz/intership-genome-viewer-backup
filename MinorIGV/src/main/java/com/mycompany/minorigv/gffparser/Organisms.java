@@ -89,7 +89,7 @@ public class Organisms {
         }else {
             Chromosome chr = new Chromosome();
             chr.setSeqTemp(Seq);
-            chr.setId(Seq);
+            chr.setId(id);
             chromosomes.put(id,chr);
         }
     }
