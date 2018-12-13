@@ -24,9 +24,9 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 	Context cont;
 	Strand strand;
 
-	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt.
+	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt. Letters weergeven.
 	private final int ZOOM_SIZE_2 = 14; //Hoeveelheid pixels waarna de aminozuur letters verdwijnen. (ORF (geel) + start (groen) + stop (rood))
-	private final int ZOOM_SIZE_3 = 3;  //Hoeveelheid pixels waarna alleen de ORFs (geel) worden weergegeven.
+	private final int ZOOM_SIZE_3 = 3;  //Hoeveelheid pixels waarna alleen de ORFs (geel) worden weergegeven. Geen letters weergeven. Geen letters weergegeven.
 
     /**
      * Initaliseerd
@@ -58,6 +58,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
 		// Breedte van een aminozuurblokje.
         double letterWidth = DrawingTools.calculateLetterWidth((int) this.getSize().getWidth(), cont.getLength())*3;
+		//TODO dit is voor in de toekomst
 		// Beïnvloed de tekenmethode van de positive (forward) strand.
         if(strand == Strand.POSITIVE) {
             if(letterWidth > ZOOM_SIZE_1){
@@ -71,6 +72,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
             }
 		}
 		// Beïnvloed de tekenmethode van de negative (reverse) strand.
+        //TODO dit is voor in de toekomst
 		else {
             if(letterWidth > ZOOM_SIZE_1){
                 drawNegative(g,seq, letterWidth);
