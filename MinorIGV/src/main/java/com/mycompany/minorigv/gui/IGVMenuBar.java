@@ -54,8 +54,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	//sub items for menu item 1 "File"
 		Open_ref = new JMenuItem("Load reference");
-		Open_data = new JMenuItem("Load Data");
-		Save_orf = new JMenuItem("Save ORF's");
+		Open_data = new JMenuItem("Load GFF");
 
 	//action listeners for the sub item of File
 		Open_ref.addActionListener(new ActionListener() {
@@ -70,26 +69,21 @@ public class IGVMenuBar extends JMenuBar {
 				OpenDataAction();
 			}
 		});
-		Save_orf.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SaveorfAction();
-			}
-		});
+
 
 	//add the sub items to "File"
 		Files.add(Open_ref);
 		Files.add(Open_data);
-		Files.add(Save_orf);
 
 	//add the Files to the menu bar
 		add(Files);
 
 	//second menu item "Tools"
-		Tools = new JMenu("Tools");
+		Tools = new JMenu("ORF");
 
 	//sub items for menu itm 2 "Tools"
 		Find_orf = new JMenuItem("Find ORF");
+        Save_orf = new JMenuItem("Save ORF's");
 		Blast = new JMenuItem("Blast");
 
 	//action listeners for the sub item of Tools
@@ -99,6 +93,12 @@ public class IGVMenuBar extends JMenuBar {
 				FindorfAction();
 			}
 		});
+        Save_orf.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SaveorfAction();
+            }
+        });
 		Blast.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -108,6 +108,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	//add the sub items to "Tools"
 		Tools.add(Find_orf);
+		Tools.add(Save_orf);
 		Tools.add(Blast);
 
 	//add Tools to the menu bar
