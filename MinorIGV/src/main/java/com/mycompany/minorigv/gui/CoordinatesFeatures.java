@@ -152,7 +152,7 @@ public class CoordinatesFeatures {
         if(feature instanceof Gene){
             return (String) feature.getAttributes().get("locus_tag");
         }else if (feature instanceof Exon){
-            return (String) feature.getAttributes().get("gene");
+            return (String) feature.getAttributes().get("Parent");
         }else {
             return (String) feature.getAttributes().get("Name");
         }
