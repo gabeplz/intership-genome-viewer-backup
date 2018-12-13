@@ -1,17 +1,12 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.FastaFileReader;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.*;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -27,7 +22,7 @@ public class IGVMenuBar extends JMenuBar {
 	JMenu Files, Tools, features;
 
 	// Define all the sub items for the menu bar that will not have their own sub items in the menu
-	JMenuItem  Open_ref,Open_data, Save_orf, Find_orf, Blast,Genes, mRNA ,Exon, Region, CDS;
+	JMenuItem  Open_ref,Open_data, Save_orf, Find_orf, Blast,Genes, mRNA ,Exon, Region, CDS, featureList;
 
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
@@ -38,14 +33,14 @@ public class IGVMenuBar extends JMenuBar {
 	public void init() {
 		this.setPreferredSize(new Dimension(200, 25));
 		this.setMinimumSize(new Dimension(100, 25));
-		Menus();
+		menus();
 		featureMenu();
 	}
 
 	/**
 	 * function creating the first 2 menus on the menu bar "Files" and "Tools"
 	 */
-	public void Menus(){
+	public void menus(){
 	//first menu item "File"
 		Files = new JMenu("Files");
 
@@ -70,7 +65,7 @@ public class IGVMenuBar extends JMenuBar {
 		Save_orf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SaveorfAction();
+				SaveOrfAction();
 			}
 		});
 
@@ -78,6 +73,7 @@ public class IGVMenuBar extends JMenuBar {
 		Files.add(Open_ref);
 		Files.add(Open_data);
 		Files.add(Save_orf);
+
 
 	//add the Files to the menu bar
 		add(Files);
@@ -88,12 +84,13 @@ public class IGVMenuBar extends JMenuBar {
 	//sub items for menu itm 2 "Tools"
 		Find_orf = new JMenuItem("Find ORF");
 		Blast = new JMenuItem("Blast");
+		featureList = new JMenuItem("Show features");
 
 	//action listeners for the sub item of Tools
 		Find_orf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FindorfAction();
+				FindOrfAction();
 			}
 		});
 		Blast.addActionListener(new ActionListener() {
@@ -102,10 +99,17 @@ public class IGVMenuBar extends JMenuBar {
 				BlastAction();
 			}
 		});
+		featureList.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				featureListAction();
+			}
+		});
 
 	//add the sub items to "Tools"
 		Tools.add(Find_orf);
 		Tools.add(Blast);
+		Tools.add(featureList);
 
 	//add Tools to the menu bar
 		add(Tools);
@@ -195,14 +199,17 @@ public class IGVMenuBar extends JMenuBar {
 
 
 	}
-	private void SaveorfAction() {
+	private void SaveOrfAction() {
 
 	}
-	private void FindorfAction() {
+	private void FindOrfAction() {
 
 	}
 	private void BlastAction() {
 
+	}
+	private void featureListAction() {
+		PopUpFrame popup = new PopUpFrame();
 	}
 
 	// action performed for the choose Feature menu
