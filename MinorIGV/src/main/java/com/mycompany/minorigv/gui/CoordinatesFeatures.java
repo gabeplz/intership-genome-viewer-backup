@@ -2,13 +2,11 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.gffparser.*;
 import com.mycompany.minorigv.sequence.Strand;
-import com.sun.xml.internal.fastinfoset.sax.Features;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Coordinaten bepalen van elke feature, rekening gehouden met overlappende features.
