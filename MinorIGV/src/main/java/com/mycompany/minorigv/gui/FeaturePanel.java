@@ -28,8 +28,12 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 
-		if (cont.getOrganism() == null)return;
+		try {
+			if (cont == null || cont.getOrganism() == null || cont.getCurORFListALL() == null) return;
 
+		}catch(Exception e){
+			return; // Dit is zo'n harde hack dat het pijn doet.
+		}
 		Feature[] featureFilteredList = null;
 
 		try {

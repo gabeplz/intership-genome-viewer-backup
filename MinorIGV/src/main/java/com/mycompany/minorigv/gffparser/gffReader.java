@@ -38,9 +38,14 @@ public class gffReader {
                 String[] splited = line.split("\\s+");
                 ID = splited[1];
                 allContigs.add(ID);
-                chrom = new Chromosome();
-                chrom.setId(ID);
-                org.addChromosome(chrom);
+
+                chrom = org.getChromosome(ID);
+                if(chrom == null){
+                    chrom = new Chromosome();
+                    chrom.setId(ID);
+                    org.addChromosome(chrom);
+                }
+
             } else if (line.startsWith("##species ")) {
                 String[] id_org = line.split("=");
                 ID_organism = id_org[1];
