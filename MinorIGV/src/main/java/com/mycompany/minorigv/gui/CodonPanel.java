@@ -102,33 +102,33 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		CodonTabel huidigeTabel = TranslationManager.buildDefault(); //TODO gebruiker keuze tabel
 
 		for (int f = 0; f < 3; f++) { //loopen over de drie mogelijke frames.
-            int frame = ORF.calcFrame(stop-1-f, Strand.NEGATIVE, cont.getFullLenght());  //bepalen frame van de subsequentie.
+            int frame = ORF.calcFrame(stop-f, Strand.NEGATIVE, cont.getFullLenght());  //bepalen frame van de subsequentie.
 
             ArrayList<ORF> strandORFs = getORFs(Strand.NEGATIVE, frame); //ORF's ophalen behorend bij dit frame.
 			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel); //sequentie behorend bij dit frame.
 
-            int x_pos_right; //linkerkant van rechthoekje, positie op de x-as.
-            int x_pos_left = (int) DrawingTools.calculateLetterPosition( panelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
+            int xPosRight; //linkerkant van rechthoekje, positie op de x-as.
+            int xPosLeft = (int) DrawingTools.calculateLetterPosition( panelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
 
 			int aa = 0; // aa teller
 			for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) { //loopen van rechts naar links op de referentie <-> links naar rechts complement
 				char letter = aaSeq.charAt(aa); //character op de positie bijbehorend aminozuur.
 
 				int indexSubSeq = indexRef-start-2; //index op referentie ten opzichte subsequentie
-                x_pos_right = x_pos_left; //oude links -> rechts.
-                x_pos_left = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq-1.5); //nieuwe x_pos bepalen.
-				int x_pos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
+                xPosRight = xPosLeft; //oude links -> rechts.
+                xPosLeft = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq-1.5); //nieuwe xPos bepalen.
+				int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
 
-                int width = x_pos_right-x_pos_left; //breedte van het vierkantje |<-->|
+                int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
 				int height = calcHeight(strand,frame);//20+20*(frame);
 
-                AA(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
-                g.fillRect(x_pos_left,height-10,width,20);
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                g.fillRect(xPosLeft,height,width,20);
 
 				g.setColor(Color.BLACK);
 
                 if(letterWidth > ZOOM_SIZE_2){ //teken de letters alleen als ze nog leesbaar zijn,
-                    DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),x_pos,height);
+                    DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),xPos,height+5);
                 }
 				aa++; // aa teller ophogen.
 			}
@@ -156,21 +156,27 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
             ArrayList<ORF> strandORFs = getORFs(Strand.POSITIVE, frame);
 			String aaSeq = TranslationManager.getAminoAcids(strand,seq.substring(start+f,stop),huidigeTabel);
+            int xPosLeft; //linkerkant van rechthoekje, positie op de x-as.
+            int xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, f- 0.5); //onthouden oude x_pos.
 
-			int aa = 0; // aa teller
-			for (int indexRef = frameStart; indexRef < stop-2; indexRef+=3) {
+            int aa = 0; // aa teller
+			for (int indexRef = frameStart+1; indexRef < stop-1; indexRef+=3) {
 				char letter = aaSeq.charAt(aa);
+                int indexSubSeq = indexRef - start;
+                xPosLeft = xPosRight; //oude links -> rechts.
+                xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq+1.5); //nieuwe xPos bepalen.
+                int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
+                selectColor(strandORFs, g, indexRef, letter, letterWidth);
 
-				int x_pos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexRef-start+1);
-				int width = (int) (DrawingTools.calculateLetterWidth(panelWidth, length)*3);
-                AA(strandORFs, g, indexRef, letter, letterWidth);
+                int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
+                int height = calcHeight(strand,frame);//20+20*(frame);
 
-				int height = 20+20*(2-frame);
-				DrawingTools.drawFilledRect(g, x_pos, height,width+1, 20);
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                g.fillRect(xPosLeft,height,width,20);
 				g.setColor(Color.BLACK);
 
 				if(letterWidth > ZOOM_SIZE_2){
-                    DrawingTools.drawCenteredChar(g,letter,x_pos,height);
+                    DrawingTools.drawCenteredChar(g,letter,xPos,height+5);
                 }
 				aa++;
 			}
@@ -201,7 +207,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
      * @param letter      de letter van het aminozuur.
      * @param width
      */
-    public void AA(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
+    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
         if(strandORFs.size() > 0){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
@@ -282,9 +288,9 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
     private static int calcHeight(Strand strand, int frame){
 
 	    if(strand == Strand.NEGATIVE){
-	        return 20+20*(frame)-10;
+	        return 10+20*(frame);
         }else if(strand == Strand.POSITIVE){
-	        return 20+20*(2-frame)-10;
+	        return 10+20*(2-frame);
         }
         else return -1;
 
@@ -309,7 +315,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 
         g.setColor(new Color(127, 191, 226));
         // Tekent het grote blauwe blok
-        g.fillRect(xPosLeft,10,xPosRight-xPosLeft,10+3*20-10);
+        g.fillRect(xPosLeft,10,xPosRight-xPosLeft,3*20);
 
 	    ArrayList<ORF> listORF = getORFs(strand);
 	    for(ORF o : listORF){
