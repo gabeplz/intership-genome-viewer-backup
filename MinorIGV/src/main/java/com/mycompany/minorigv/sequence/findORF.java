@@ -72,7 +72,7 @@ public class findORF {
             int start = stop - match.group(1).length();           // Positie van het stopcodon op de orginele sequentie (+)
             idORF++;
 
-            int readingframe = ORF.calcFrame(stop-1, Strand.NEGATIVE, seq.length());
+            int readingframe = ORF.calcFrame(stop, Strand.NEGATIVE, seq.length());
 
             String id_ORF = "ORF" + idORF +"_C";
             Strand strand = Strand.NEGATIVE;
