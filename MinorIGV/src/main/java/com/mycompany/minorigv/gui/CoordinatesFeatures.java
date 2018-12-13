@@ -29,7 +29,7 @@ public class CoordinatesFeatures {
     /**
      * Aparte lijsten maken voor elke Feature.
      * @param featureFilteredList      Lijst met alle features door elkaar op basis van de keuze van de gebruiker.
-     * @param g                        Graphic
+     * @param g                        Graphic context
      */
     public void seperateFeatures(Feature[] featureFilteredList, Graphics g){
         // De coordinaten van de y as op de forward en reverse panel.
@@ -81,8 +81,8 @@ public class CoordinatesFeatures {
 
     /**
      * Coordinaten van elke feature worden bepaald en meegegeven aan een methode die de features tekent.
-     * @param OneFeature            Een lijst met daarin alle objecten van één feature, bijvoorbeeld alle objecten van de feature Genes.
-     * @param g                     Graphics
+     * @param oneFeature            Een lijst met daarin alle objecten van één feature, bijvoorbeeld alle objecten van de feature Genes.
+     * @param g                     Graphics context
      * @param yCoodReverse          De y as coordinaat in de reverse panel
      * @param yCoodForward          De y as coordinaat in de forward panel
      * @param yCoodReverseMax       De hoogste y coordinaat van een getekende feature in de reverse panel
@@ -90,7 +90,7 @@ public class CoordinatesFeatures {
      * @param col                   Kleur van een soort feature. Genes: Orange, mRNA: Blue.
      * @return  ArrayList met op index 1: yCoodReverse, index 2: yCoodForward, 3: yCoodForwardMax, 4: yCoodReverseMax.
      */
-    public ArrayList<Integer> setCoordinates(ArrayList<Feature> OneFeature, Graphics g, int yCoodReverse, int yCoodForward, int yCoodReverseMax, int yCoodForwardMax, Color col){
+    public ArrayList<Integer> setCoordinates(ArrayList<Feature> oneFeature, Graphics g, int yCoodReverse, int yCoodForward, int yCoodReverseMax, int yCoodForwardMax, Color col){
         int latestStopReverse = 0;
         int latestStopForward = 0;
         HashMap<Feature, Integer> listOvFt = new HashMap<>();
@@ -98,7 +98,7 @@ public class CoordinatesFeatures {
         ArrayList<Integer> newCoord = new ArrayList<>();
 
         // Voor elke feature in een lijst met dezelfde features (bijv. alleen genen) wordt er gekeken op welke strand het voorkomt en wordt getekend.
-        for(Feature feature: OneFeature){
+        for(Feature feature: oneFeature){
             if (feature.getStrand().equals(Strand.NEGATIVE)){
                 // Ophalen van de coordinaten op de reverse strand van de Feature.
                 yCoodReverse = getCoordinates(feature, latestStopReverse, listOvFt, yCoodReverse, feat);
@@ -141,13 +141,14 @@ public class CoordinatesFeatures {
     }
 
     /**
-     * Ophalen van de tags die in de features moeten komen te staan. Als de feature een gen is, wordt de locus_tag gevisualiseerd. Anders
-     * wordt de naam van de feature uit de attributes opgehaald.
+     * Ophalen van de tags die in de features moeten komen te staan. Als de feature een gen is, wordt de locus_tag gevisualiseerd.
+     * Als de feature een exon is, wordt het gene gevisualiseerd. Anders wordt de naam van de feature uit de attributes opgehaald.
      * @param feature   De feature waarvan de tag opgehaald moet worden
      * @return          Een string met daarin de tag voor in de feature.
      */
     private String getTag(Feature feature){
-        // Als de feature een gen is wordt de locus tag als tag opgeslagen, anders de naam van de feature.
+        // Als de feature een gen is wordt de locus tag als tag opgeslagen. Als de feature een exon is wordt het gene
+        // als tag opgeslagen. Bij de andere features wordt de naam van de feature.
         if(feature instanceof Gene){
             return (String) feature.getAttributes().get("locus_tag");
         }else if (feature instanceof Exon){
