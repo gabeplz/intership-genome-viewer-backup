@@ -6,7 +6,7 @@ import com.mycompany.minorigv.sequence.Strand;
  * In de sequentie van een chromosoom/contig wordt er gezocht naar Open Reading Frames (ORFs) en
  * informatie van een ORF en de sequentie zelf worden opgeslagen in een object.
  */
-public class ORF {
+public class ORF implements MappableFeature{
     private int start;
     private int stop;
     private int readingframe;
