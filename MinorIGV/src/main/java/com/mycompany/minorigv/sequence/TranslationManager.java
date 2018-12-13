@@ -44,7 +44,7 @@ public class TranslationManager {
     public static final String TEST_AMINOSTARTS =       "---M---------------M---------------M----------------------------";
 
     //static final String DEFAULT_CODON_TABLE_PATH = "C:\\Users\\Gebruiker\\Minor-IGV\\MinorIGV\\src\\main\\resources\\CodonTabels.txt";
-    static final String DEFAULT_CODON_TABLE_PATH = "\\src\\main\\resources\\CodonTabels.txt";
+    static final String DEFAULT_CODON_TABLE_PATH = "CodonTabels.txt";
 
     private LinkedHashMap<Integer, CodonTable> allCodonTables = new LinkedHashMap<Integer, CodonTable>();
 
@@ -91,8 +91,12 @@ public class TranslationManager {
      * @throws IOException
      */
 	void loadCodonTabels(String codonTablesPath) throws FileNotFoundException, IOException {
-        String localDir = System.getProperty("user.dir");
-        BufferedReader f_reader = new BufferedReader(new FileReader(localDir + DEFAULT_CODON_TABLE_PATH));
+        
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(DEFAULT_CODON_TABLE_PATH).getFile());
+        System.out.println(file.getAbsolutePath());
+
+        BufferedReader f_reader = new BufferedReader(new FileReader(file));
         String line = f_reader.readLine();
         while (line != null) {
             // huidige line bevat de opende brace
