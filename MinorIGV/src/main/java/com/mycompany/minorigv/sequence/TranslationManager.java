@@ -93,8 +93,7 @@ public class TranslationManager {
 	void loadCodonTabels(String codonTablesPath) throws FileNotFoundException, IOException {
         
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(DEFAULT_CODON_TABLE_PATH).getFile());
-        System.out.println(file.getAbsolutePath());
+        String file = java.net.URLDecoder.decode(classLoader.getResource(DEFAULT_CODON_TABLE_PATH).getFile(),"UTF-8");
 
         BufferedReader f_reader = new BufferedReader(new FileReader(file));
         String line = f_reader.readLine();
