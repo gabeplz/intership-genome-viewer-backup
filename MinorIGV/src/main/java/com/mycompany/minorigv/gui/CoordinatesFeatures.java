@@ -2,11 +2,13 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.gffparser.*;
 import com.mycompany.minorigv.sequence.Strand;
+import com.sun.xml.internal.fastinfoset.sax.Features;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Coordinaten bepalen van elke feature, rekening gehouden met overlappende features.
@@ -30,14 +32,14 @@ public class CoordinatesFeatures {
      * @param g                        Graphic
      */
     public void seperateFeatures(Feature[] featureFilteredList, Graphics g){
-        // De coordinaten van de y as op de forward en reverse panel
-        int yCoodReverse = 4;
-        int yCoodForward = 4;
+        // De coordinaten van de y as op de forward en reverse panel.
+        // index 0: de y as coordinaat op reverse panel
+        // index 1: de y as coordinaat op forward panel
+        // index 2: de hoogste y as coordinaat op de forward panel
+        // index 3: de hoogste y as coordinaat op de reverse panel
+        ArrayList<Integer> newCoord = new ArrayList<>(Arrays.asList(4,4,0,0));
 
-        // Hoogste y as die is getekend zodat de volgende feature vanaf dat coordinaat pas gaat tekenen
-        int yCoodReverseMax = 0;
-        int yCoodForwardMax = 0;
-
+        // TODO : In het aanmaken van de featureFilteredList al een hashmap genereren.
         ArrayList<Feature> featureGene = new ArrayList<>();
         ArrayList<Feature> featuremRNA = new ArrayList<>();
         ArrayList<Feature> featureExon = new ArrayList<>();
@@ -61,35 +63,18 @@ public class CoordinatesFeatures {
             }
         }
 
-        ArrayList<Integer> newCoord;
-
+        // TODO : Als er een hashmap is gemaakt, dan de if statements aanpassen.
         // Als de lijsten niet leeg zijn, dan worden de coordinaten bepaald voor het mappen.
         if(!featureGene.isEmpty()){
-            newCoord = setCoordinates(featureGene, g, yCoodReverse, yCoodForward,yCoodReverseMax,yCoodForwardMax, Color.ORANGE);
-            yCoodReverse = newCoord.get(0);
-            yCoodForward = newCoord.get(1);
-            yCoodForwardMax = newCoord.get(2);
-            yCoodReverseMax = newCoord.get(3);
+            newCoord = setCoordinates(featureGene, g, newCoord.get(0), newCoord.get(1),newCoord.get(3),newCoord.get(2), new Color(255, 135, 12));
         }if(!featuremRNA.isEmpty()){
-            newCoord = setCoordinates(featuremRNA, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.BLUE);
-            yCoodReverse = newCoord.get(0);
-            yCoodForward = newCoord.get(1);
-            yCoodForwardMax = newCoord.get(2);
-            yCoodReverseMax = newCoord.get(3);
+            newCoord = setCoordinates(featuremRNA, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 229, 57));
         }if(!featureExon.isEmpty()){
-            newCoord = setCoordinates(featureExon, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.GREEN);
-            yCoodReverse = newCoord.get(0);
-            yCoodForward = newCoord.get(1);
-            yCoodForwardMax = newCoord.get(2);
-            yCoodReverseMax = newCoord.get(3);
+            newCoord = setCoordinates(featureExon, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 79, 35));
         }if(!featureCDS.isEmpty()){
-            newCoord = setCoordinates(featureCDS, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.RED);
-            yCoodReverse = newCoord.get(0);
-            yCoodForward = newCoord.get(1);
-            yCoodForwardMax = newCoord.get(2);
-            yCoodReverseMax = newCoord.get(3);
+            newCoord = setCoordinates(featureCDS, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(140, 183, 255));
         }if(!featureRegion.isEmpty()){
-            newCoord = setCoordinates(featureRegion, g, yCoodReverse, yCoodForward, yCoodReverseMax, yCoodForwardMax, Color.PINK);
+            newCoord = setCoordinates(featureRegion, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(150, 238, 75));
 
         }
     }
@@ -98,10 +83,10 @@ public class CoordinatesFeatures {
      * Coordinaten van elke feature worden bepaald en meegegeven aan een methode die de features tekent.
      * @param OneFeature            Een lijst met daarin alle objecten van één feature, bijvoorbeeld alle objecten van de feature Genes.
      * @param g                     Graphics
-     * @param yCoodReverse        De y as coordinaat in de reverse panel
-     * @param yCoodForward        De y as coordinaat in de forward panel
-     * @param yCoodReverseMax    De hoogste y coordinaat van een getekende feature in de reverse panel
-     * @param yCoodForwardMax    De hoogste y coordinaat van een getekende feature in de forward panel
+     * @param yCoodReverse          De y as coordinaat in de reverse panel
+     * @param yCoodForward          De y as coordinaat in de forward panel
+     * @param yCoodReverseMax       De hoogste y coordinaat van een getekende feature in de reverse panel
+     * @param yCoodForwardMax       De hoogste y coordinaat van een getekende feature in de forward panel
      * @param col                   Kleur van een soort feature. Genes: Orange, mRNA: Blue.
      * @return  ArrayList met op index 1: yCoodReverse, index 2: yCoodForward, 3: yCoodForwardMax, 4: yCoodReverseMax.
      */
