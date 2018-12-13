@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -22,10 +21,10 @@ public class IGVMenuBar extends JMenuBar {
 
 	private Context cont;
 	// Define all the items for the menu bar that will have sub items
-	JMenu Files, Tools, features;
+	JMenu files, tools, features;
 
 	// Define all the sub items for the menu bar that will not have their own sub items in the menu
-	JMenuItem  Open_ref,Open_data, Save_orf, Find_orf, Blast,Genes, mRNA ,Exon, Region, CDS, featureList;
+	JMenuItem openRef, openData, saveORF, findORF, blast,Genes, mRNA ,Exon, Region, CDS, featureList;
 
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
@@ -42,64 +41,64 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	/**
-	 * function creating the first 2 menus on the menu bar "Files" and "Tools"
+	 * function creating the first 2 menus on the menu bar "files" and "tools"
 	 */
 	public void menus(){
 	//first menu item "File"
-		Files = new JMenu("Files");
+		files = new JMenu("files");
 
 	//sub items for menu item 1 "File"
-		Open_ref = new JMenuItem("Load reference");
-		Open_data = new JMenuItem("Load Data");
-		Save_orf = new JMenuItem("Save ORF's");
+		openRef = new JMenuItem("Load reference");
+		openData = new JMenuItem("Load Data");
+		saveORF = new JMenuItem("Save ORF's");
 
 	//action listeners for the sub item of File
-		Open_ref.addActionListener(new ActionListener() {
+		openRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadReferenceAction();
 			}
 		});
-		Open_data.addActionListener(new ActionListener() {
+		openData.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				OpenDataAction();
+				openDataAction();
 			}
 		});
-		Save_orf.addActionListener(new ActionListener() {
+		saveORF.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SaveOrfAction();
+				saveOrfAction();
 			}
 		});
 
 	//add the sub items to "File"
-		Files.add(Open_ref);
-		Files.add(Open_data);
-		Files.add(Save_orf);
+		files.add(openRef);
+		files.add(openData);
+		files.add(saveORF);
 
-	//add the Files to the menu bar
-		add(Files);
+	//add the files to the menu bar
+		add(files);
 
-	//second menu item "Tools"
-		Tools = new JMenu("Tools");
+	//second menu item "tools"
+		tools = new JMenu("tools");
 
-	//sub items for menu itm 2 "Tools"
-		Find_orf = new JMenuItem("Find ORF");
-		Blast = new JMenuItem("Blast");
+	//sub items for menu itm 2 "tools"
+		findORF = new JMenuItem("Find ORF");
+		blast = new JMenuItem("blast");
 		featureList = new JMenuItem("Show features");
 
-	//action listeners for the sub item of Tools
-		Find_orf.addActionListener(new ActionListener() {
+	//action listeners for the sub item of tools
+		findORF.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FindOrfAction();
+				findOrfAction();
 			}
 		});
-		Blast.addActionListener(new ActionListener() {
+		blast.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BlastAction();
+				blastAction();
 			}
 		});
 		featureList.addActionListener(new ActionListener() {
@@ -109,13 +108,13 @@ public class IGVMenuBar extends JMenuBar {
 			}
 		});
 
-	//add the sub items to "Tools"
-		Tools.add(Find_orf);
-		Tools.add(Blast);
-		Tools.add(featureList);
+	//add the sub items to "tools"
+		tools.add(findORF);
+		tools.add(blast);
+		tools.add(featureList);
 
-	//add Tools to the menu bar
-		add(Tools);
+	//add tools to the menu bar
+		add(tools);
 	}
 
 	/**
@@ -182,7 +181,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 
-	// action performed for Files and Tools
+	// action performed for files and tools
 	private void loadReferenceAction() {
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
@@ -191,7 +190,7 @@ public class IGVMenuBar extends JMenuBar {
 
 		}catch (Exception e){}
 	}
-	private void OpenDataAction() {
+	private void openDataAction() {
 
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
@@ -202,17 +201,18 @@ public class IGVMenuBar extends JMenuBar {
 
 
 	}
-	private void SaveOrfAction() {
+	private void saveOrfAction() {
 
 	}
-	private void FindOrfAction() {
+	private void findOrfAction() {
 
 	}
-	private void BlastAction() {
+	private void blastAction() {
 
 	}
 	private void featureListAction() {
-		PopUpFrame popup = new PopUpFrame();
+		PopUpFrame popup = new PopUpFrame(cont);
+
 	}
 
 	// action performed for the choose Feature menu

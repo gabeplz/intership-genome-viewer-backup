@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 /**
  * Class voor de visualisatie van verschillende features zoals mRNA/Genen/Telomeren etc die te vinden zijn
- * in GFF(Generic feature format) Files.
+ * in GFF(Generic feature format) files.
  * @author Huub en Amber Janssen Groesbeek
  * Date: 20/11/18
  *
