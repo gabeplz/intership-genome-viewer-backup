@@ -149,10 +149,18 @@ public class CoordinatesFeatures {
         // als tag opgeslagen. Bij de andere features wordt de naam van de feature.
         if(feature instanceof Gene){
             return (String) feature.getAttributes().get("locus_tag");
+        }else if (feature instanceof Gene){
+            return "Gene";
+        }else if (feature instanceof mRNA){
+            return "mRNA";
         }else if (feature instanceof Exon){
-            return (String) feature.getAttributes().get("Parent");
-        }else {
-            return (String) feature.getAttributes().get("Name");
+            return "Exon";
+        }else if (feature instanceof CDS){
+            return "CDS";
+        }else if (feature instanceof Region){
+            return "Region";
+        }else{
+            return "?";
         }
     }
 
