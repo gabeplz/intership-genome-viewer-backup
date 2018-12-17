@@ -26,7 +26,7 @@ public class findORF {
      * @param seq   De sequentie van het chromosoom.
      * @return  listORF is een Arraylist met ORF objecten.
      */
-    public static ArrayList<ORF> searchORF(String id, String seq, int startUser, int stopUser) {
+    public static ArrayList<ORF> searchORF(String id, String seq, int startUser, int stopUser, int lengthORFUser) {
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
         Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE); //TODO koppel codontabel
         Matcher match = patroon.matcher(seq);
@@ -43,8 +43,13 @@ public class findORF {
             String id_ORF = "ORF" + idORF +"_T";
             Strand strand = Strand.POSITIVE;
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand);
-            listORF.add(ORF_Object);
+            int lengthORF = stop - start;
+
+            if(lengthORF >= lengthORFUser){
+                ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand, lengthORF);
+                listORF.add(ORF_Object);
+            }
+
         }
         return listORF;
     }
@@ -59,7 +64,7 @@ public class findORF {
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */
-    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging, int startUser, int stopUser) {
+    public static ArrayList<ORF> searchORF(String id, String seq, String bevestiging, int startUser, int stopUser, int lengthORFUser) {
         // Patroon voor een ORF. Wordt gekeken waar dit ORF op de chromosoom/contig sequentie ligt.
         Pattern patroon = Pattern.compile("(?=((ATG)(.{3})*?(TAG|TGA|TAA)))", Pattern.CASE_INSENSITIVE); //TODO koppel codontabel
         Matcher match = patroon.matcher(seq);
@@ -76,9 +81,13 @@ public class findORF {
 
             String id_ORF = "ORF" + idORF +"_C";
             Strand strand = Strand.NEGATIVE;
+            int lengthORF = stop - start;
 
-            ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand);
-            listORF.add(ORF_Object);
+            if(lengthORF >= lengthORFUser){
+                ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand, lengthORF);
+                listORF.add(ORF_Object);
+            }
+
 
         }
         return listORF;

@@ -205,7 +205,8 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 	private void FindorfAction() {
-		cont.setCurORFListALL();
+		int lenghtORF = Integer.parseInt(JOptionPane.showInputDialog("Lenght ORF"));
+		cont.setCurORFListALL(lenghtORF);
 	}
 	private void BlastAction() {
 

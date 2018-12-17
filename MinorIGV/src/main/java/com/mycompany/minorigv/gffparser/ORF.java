@@ -12,6 +12,7 @@ public class ORF implements MappableFeature{
     private int readingframe;
     private String idORF;
     private Strand strand;
+    private int lengthORF;
 
     /**
      *
@@ -23,12 +24,13 @@ public class ORF implements MappableFeature{
      * @param idORF             Het ID dat wordt meegegeven aan het ORF om ORFs te kunnen onderscheiden
      * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
      */
-    public ORF(int start, int stop, int readingframe, String idORF, Strand strand) {
+    public ORF(int start, int stop, int readingframe, String idORF, Strand strand, int lengthORF) {
         this.start = start;
         this.stop = stop;
         this.readingframe = readingframe;
         this.idORF = idORF;
         this.strand = strand;
+        this.lengthORF = lengthORF;
     }
 
     /**
@@ -114,6 +116,13 @@ public class ORF implements MappableFeature{
         this.strand = strand;
     }
 
+    public int getLengthORF() {
+        return lengthORF;
+    }
+
+    public void setLengthORF(int lengthORF) {
+        this.lengthORF = lengthORF;
+    }
 
     /**
      *

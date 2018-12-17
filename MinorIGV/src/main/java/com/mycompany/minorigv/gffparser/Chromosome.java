@@ -120,15 +120,14 @@ public class Chromosome {
     /**
      * Het genereerd de ArrayList met daarin de ORFs
      */
-    public void setListORF()  {
+    public void setListORF(int lenghtORF)  {
         // ORFs zoeken in de template en complementaire strand.
         String seqComp = makeCompStrand.getReverseComplement(getSeqTemp());
 
-        listORF = findORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length());
+        listORF = findORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length(), lenghtORF);
 
-        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length());
+        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length(), lenghtORF);
         listORF.addAll(orfs_comp);
-
     }
 
     /**
