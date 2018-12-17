@@ -7,11 +7,12 @@ import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.util.Observable;
@@ -20,6 +21,8 @@ import java.util.Observer;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
 
 /**
  * Class for building the Menu bar of the application
@@ -35,6 +38,9 @@ public class IGVMenuBar extends JMenuBar {
 
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
+
+    JRadioButton buttonAll ,buttonBetween;
+    JFormattedTextField textField;
 
 	/**
 	 * init
@@ -202,9 +208,66 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 	private void SaveorfAction() {
+		System.out.println("hoi");
+		buttonAll = new JRadioButton("All",true);
+		buttonBetween = new JRadioButton("Between");
+		ButtonGroup groupRadioButton = new ButtonGroup();
+		groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
+		final JLabel labelLengthORFUser = new JLabel("Length ORF : ", JLabel.LEFT);
+
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(true);
+		textField = new JFormattedTextField(formatter);
+		textField.setValue(100);
+		JButton saveButton = new JButton();
+		saveButton.setText("Save");
+
+		JPanel panel = new JPanel(new GridLayout(2,2));
+        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+
+        JPanel panel2 = new JPanel();
+        panel2.add(saveButton);
+
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		JFrame f = new JFrame();
+
+		f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
+		f.getContentPane().add(panel);
+
+		f.getContentPane().add(panel2);
+
+		f.pack();
+		f.setLocationRelativeTo(null);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setVisible(true);
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveButtonAction();
+            }
+        });
+
+
 
 	}
-	private void FindorfAction() {
+
+    private void saveButtonAction() {
+        int lengthORFUser = (int) Integer.parseInt(textField.getValue().toString());
+        Boolean m = buttonAll.isSelected();
+        if(m == true){
+            System.out.println("ALL");
+            cont.setCurORFListALL(lengthORFUser);
+        }else{
+            System.out.println("BETWEEN");
+        }
+    }
+
+    private void FindorfAction() {
 		int lenghtORF = Integer.parseInt(JOptionPane.showInputDialog("Lenght ORF"));
 		cont.setCurORFListALL(lenghtORF);
 	}
