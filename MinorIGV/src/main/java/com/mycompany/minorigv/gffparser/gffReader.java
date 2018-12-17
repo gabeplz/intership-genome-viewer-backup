@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class gffReader {
 
+
     /**
      * Het inlezen van het bestand per regel en het opslaan van data in de regels wanneer er in de derde kolom gene, mRNA,
      * exon, CDS of region staat.
@@ -23,10 +24,10 @@ public class gffReader {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String> allContigs = new ArrayList<String>();
         
-        String line = null;
+        String line;
         String ID = null;
-        String ID_organism = null;
-        
+        String ID_organism;
+
         if (org == null) {
         	org = new Organisms();
         }
@@ -35,8 +36,8 @@ public class gffReader {
         // inlezen van het bestand per regel.
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("##sequence-region")) {
-                String[] splited = line.split("\\s+");
-                ID = splited[1];
+                String[] splitted = line.split("\\s+");
+                ID = splitted[1];
                 allContigs.add(ID);
 
                 chrom = org.getChromosome(ID);
@@ -59,19 +60,22 @@ public class gffReader {
                 attributes att = new attributes();
                 Feature feat = null;
                 // Als er in de regel in kolom 3 gene, mRNA, exon, CDS of region staat, bevat de regel relevante data dat wordt opgeslagen.
-                if (line.split("\\t")[2].equals("gene")) {
+
+                String featName = line.split("\\t")[2];
+
+                if (featName.equals(FeatureTypes.GENE.getGffName())) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new Gene(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("mRNA")) {
+                }else if (featName.equals(FeatureTypes.MRNA.getGffName())) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new mRNA(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("exon")) {
+                }else if (featName.equals(FeatureTypes.EXON.getGffName())) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new Exon(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("CDS")) {
+                }else if (featName.equals(FeatureTypes.CDS.getGffName())) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new CDS(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("region")) {
+                }else if (featName.equals(FeatureTypes.REGION.getGffName())) {
                     HashMap attribute = att.splitAtt(columns[8]);
                     feat = new Region(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
                 }
