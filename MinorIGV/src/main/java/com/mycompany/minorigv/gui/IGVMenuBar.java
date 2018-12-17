@@ -251,19 +251,20 @@ public class IGVMenuBar extends JMenuBar {
                 saveButtonAction();
             }
         });
-
-
-
 	}
 
     private void saveButtonAction() {
         int lengthORFUser = (int) Integer.parseInt(textField.getValue().toString());
+
+        cont.setCurORFListALL(lengthORFUser);
+
         Boolean m = buttonAll.isSelected();
         if(m == true){
             System.out.println("ALL");
-            cont.setCurORFListALL(lengthORFUser);
+            cont.getCurORFListALL();
         }else{
             System.out.println("BETWEEN");
+            cont.getCurORFListBetween();
         }
     }
 
