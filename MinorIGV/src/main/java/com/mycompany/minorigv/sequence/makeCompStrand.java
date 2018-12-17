@@ -37,37 +37,37 @@ public class makeCompStrand {
 
 
         char[] complement = new char[sequence.length()];
-        int jj = complement.length;
-        for (int ii = 0; ii < sequence.length(); ii++) {
-            char c = sequence.charAt(ii);
-            jj--;
+        int length = complement.length;
+        for (int index = 0; index < sequence.length(); index++) {
+            char c = sequence.charAt(index);
+            length--;
             switch (c) {
                 case 'T':
-                    complement[jj] = 'A';
+                    complement[length] = 'A';
                     break;
                 case 'A':
-                    complement[jj] = 'T';
+                    complement[length] = 'T';
                     break;
                 case 'C':
-                    complement[jj] = 'G';
+                    complement[length] = 'G';
                     break;
                 case 'G':
-                    complement[jj] = 'C';
+                    complement[length] = 'C';
                     break;
                 case 't':
-                    complement[jj] = 'a';
+                    complement[length] = 'a';
                     break;
                 case 'a':
-                    complement[jj] = 't';
+                    complement[length] = 't';
                     break;
                 case 'c':
-                    complement[jj] = 'g';
+                    complement[length] = 'g';
                     break;
                 case 'g':
-                    complement[jj] = 'c';
+                    complement[length] = 'c';
                     break;
                 default:
-                    complement[jj] = c;
+                    complement[length] = c;
             }
         }
         return new String(complement);

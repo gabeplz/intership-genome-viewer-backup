@@ -65,23 +65,20 @@ public class CodonTable {
 	 **/
 	public static CodonTable build(Integer key, String[] names, String[] base, String aas, String startString) {
 
-		String base1 = base[0];
-		String base2 = base[1];
+		String base1 = base[0];  //base word opgedeelt in 3 strings die elk nucleotides bevatten
+		String base2 = base[1];  // de nucleotides van string 1, 2 en 3 zijn respectivelijk voor positie 1, 2 en 3 in het codon
 		String base3 = base[2];
 
-		
-
 		Map<String, String> codonMap = new HashMap<String, String>(aas.length());
-		Set<String> starts = new HashSet<String>(aas.length());
+		Set<String> starts = new HashSet<String>(aas.length());   // set voor alternative start aminozuren
 
-		for (int cc = 0; cc < aas.length(); cc++) {
-			String codon = base1.substring(cc, cc + 1) + base2.substring(cc, cc + 1) + base3.substring(cc, cc + 1);
-			String aa = aas.substring(cc, cc +1);
-			//                AminoAcid aa = AANameMap.get(aas.substring(cc, cc + 1));
+		for (int index = 0; index < aas.length(); index++) {
+			String codon = base1.substring(index, index + 1) + base2.substring(index, index + 1) + base3.substring(index, index + 1);		//pakt uit de 3 strings dezelfde index om een codon te maken
+			String aa = aas.substring(index, index +1);
 
-			codonMap.put(codon, aa);
+			codonMap.put(codon, aa);  // codon en aminozuur worden aan elkaar gekoppeld door het in een hashmap te zetten
 
-			if (startString.charAt(cc) == 'M') {
+			if (startString.charAt(index) == 'M') {  // voegt alternatieve start aminozuur toe waneer er een 'M' in de array aas staat.
 				starts.add(aa);
 			}
 		}

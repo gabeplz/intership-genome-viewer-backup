@@ -35,6 +35,10 @@ import java.io.*;
 
 /**
  * @author jrobinso. Stan Wehkamp
+ * singleton class that call on helper functions to build the codontabels
+ * also translates nucleotides sequences to aminoacids.
+ * takes the codon table to be used from context
+ * the codontables in context are pulled from the allCodonTables in this class
  */
 public class TranslationManager {
     private static final String[] BASE_SEQUENCES = {    "TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
@@ -43,17 +47,13 @@ public class TranslationManager {
     public static final String TEST_AMINOVOLGORDE =     "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG";     // TEST_AMINOVOLGORDE, TEST_AMINOSTARTS worden in de toekomst uit een file gegenereed
     public static final String TEST_AMINOSTARTS =       "---M---------------M---------------M----------------------------";
 
-    //static final String DEFAULT_CODON_TABLE_PATH = "C:\\Users\\Gebruiker\\Minor-IGV\\MinorIGV\\src\\main\\resources\\CodonTabels.txt";
     static final String DEFAULT_CODON_TABLE_PATH = "CodonTabels.txt";
 
     private LinkedHashMap<Integer, CodonTable> allCodonTables = new LinkedHashMap<Integer, CodonTable>();
 
-
-
-
     private static TranslationManager instance;
 
-    private TranslationManager(){    }
+    private TranslationManager(){    }                  //leave this here
 
     public static TranslationManager getInstance() {
         if (instance == null) {
@@ -61,31 +61,18 @@ public class TranslationManager {
                 TranslationManager newInstance = new TranslationManager();
                 newInstance.loadCodonTabels(DEFAULT_CODON_TABLE_PATH);
                 instance = newInstance;
-                System.out.println("new made");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
-      System.out.println("existing send");
       return instance;
     }
 
-
     /**
-     * bouwt de standaard codon tabel.
-     * @return object CodonTable
-     */
-//    public static CodonTable buildDefault() {
-//		return CodonTable.build(1,new String[]{"hoi","hai"}, BASE_SEQUENCES, TEST_AMINOVOLGORDE, TEST_AMINOSTARTS);
-//
-//	}
-
-    /**
-     *
+     *loads file from recource map and parses the contents to CodonTable.build.
+     * which returns the codon table back to this method which puts it in the hashmap allCodonTables
      * @param codonTablesPath
      * @throws FileNotFoundException
      * @throws IOException
@@ -95,111 +82,53 @@ public class TranslationManager {
         ClassLoader classLoader = getClass().getClassLoader();
         String file = java.net.URLDecoder.decode(classLoader.getResource(DEFAULT_CODON_TABLE_PATH).getFile(),"UTF-8");
 
-        BufferedReader f_reader = new BufferedReader(new FileReader(file));
-        String line = f_reader.readLine();
+        BufferedReader fileReader = new BufferedReader(new FileReader(file));
+        String line = fileReader.readLine();
         while (line != null) {
             // huidige line bevat de opende brace
-            line = f_reader.readLine();
+            line = fileReader.readLine();
 
             //huidige line bevat de alle namen van de tabel
             String[] tabelNamen = line.substring(line.lastIndexOf("[")+1, line.lastIndexOf("]")).replaceAll("\"", "").split(",");
-            line = f_reader.readLine();
+            line = fileReader.readLine();
 
             //huidige line bevat het tabel id
             Integer key = Integer.valueOf(line.substring(line.lastIndexOf(":") + 1, line.length() -1 ));
-            line = f_reader.readLine();
+            line = fileReader.readLine();
 
             //huidige line bevat aminozuren in een specifieke volgorde om alle mogelijke codons te representeren
             String aminoNormal = line.substring(line.lastIndexOf(":" )+2, line.length() -2);
-            line = f_reader.readLine();
+            line = fileReader.readLine();
 
             //huidige line bevat alternative aminozuren in een specifieke volgorde om alle mogelijke codons te representeren
             String aminoStarts = line.substring(line.lastIndexOf(":" )+2, line.length() -1);
-            line = f_reader.readLine();
+            line = fileReader.readLine();
 
             //huidige line bevat de sluitende brace
-            line = f_reader.readLine();
+            line = fileReader.readLine();
 
             CodonTable curTable = CodonTable.build(key, tabelNamen, BASE_SEQUENCES, aminoNormal, aminoStarts);
             allCodonTables.put(curTable.getKey(), curTable);
         }
     }
 
-
-
-
+    /**
+     * getter voor 1 codontable uit allCodonTables
+     * gebruikt een Integer als key
+     * @param key
+     * @return Codontable
+     */
     public CodonTable getCodonTable (Integer key){
         return allCodonTables.get(key);
     }
 
+    /**
+     * getter voor alle codontabellen uit allCodonTables
+     * @return collection van allCodonTables
+     */
     public Collection<CodonTable> getAllCodonTables() {
         return Collections.unmodifiableCollection(allCodonTables.values());
     }
-
-
- /**
- *
- * @author jrobinso, Stan Wehkamp
- * 
- * returns een hashmap
- * 
- * start method passes arguments die nodig zijn voor de constructors van CodonTable, AminoAcidSequence en naar de methode getaminoacid binnen de class
- * contains static classes to translate amino acids and make reverse complemantary sequence 
- * 
- * @param sequence
- * @param comp_sequence
- * @return hashmap
- */
- /**
-    public HashMap<String, Object> start(String sequence, String comp_sequence) {
-        // namen = namen van codontabel
-        String[] namen = {"chromosome1", "kaas", "baas"};
-        // maak codontabel aan
-        CodonTable numer1 = buildDefault();
-
-        int start = 0;                          // huidig onodig gecompliceerde maneer om de volgede variabelen de volgende waardes te geven:
-        int mod = start % 3;                    // n1 = 0, n2 = 1, n2 = 2
-        int n1 = normalize3(3 - mod);           // in de toekomst word start gebaseerd op het refrenceframe en locatie op de refsequentie
-        int n2 = normalize3(n1 + 1);
-        int n3 = normalize3(n2 + 1);
-        //List
-        String AminoAcidsP1 = getAminoAcids(Strand.POSITIVE, sequence.substring(n1), numer1);       // 6 aminozuur sequenties worden gemaakt voor de 6 reading frames
-        String AminoAcidsP2 = getAminoAcids(Strand.POSITIVE, sequence.substring(n2), numer1);
-        String AminoAcidsP3 = getAminoAcids(Strand.POSITIVE, sequence.substring(n3), numer1);
-
-        final int len = comp_sequence.length();
-        String AminoAcidsN1 = getAminoAcids(Strand.NEGATIVE, comp_sequence.substring(n1), numer1);
-        String AminoAcidsN2 = getAminoAcids(Strand.NEGATIVE, comp_sequence.substring(n2), numer1);
-        String AminoAcidsN3 = getAminoAcids(Strand.NEGATIVE, comp_sequence.substring(n3), numer1);
-
-
-        AminoAcidSequence RF1 = new AminoAcidSequence(Strand.POSITIVE, AminoAcidsP1, numer1.getKey()); //de enum negative zorgt ervoor dat de sequentie word gereversed voor translatie begint
-        AminoAcidSequence RF2 = new AminoAcidSequence(Strand.POSITIVE, AminoAcidsP2, numer1.getKey());
-        AminoAcidSequence RF3 = new AminoAcidSequence(Strand.POSITIVE, AminoAcidsP3, numer1.getKey());
-        AminoAcidSequence RF4 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN1, numer1.getKey());
-        AminoAcidSequence RF5 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN2, numer1.getKey());
-        AminoAcidSequence RF6 = new AminoAcidSequence(Strand.NEGATIVE, AminoAcidsN3, numer1.getKey());
-
-        HashMap<String, Object> readingframes = new HashMap<String, Object>();
-        readingframes.put("RF1", RF1);
-        readingframes.put("RF2", RF2);
-        readingframes.put("RF3", RF3);
-        readingframes.put("RF4", RF4);
-        readingframes.put("RF5", RF5);
-        readingframes.put("RF6", RF6);
-
-        return readingframes;
-    }
-**/
-    /**
-     * 
-     * @param n int
-     * @return 0 of n
-     */
-    private static int normalize3(int n) {
-        return n == 3 ? 0 : n;
-    }
-
 
      /**
      * retuns een string van aminozuren gegenereed van een nucleotide sequentie en een codontabel. 
@@ -208,7 +137,7 @@ public class TranslationManager {
      * @param sequence string de een nucleotide sequentie voorsteld
      * @param huidigeTabel object CodonTable
      * @return string waar elk karakter een aminozuur voorsteld
-     */
+     **/
     public String getAminoAcids(Strand direction, String sequence, CodonTable huidigeTabel) {
         // sequentie moet deelbaar zijn door 3
         // het aanroepende programma is verandwoordelijk om een uitgelijnde sequentie mee te geven.
