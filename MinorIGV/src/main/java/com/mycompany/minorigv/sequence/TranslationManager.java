@@ -55,6 +55,11 @@ public class TranslationManager {
 
     private TranslationManager(){    }                  //leave this here
 
+    /**
+     * bouwt de instance van de singelton class
+     * start ook de generatie van de codontabellen
+     * @return TranslationManeger instance
+     */
     public static TranslationManager getInstance() {
         if (instance == null) {
             try {
