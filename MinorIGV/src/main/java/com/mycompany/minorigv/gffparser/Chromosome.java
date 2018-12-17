@@ -197,18 +197,22 @@ public class Chromosome {
      */
     public ArrayList<ORF> getORFsBetween(int start, int stop){
         ArrayList<ORF> orfsFilteredList = new ArrayList<>();
-
-        for(ORF o : listORF){
-            if (o.getStop() > start && o.getStop() < stop){
-                orfsFilteredList.add(o);
-            }else if(o.getStart() > start && o.getStart() < stop){
-                orfsFilteredList.add(o);
-            }else if(o.getStart() < start && o.getStop() > stop){
-                orfsFilteredList.add(o);
+        if(listORF != null){
+            for(ORF o : listORF){
+                if (o.getStop() > start && o.getStop() < stop){
+                    orfsFilteredList.add(o);
+                }else if(o.getStart() > start && o.getStart() < stop){
+                    orfsFilteredList.add(o);
+                }else if(o.getStart() < start && o.getStop() > stop){
+                    orfsFilteredList.add(o);
+                }
             }
+
+            return orfsFilteredList;
+        }else{
+            return null;
         }
 
-        return orfsFilteredList;
     }
 
 

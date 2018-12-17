@@ -2,7 +2,9 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
+import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 import java.awt.Dimension;
@@ -203,7 +205,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 	private void FindorfAction() {
-
+		cont.setCurORFListALL();
 	}
 	private void BlastAction() {
 

@@ -209,7 +209,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
      * @param width
      */
     public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
-        if(strandORFs.size() > 0){ //als uberhaubt ORF's.
+        if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
@@ -254,12 +254,17 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		ArrayList<ORF> listORF = cont.getCurORFListBetween();
 
         ArrayList<ORF> strandORFs = new ArrayList<>();
-        for(ORF o : listORF){
-            if(o.getStrand().equals(strand) && o.getReadingframe() == frame){
-                strandORFs.add(o);
+        if(listORF != null){
+            for(ORF o : listORF){
+                if(o.getStrand().equals(strand) && o.getReadingframe() == frame){
+                    strandORFs.add(o);
+                }
             }
+            return strandORFs;
+        }else{
+            return null;
         }
-        return strandORFs;
+
 	}
 
     /**
@@ -272,12 +277,17 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
         ArrayList<ORF> listORF = cont.getCurORFListBetween();
 
         ArrayList<ORF> strandORFs = new ArrayList<>();
-        for(ORF o : listORF){
-            if(o.getStrand().equals(strand)){
-                strandORFs.add(o);
+        if(listORF != null){
+            for(ORF o : listORF){
+                if(o.getStrand().equals(strand)){
+                    strandORFs.add(o);
+                }
             }
+            return strandORFs;
+        }else{
+            return null;
         }
-        return strandORFs;
+
     }
 
     /**

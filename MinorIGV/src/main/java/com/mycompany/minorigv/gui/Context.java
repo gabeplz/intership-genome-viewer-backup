@@ -37,6 +37,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	private int start;
 	private int stop;
 	private ArrayList<String> keuze_gebruiker;
+	private HashMap<String,String> fastaMap = new HashMap<>();
 
 
 	private final int DEFAULT_START = 0;
@@ -171,12 +172,12 @@ public class Context implements Serializable, PropertyChangeListener {
 			//voor volledigheid
 		}
 
-		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path);
+		fastaMap = FastaFileReader.getSequences(path);
 
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
-			organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
+			//organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
 		}
 
 		setChromosomeNames(); //update chromosoom namen
@@ -332,10 +333,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		return stop;
 	}
 
-	//Wanneer je alle ORFs wilt hebben (voor bijv. wegschrijven)
-	public ArrayList<ORF> getCurORFListALL(){
-		return curChromosome.getListORF();
-	}
+
 	public void setOrganism(Organisms organism) {
 		Organisms oldValue = this.organism;
 		this.organism = organism;
@@ -429,6 +427,15 @@ public class Context implements Serializable, PropertyChangeListener {
 
     public ArrayList<ORF> getCurORFListBetween() {
         return curChromosome.getORFsBetween(start, stop);
+	}
+
+	public void setCurORFListALL(){
+		curChromosome.setListORF();
+	}
+
+	//Wanneer je alle ORFs wilt hebben (voor bijv. wegschrijven)
+	public ArrayList<ORF> getCurORFListALL(){
+		return curChromosome.getListORF();
 	}
 
 }
