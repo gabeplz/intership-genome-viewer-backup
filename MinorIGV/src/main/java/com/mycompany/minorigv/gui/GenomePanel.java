@@ -92,7 +92,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Function that changes the chromosome being used in context
+     * Functie verantwoordelijk voor het veranderen van het huidige chromosoom.
      */
     private void changeChromosome() {
         try {
