@@ -62,8 +62,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	//sub items for menu item 1 "File"
 		openRef = new JMenuItem("Load reference");
-		openData = new JMenuItem("Load Data");
-		saveORF = new JMenuItem("Save ORF's");
+		openData = new JMenuItem("Load GFF");
 
 	//action listeners for the sub item of File
 		openRef.addActionListener(new ActionListener() {
@@ -78,28 +77,22 @@ public class IGVMenuBar extends JMenuBar {
 				openDataAction();
 			}
 		});
-		saveORF.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveOrfAction();
-			}
-		});
+
 
 	//add the sub items to "File"
 		files.add(openRef);
 		files.add(openData);
-		files.add(saveORF);
 
 	//add the files to the menu bar
 		add(files);
 
 	//second menu item "tools"
-		tools = new JMenu("tools");
+		tools = new JMenu("ORF");
 
 	//sub items for menu itm 2 "tools"
-		findORF = new JMenuItem("Find ORF");
-		blast = new JMenuItem("blast");
-		featureList = new JMenuItem("Show features");
+		findORF = new JMenuItem("Find ORFs");
+		saveORF = new JMenuItem("Save ORFs");
+		blast = new JMenuItem("Blast");
 
 	//action listeners for the sub item of tools
 		findORF.addActionListener(new ActionListener() {
@@ -108,23 +101,24 @@ public class IGVMenuBar extends JMenuBar {
 				findOrfAction();
 			}
 		});
+		saveORF.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveOrfAction();
+			}
+		});
 		blast.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				blastAction();
 			}
 		});
-		featureList.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				featureListAction();
-			}
-		});
+
 
 	//add the sub items to "tools"
 		tools.add(findORF);
+		tools.add(saveORF);
 		tools.add(blast);
-		tools.add(featureList);
 
 	//add tools to the menu bar
 		add(tools);
@@ -137,6 +131,7 @@ public class IGVMenuBar extends JMenuBar {
 	// create the feature menu for the menu bar
 		features = new JMenu("Features");
 
+		featureList = new JMenuItem("Show features");
 	// Checkboxes the contain the features that can be visualized
 		Genes = new JCheckBoxMenuItem("Genes");
 		mRNA = new JCheckBoxMenuItem("mRNA");
@@ -144,6 +139,12 @@ public class IGVMenuBar extends JMenuBar {
 		Region = new JCheckBoxMenuItem("Region");
 		CDS = new JCheckBoxMenuItem("CDS");
 
+		featureList.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				featureListAction();
+			}
+		});
 	// add action listeners to the check boxes
 		Genes.addActionListener(new ActionListener() {
 			@Override
@@ -177,6 +178,8 @@ public class IGVMenuBar extends JMenuBar {
 		});
 
 	// add the checkboxes to the features menu
+
+		features.add(featureList);
 		features.add(Genes);
 		features.add(mRNA);
 		features.add(Exon);
@@ -306,8 +309,10 @@ public class IGVMenuBar extends JMenuBar {
 
 
 	}
-        private void featureListAction() {
-            PopUpFrame popup = new PopUpFrame(cont);}
+
+	private void featureListAction() {
+    	PopUpFrame popup = new PopUpFrame(cont);
+    }
 
 	// action performed for the choose Feature menu
 	// if check box is selected it will add the feature to a list that contains the features that should be visualized
