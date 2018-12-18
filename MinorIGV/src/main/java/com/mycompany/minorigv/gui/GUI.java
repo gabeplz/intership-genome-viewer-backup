@@ -13,14 +13,14 @@ import java.util.Observer;
 
 
 /**
- * Class waarin de main staat waarmee de GUI geinitialiseerd wordt en verschillende objecten worden toegevoegt.
+ * Class waarin de Main staat waarmee de GUI geinitialiseerd wordt en verschillende objecten worden toegevoegt.
  * @author kahuub
  * Date: 19/11/18
  */
 public class GUI {
 
 	private JFrame frame;
-	private ReferencePanel ReferencePaneel;
+	private ReferencePanel referencePaneel;
 	private JScrollPane scrollPane;
 	private Context context;
 
@@ -65,41 +65,41 @@ public class GUI {
 		IGVMenuBar igvMenuBar = new IGVMenuBar();
 		igvMenuBar.init();
 
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		//gbc_panel.insets = new Insets(0, 0, 0, 0);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 0;
-		frame.getContentPane().add(igvMenuBar,gbc_panel );
+		GridBagConstraints gbcPanel = new GridBagConstraints();
+		//gbcPanel.insets = new Insets(0, 0, 0, 0);
+		gbcPanel.fill = GridBagConstraints.BOTH;
+		gbcPanel.gridx = 0;
+		gbcPanel.gridy = 0;
+		frame.getContentPane().add(igvMenuBar,gbcPanel );
 		
 		
 		GenomePanel organismPanel = new GenomePanel();
 		organismPanel.init();
 		
-		GridBagConstraints gbc_genome = new GridBagConstraints();
-		gbc_genome.fill = GridBagConstraints.HORIZONTAL;
-		gbc_genome.gridx = 0;
-		gbc_genome.gridy = 1;
+		GridBagConstraints gbcGenome = new GridBagConstraints();
+		gbcGenome.fill = GridBagConstraints.HORIZONTAL;
+		gbcGenome.gridx = 0;
+		gbcGenome.gridy = 1;
 		organismPanel.setBackground(Color.BLACK);
-		frame.getContentPane().add(organismPanel,gbc_genome );
+		frame.getContentPane().add(organismPanel,gbcGenome );
 		
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.weighty = 1.0;
-		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 2;
-		frame.getContentPane().add(scrollPane_1, gbc_scrollPane_1);
+		JScrollPane scrollPane1 = new JScrollPane();
+		GridBagConstraints gbcScrollPane1 = new GridBagConstraints();
+		gbcScrollPane1.weighty = 1.0;
+		gbcScrollPane1.fill = GridBagConstraints.BOTH;
+		gbcScrollPane1.gridx = 0;
+		gbcScrollPane1.gridy = 2;
+		frame.getContentPane().add(scrollPane1, gbcScrollPane1);
 		
 		OrganismPanel organism = new OrganismPanel();
-		scrollPane_1.setViewportView(organism);
+		scrollPane1.setViewportView(organism);
 		organism.init();
 		
 		
-		RulerPanel liniaal = new RulerPanel();
-		liniaal.init();
-		organism.add(liniaal);
+		RulerPanel ruler = new RulerPanel();
+		ruler.init();
+		organism.add(ruler);
 
 		FeaturePanel featuresForward = new FeaturePanel();
 		featuresForward.init(true);
@@ -111,9 +111,9 @@ public class GUI {
 
 		organism.add(forwardPanel);
 
-		ReferencePanel refpanel1 = new ReferencePanel();
-		refpanel1.init();
-		organism.add(refpanel1);
+		ReferencePanel refPanel1 = new ReferencePanel();
+		refPanel1.init();
+		organism.add(refPanel1);
 
 		CodonPanel reversePanel = new CodonPanel();
 
@@ -126,10 +126,10 @@ public class GUI {
 		organism.add(featuresReverse);
 
 		context = new Context();
-		refpanel1.setContext(context);
+		refPanel1.setContext(context);
 		forwardPanel.setContext(context);
 		reversePanel.setContext(context);
-		liniaal.setContext(context);
+		ruler.setContext(context);
 		organismPanel.setContext(context);
 		igvMenuBar.setContext(context);
 		featuresForward.setContext(context);

@@ -40,15 +40,15 @@ public class FindORF {
 
             int readingframe = ORF.calcFrame(start, Strand.POSITIVE, seq.length()); // Readingframe wordt bepaald
 
-            String id_ORF = "ORF" + idORF +"_T"; // ID van het ORF wordt bepaald.
+            String ORFidid = "ORF" + idORF +"_T"; // ID van het ORF wordt bepaald.
             Strand strand = Strand.POSITIVE; // Strand wordt ingesteld.
 
             int lengthORF = stop - start; // Lengte van het ORF wordt bepaald.
 
             // Slaat alleen het ORF op wanneer de lenge van het ORF minimaal de lengte heeft die de gebruiker heeft ingesteld.
             if(lengthORF >= lengthORFUser){
-                ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand, lengthORF);
-                listORF.add(ORF_Object);
+                ORF ORFObject = new ORF(start, stop, readingframe, ORFidid, strand, lengthORF);
+                listORF.add(ORFObject);
             }
         }
         return listORF;
@@ -79,14 +79,14 @@ public class FindORF {
 
             int readingframe = ORF.calcFrame(stop, Strand.NEGATIVE, seq.length()); // Readingframe wordt bepaald
 
-            String id_ORF = "ORF" + idORF +"_C"; // ID van het ORF wordt bepaald.
+            String ORFidid = "ORF" + idORF +"_C"; // ID van het ORF wordt bepaald.
             Strand strand = Strand.NEGATIVE;    // Strand wordt ingesteld.
             int lengthORF = stop - start; // Lengte van het ORF wordt bepaald.
 
             // Slaat alleen het ORF op wanneer de lenge van het ORF minimaal de lengte heeft die de gebruiker heeft ingesteld.
             if(lengthORF >= lengthORFUser){
-                ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand, lengthORF);
-                listORF.add(ORF_Object);
+                ORF ORFObject = new ORF(start, stop, readingframe, ORFidid, strand, lengthORF);
+                listORF.add(ORFObject);
             }
         }
         return listORF;

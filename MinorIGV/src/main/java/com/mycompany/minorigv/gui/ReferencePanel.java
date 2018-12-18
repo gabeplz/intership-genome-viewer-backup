@@ -65,29 +65,29 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
         String revComp = MakeCompStrand.getReverseComplement(seq);  //Reverse Complement van de sub sequentie.
 
-        int real_width = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), length);  //bepaal de toegewezen breedte per pixel.
+        int realWidth = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), length);  //bepaal de toegewezen breedte per pixel.
 
-        int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, -0.5); //linkerkant van rechthoekje, positie op de x-as.
-        int old_x_pos; //onthouden oude x_pos.
+        int xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, -0.5); //linkerkant van rechthoekje, positie op de x-as.
+        int oldXPos; //onthouden oude xPos.
 
         for(int i = 0; i < length; i++  ) {
             int j = length-i-1;
 
-            old_x_pos = x_pos;
-            x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i+0.5); //nieuwe x_pos bepalen.
+            oldXPos = xPos;
+            xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i+0.5); //nieuwe xPos bepalen.
 
-            int width = x_pos-old_x_pos;  //breedte vierkantje
+            int width = xPos-oldXPos;  //breedte vierkantje
 
-            if(real_width > 2){
-                width = x_pos-old_x_pos-1; //pixelbrede streep wit rechts.
+            if(realWidth > 2){
+                width = xPos-oldXPos-1; //pixelbrede streep wit rechts.
             }
 
             this.chooseLetterColor(g,seq.charAt(i)); //letterkleur kiezen.
 
-            g2.fillRect(old_x_pos,HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
+            g2.fillRect(oldXPos,HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
 
             this.chooseLetterColor(g,revComp.charAt(j)); //letterkleur kiezen reverse.
-            g2.fillRect(old_x_pos,HEIGHT+HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
+            g2.fillRect(oldXPos,HEIGHT+HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
 
             g.setColor(Color.BLACK); //Zwarte kleur resetten.
         }
@@ -109,14 +109,14 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		for(int i = 0; i < length; i++  ) {
 			int j = length-i-1;  //rechts naar links (reverse)
 
-			int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);  //letter corresponderend bepalen.
+			int xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);  //letter corresponderend bepalen.
 
 			this.chooseLetterColor(g,seq.charAt(i));  //letterkleur kiezen.
 
-			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, HEIGHT);  //gecentreerd character tekenen.
+			DrawingTools.drawCenteredChar(g2, seq.charAt(i), xPos, HEIGHT);  //gecentreerd character tekenen.
 
 			this.chooseLetterColor(g,revComp.charAt(j));  //letterkeuze  <-, loop richting ->
-			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 2*HEIGHT);  //tekenen reverse
+			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), xPos, 2*HEIGHT);  //tekenen reverse
 			g.setColor(Color.BLACK);  //kleur terugzetten
 		}
 
@@ -165,7 +165,6 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 	 * initiatie van het paneel waarin de sequenties worden getekent
  	 */
 	public void init() {
-
 		setPreferredSize(new Dimension(500,55));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));

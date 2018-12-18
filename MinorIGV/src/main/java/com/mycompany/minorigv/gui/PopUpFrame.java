@@ -11,7 +11,8 @@ public class PopUpFrame extends JFrame {
     Context cont;
 
     /**
-     * PopUpFrame construeerd een JavaFrame als pop up wanneer er om de get featueres button word geklikt. Het frame bevat alle features die de gebruiker will zien in een tabel
+     * PopUpFrame construeerd een JavaFrame als pop up wanneer er om de get featueres button word geklikt.
+     * Het frame bevat alle features die de gebruiker will zien in een tabel
      * @param cont
      */
     public PopUpFrame(Context cont) {
@@ -48,20 +49,15 @@ public class PopUpFrame extends JFrame {
             String featureName="";
             if (feat instanceof mRNA){
                 featureName = "mRNA";
-            };
-            if (feat instanceof CDS){
+            } else if (feat instanceof CDS){
                 featureName = "CDS";
-            };
-            if (feat instanceof Exon){
+            } else if (feat instanceof Exon){
                 featureName = "Exon";
-            };
-            if (feat instanceof Region){
+            } else if (feat instanceof Region){
                 featureName = "Region";
-            };
-            if (feat instanceof Gene){
+            } else if (feat instanceof Gene){
                 featureName = "Gene";
-            };
-
+            }
             //Voeg een regel toe aan het model.
             model.addRow(new Object[]{feat.getId(), featureName,feat.getStrand(),feat.getStart(),feat.getStop()});
         }
