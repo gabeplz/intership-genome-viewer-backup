@@ -2,6 +2,8 @@ package com.mycompany.minorigv.gffparser;
 import com.mycompany.minorigv.FastaFileReader;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -10,8 +12,15 @@ import java.util.*;
 public class main {
     public static String path_gff;
     public static String path_fasta;
-    public static void main(String[] args) throws Exception{
-    	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    public static void main(String[] args) throws Exception {
+        String ncseq = new String("https://stackoverflow.com/questions/tagged/regex\n");
+
+        System.out.println(ncseq.matches("(https?|ftp)://([^/\r\n]+)(/[^\r\n]*)?"));
+
+
+    }
+        /**
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         path_gff = classLoader.getResource("voorbeeldgff.gff").getFile();
         path_fasta = classLoader.getResource("GCF_000146045.2_R64_genomic.fna").getFile();
 
@@ -22,8 +31,11 @@ public class main {
 
         for(String id : fastaMap.keySet()){
             org.addSequence(id,fastaMap.get(id));
+
         }
 
 
     }
 }
+**/
+    }

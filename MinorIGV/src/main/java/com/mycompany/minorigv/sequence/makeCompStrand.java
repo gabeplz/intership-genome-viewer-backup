@@ -29,7 +29,7 @@ public class makeCompStrand {
    /**
     * creates a reverse complemantary strand van nucleotides. de volgorde van de nucleotide word bepaald door de volgorde
     * waarin ze tegengekomen zouden worden als de leesrichting van het readingframe gevolgd word
-    * in: atg aaa ccg -> out:ccg ttt cat
+    * in: atg aaa ccg -> out:cgg ttt cat
     * @param sequence een string die een nucleotide sequentie voorsteld.
     * @return complement een string die een nucleotide sequentie voorsteld.
     */ 
