@@ -48,12 +48,4 @@ public class DrawingTools {
 		g.drawString(String.valueOf(charr), (int) (x-(font_width/2)),(int) (y+(font_height/2)));
 	}
 
-	public static void drawFilledRect(Graphics g, int x, int y, double width, int height) {
-
-
-		int x1 = (int) (x - Math.floor( width /2) );
-		int y1 = (int) (y - Math.floor( height/2) );
-		g.fillRect(x1, y1, (int) width, height);
-
-	}
 }

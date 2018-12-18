@@ -40,13 +40,13 @@ public class CodonTable {
 	private Set<String> starts;
 	private Map<String, String> codonMap;
 
-        /**
-         * constructor voor CodonTable
-         * @param key key functioneert als id for the tabel and als key voor de hashmap die de CodonTable objecten gaat bevatten
-         * @param names array voor de namen van de codontabel
-         * @param starts set voor de alternative start aminozuren
-         * @param codonMap Map met een 3 letterige codons als key en een een letterige afkorting voor een aminozuur als value
-         */
+	/**
+	 * constructor voor CodonTable
+	 * @param key key functioneert als id for the tabel and als key voor de hashmap die de CodonTable objecten gaat bevatten
+	 * @param names array voor de namen van de codontabel
+	 * @param starts set voor de alternative start aminozuren
+	 * @param codonMap Map met een 3 letterige codons als key en een een letterige afkorting voor een aminozuur als value
+	 */
 	public CodonTable(Integer key, String[] names, Set<String> starts, Map<String, String> codonMap){
 		this.key = key;                 
 		this.names = names;              

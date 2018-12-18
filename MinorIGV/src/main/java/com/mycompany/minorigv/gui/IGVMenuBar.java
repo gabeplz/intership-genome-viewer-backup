@@ -1,17 +1,12 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
-import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
@@ -34,7 +29,7 @@ public class IGVMenuBar extends JMenuBar {
 	JMenu files, tools, features;
 
 	// Define all the sub items for the menu bar that will not have their own sub items in the menu
-	JMenuItem openRef, openData, saveORF, findORF, blast,Genes, mRNA ,Exon, Region, CDS, featureList;
+	JMenuItem openRef, openData, saveORF, findORF, blast,genes, mRNA ,exon, region, CDS, featureList;
 
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
@@ -133,10 +128,10 @@ public class IGVMenuBar extends JMenuBar {
 
 		featureList = new JMenuItem("Show features");
 	// Checkboxes the contain the features that can be visualized
-		Genes = new JCheckBoxMenuItem("Genes");
+		genes = new JCheckBoxMenuItem("Genes");
 		mRNA = new JCheckBoxMenuItem("mRNA");
-		Exon = new JCheckBoxMenuItem("Exon");
-		Region = new JCheckBoxMenuItem("Region");
+		exon = new JCheckBoxMenuItem("Exon");
+		region = new JCheckBoxMenuItem("Region");
 		CDS = new JCheckBoxMenuItem("CDS");
 
 		featureList.addActionListener(new ActionListener() {
@@ -146,7 +141,7 @@ public class IGVMenuBar extends JMenuBar {
 			}
 		});
 	// add action listeners to the check boxes
-		Genes.addActionListener(new ActionListener() {
+		genes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				genesAction();
@@ -158,13 +153,13 @@ public class IGVMenuBar extends JMenuBar {
 				mrnaAction();
 			}
 		});
-		Region.addActionListener(new ActionListener() {
+		region.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				regionAction();
 			}
 		});
-		Exon.addActionListener(new ActionListener() {
+		exon.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				exonAction();
@@ -180,10 +175,10 @@ public class IGVMenuBar extends JMenuBar {
 	// add the checkboxes to the features menu
 
 		features.add(featureList);
-		features.add(Genes);
+		features.add(genes);
 		features.add(mRNA);
-		features.add(Exon);
-		features.add(Region);
+		features.add(exon);
+		features.add(region);
 		features.add(CDS);
 
 	// add the features menu to the menu bar
@@ -191,8 +186,8 @@ public class IGVMenuBar extends JMenuBar {
 
 	// create booleans that will be true if check box is selected and false if not selected
 		boolean m = mRNA.isSelected();
-		boolean e = Exon.isSelected();
-		boolean r = Region.isSelected();
+		boolean e = exon.isSelected();
+		boolean r = region.isSelected();
 		boolean c =CDS.isSelected();
 
 	}
@@ -207,15 +202,12 @@ public class IGVMenuBar extends JMenuBar {
 		}catch (Exception e){}
 	}
 	private void openDataAction() {
-
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
 			String path = fasta.fastafile();
 			cont.addGFF(path);
 
 		}catch (Exception e){}
-
-
 	}
 
 	/**
@@ -230,8 +222,10 @@ public class IGVMenuBar extends JMenuBar {
 		buttonBetween = new JRadioButton("Between");
 		ButtonGroup groupRadioButton = new ButtonGroup();
 		groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
+
 		// Label wordt aangemaakt.
 		final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
+
 		// Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
@@ -241,17 +235,22 @@ public class IGVMenuBar extends JMenuBar {
         formatter.setAllowsInvalid(true);
 		textField = new JFormattedTextField(formatter);
 		textField.setValue(100); // Strandaard lengte van het ORF.
+
 		// Save button wordt aangemaakt.
 		JButton saveButton = new JButton();
 		saveButton.setText("Save");
+
 		// Panel voor Radio Button, Label en Textfield wordt aangemaakt
 		JPanel panel = new JPanel(new GridLayout(2,2));
         panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+
 		// Panel voor de Button wordt aangemaakt.
         JPanel panelForButton = new JPanel();
         panelForButton.add(saveButton);
+
 		// Er wordt een Padding ingesteld.
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         // Er wordt een frame aangemaakt.
 		JFrame f = new JFrame();
 		f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
@@ -260,6 +259,7 @@ public class IGVMenuBar extends JMenuBar {
 		f.pack();
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);
+
 		// ActionListener voor de Save Button
         saveButton.addActionListener(new ActionListener() {
             @Override
@@ -317,7 +317,7 @@ public class IGVMenuBar extends JMenuBar {
 	// action performed for the choose Feature menu
 	// if check box is selected it will add the feature to a list that contains the features that should be visualized
 	private void genesAction() {
-		Boolean m = Genes.isSelected();
+		Boolean m = genes.isSelected();
 		if (m == true){
 			featureArray.add("Gene");
 		}else{
@@ -336,7 +336,7 @@ public class IGVMenuBar extends JMenuBar {
         tellContext();
 	}
 	private void regionAction() {
-		Boolean m = Region.isSelected();
+		Boolean m = region.isSelected();
 		if (m == true){
 			featureArray.add("Region");
 		}else{
@@ -345,7 +345,7 @@ public class IGVMenuBar extends JMenuBar {
         tellContext();
 	}
 	private void exonAction() {
-		Boolean m = Exon.isSelected();
+		Boolean m = exon.isSelected();
 		if (m == true){
 			featureArray.add("Exon");
 		}else{
@@ -374,7 +374,7 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	public void tellContext(){
-	    cont.setKeuze_gebruiker(this.featureArray);
+	    cont.setChoiceUser(this.featureArray);
     }
 
 	public void setContext(Context cont) {

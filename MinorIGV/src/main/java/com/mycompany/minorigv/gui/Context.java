@@ -39,7 +39,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private int start;
 	private int stop;
-	private ArrayList<String> keuze_gebruiker;
+	private ArrayList<String> choiceUser;
 	private HashMap<String,String> fastaMap = new HashMap<>();
 
 
@@ -92,7 +92,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	 */
 	public Context(){
         this.addPropertyChangeListener(this);
-        this.keuze_gebruiker = new ArrayList<String>();
+        this.choiceUser = new ArrayList<String>();
         this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
 	}
 
@@ -125,7 +125,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
-			//organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
 		}
 
 		setChromosomeNames(); //update chromosoom namen
@@ -136,7 +135,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	}
 	public ArrayList<String> getChoicesUser(){
-		return keuze_gebruiker;
+		return choiceUser;
 	}
 
 	/**
@@ -197,7 +196,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	private void updateCurrentFeatureList() {
 	    this.featStart = start;
 	    this.featStop = stop;
-	    ArrayList<Feature> featList = Chromosome.filterFeatures(curChromosome.getFeaturesBetween(featStart,featStop),this.keuze_gebruiker);
+	    ArrayList<Feature> featList = Chromosome.filterFeatures(curChromosome.getFeaturesBetween(featStart,featStop),this.choiceUser);
 		this.currentFeatureList = featList.toArray(new Feature[featList.size()]);
 
 		pcs.firePropertyChange("currentFeatureList",null,null);
@@ -266,7 +265,6 @@ public class Context implements Serializable, PropertyChangeListener {
         if (currentFeatureList == null || featStart != start || featStop != stop) {
             updateCurrentFeatureList();
         }
-		System.out.println(currentFeatureList);
         return this.currentFeatureList;
     }
 
@@ -279,8 +277,8 @@ public class Context implements Serializable, PropertyChangeListener {
 		return this.curChromosome.getFeatures();
 	}
 
-	public void setKeuze_gebruiker(ArrayList<String> keuzes){
-		this.keuze_gebruiker = keuzes;
+	public void setChoiceUser(ArrayList<String> choices){
+		this.choiceUser = choices;
 	}
 
 	public int getStart() {

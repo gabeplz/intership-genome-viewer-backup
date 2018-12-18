@@ -91,7 +91,7 @@ public class TranslationManager {
             line = fileReader.readLine();
 
             //huidige line bevat de alle namen van de tabel
-            String[] tabelNamen = line.substring(line.lastIndexOf("[")+1, line.lastIndexOf("]")).replaceAll("\"", "").split(",");
+            String[] tableNames = line.substring(line.lastIndexOf("[")+1, line.lastIndexOf("]")).replaceAll("\"", "").split(",");
             line = fileReader.readLine();
 
             //huidige line bevat het tabel id
@@ -109,7 +109,7 @@ public class TranslationManager {
             //huidige line bevat de sluitende brace
             line = fileReader.readLine();
 
-            CodonTable curTable = CodonTable.build(key, tabelNamen, BASE_SEQUENCES, aminoNormal, aminoStarts);
+            CodonTable curTable = CodonTable.build(key, tableNames, BASE_SEQUENCES, aminoNormal, aminoStarts);
             allCodonTables.put(curTable.getKey(), curTable);
         }
     }
@@ -137,10 +137,10 @@ public class TranslationManager {
      * 
      * @param direction de enum strand zort ervoor dat de sequentie word gebruikt zoal het is of gereversed word waneer enum NEGATIVE is
      * @param sequence string de een nucleotide sequentie voorsteld
-     * @param huidigeTabel object CodonTable
+     * @param curTable object CodonTable
      * @return string waar elk karakter een aminozuur voorsteld
      **/
-    public String getAminoAcids(Strand direction, String sequence, CodonTable huidigeTabel) {
+    public String getAminoAcids(Strand direction, String sequence, CodonTable curTable) {
         // sequentie moet deelbaar zijn door 3
         // het aanroepende programma is verandwoordelijk om een uitgelijnde sequentie mee te geven.
         int readLength = sequence.length()/3;
@@ -152,7 +152,7 @@ public class TranslationManager {
         
         for (int i = 0; i <= sequence.length() - 3; i += 3) {
             String codon = sequence.substring(i, i + 3).toUpperCase();
-            String aa = toAA(codon, huidigeTabel);
+            String aa = toAA(codon, curTable);
             acids.add(aa);
         }
 
