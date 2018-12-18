@@ -47,5 +47,20 @@ public class Exon extends Feature{
         this.attributes = attributes;
     }
 
+    @Override
+    public String getGFFName() {
+        return "exon";
+    }
+
+    @Override
+    public String getName() {
+        return "exon";
+    }
+
+    @Override
+    public String getClassName() {
+        return "Exon";
+    }
+
 
 }

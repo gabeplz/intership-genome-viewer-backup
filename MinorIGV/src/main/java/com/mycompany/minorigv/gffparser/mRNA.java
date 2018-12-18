@@ -47,4 +47,19 @@ public class mRNA extends Feature{
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;
     }
+
+    @Override
+    public String getGFFName() {
+        return "mRNA";
+    }
+
+    @Override
+    public String getName() {
+        return "mRNA";
+    }
+
+    @Override
+    public String getClassName() {
+        return "mRNA";
+    }
 }

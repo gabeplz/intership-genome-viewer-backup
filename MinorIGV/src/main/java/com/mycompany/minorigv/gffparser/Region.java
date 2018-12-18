@@ -48,5 +48,20 @@ public class Region extends Feature{
         this.attributes = attributes;
     }
 
+    @Override
+    public String getGFFName() {
+        return "region";
+    }
+
+    @Override
+    public String getName() {
+        return "region";
+    }
+
+    @Override
+    public String getClassName() {
+        return "Region";
+    }
+
 
 }

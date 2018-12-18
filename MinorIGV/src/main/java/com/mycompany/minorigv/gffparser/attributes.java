@@ -10,7 +10,7 @@ import java.util.Map;
  *  @author Anne van Ewijk en Amber Janssen Groesbeek
  */
 public class attributes {
-    Map<String, Object> attribute = new HashMap<String, Object>();
+
 
     /**
      * De kolom 8 (attributen) wordt gesplit waarna de informatie wordt opgeslagen in een hashmap.
@@ -19,7 +19,8 @@ public class attributes {
      * @param attr     Kolom 8 uit de ingeladen bestanden die informatie van element bevat.
      * @return         Er wordt een hashmap gereturned verdere informatie over het element.
      */
-    public HashMap splitAtt(String attr){
+    public static HashMap splitAtt(String attr){
+        Map<String, Object> attribute = new HashMap<String, Object>();
         // Alle informatie in kolom 8 is gescheiden doormiddel van ;.
         String[] subAttr = attr.split(";");
 

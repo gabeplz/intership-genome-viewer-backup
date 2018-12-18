@@ -47,5 +47,20 @@ public class CDS extends Feature{
         this.attributes = attributes;
     }
 
+    @Override
+    public String getGFFName() {
+        return "CDS";
+    }
+
+    @Override
+    public String getName() {
+        return "Coding sequence";
+    }
+
+    @Override
+    public String getClassName() {
+        return "CDS";
+    }
+
 
 }

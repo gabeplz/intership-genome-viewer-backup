@@ -10,7 +10,7 @@ import com.mycompany.minorigv.sequence.Strand;
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
-public class Feature implements MappableFeature {
+public abstract class Feature implements MappableFeature {
     private String id;
     private String start;
     private String stop;
@@ -162,4 +162,23 @@ public class Feature implements MappableFeature {
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;
     }
+
+    /**
+     * hulp functie voor het geven van de manier hoe het in de GFF files staat.
+     * @return een String met de weergave in de GFF file.
+     */
+    public abstract String getGFFName();
+
+    /**
+     * Hulp functie voor het geven van de Nederlandse Naam.
+     * @return een String met de leesbare naam.
+     */
+    public abstract String getName();
+
+    /**
+     * Functie voor het retourneren van de className.
+     * @return een String met de class name want reflectie is beetje hackish.
+     */
+    public abstract String getClassName();
+
 }

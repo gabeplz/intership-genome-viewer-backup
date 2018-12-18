@@ -48,4 +48,19 @@ private HashMap attributes;
         this.attributes = attributes;
     }
 
+    @Override
+    public String getGFFName() {
+        return "gene";
+    }
+
+    @Override
+    public String getName() {
+        return "gene";
+    }
+
+    @Override
+    public String getClassName() {
+        return "Gene";
+    }
+
 }

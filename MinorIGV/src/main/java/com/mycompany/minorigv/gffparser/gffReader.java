@@ -23,9 +23,9 @@ public class gffReader {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String> allContigs = new ArrayList<String>();
         
-        String line = null;
+        String line;
         String ID = null;
-        String ID_organism = null;
+        String ID_organism;
         
         if (org == null) {
         	org = new Organisms();
@@ -56,25 +56,10 @@ public class gffReader {
                 String[] columns = line.split("\\t");
 
                 // Class waarin de kolom met attributen wordt verwerkt.
-                attributes att = new attributes();
-                Feature feat = null;
+                String featName = line.split("\\t")[2];
+                Feature feat = FeatureFactory.makeFeature(featName,columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], columns[8]);
                 // Als er in de regel in kolom 3 gene, mRNA, exon, CDS of region staat, bevat de regel relevante data dat wordt opgeslagen.
-                if (line.split("\\t")[2].equals("gene")) {
-                    HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new Gene(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("mRNA")) {
-                    HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new mRNA(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("exon")) {
-                    HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new Exon(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("CDS")) {
-                    HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new CDS(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                } else if (line.split("\\t")[2].equals("region")) {
-                    HashMap attribute = att.splitAtt(columns[8]);
-                    feat = new Region(columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], attribute);
-                }
+
                 chrom.addFeature(feat);
             }
         }
