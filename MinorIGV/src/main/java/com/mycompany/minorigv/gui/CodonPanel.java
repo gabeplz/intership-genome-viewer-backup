@@ -329,15 +329,18 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
         g.fillRect(xPosLeft,10,xPosRight-xPosLeft,3*20);
 
 	    ArrayList<ORF> listORF = getORFs(strand);
-	    for(ORF o : listORF){
-	        // Linker positie in pixel van het ORF (geel)
-	        xPosLeft = (int) DrawingTools.calculateLetterPosition(panelWidth, length,o.getStart()-start);
-	        // Rechter positie in pixel van het ORF (geel).
-	        xPosRight = (int) DrawingTools.calculateLetterPosition(panelWidth, length, o.getStop()-start);
-	        int height = calcHeight(strand, o.getReadingframe());
-            g.setColor(new Color(255, 255, 0));
-	        g.fillRect(xPosLeft, height, xPosRight-xPosLeft, 20);
-	        g.setColor(Color.BLACK);
+	    if(listORF != null){
+            for(ORF o : listORF){
+                // Linker positie in pixel van het ORF (geel)
+                xPosLeft = (int) DrawingTools.calculateLetterPosition(panelWidth, length,o.getStart()-start);
+                // Rechter positie in pixel van het ORF (geel).
+                xPosRight = (int) DrawingTools.calculateLetterPosition(panelWidth, length, o.getStop()-start);
+                int height = calcHeight(strand, o.getReadingframe());
+                g.setColor(new Color(255, 255, 0));
+                g.fillRect(xPosLeft, height, xPosRight-xPosLeft, 20);
+                g.setColor(Color.BLACK);
+            }
         }
+
     }
 }

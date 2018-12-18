@@ -4,7 +4,10 @@ package com.mycompany.minorigv.gui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
@@ -436,6 +439,23 @@ public class Context implements Serializable, PropertyChangeListener {
 	//Wanneer je alle ORFs wilt hebben (voor bijv. wegschrijven)
 	public ArrayList<ORF> getCurORFListALL(){
 		return curChromosome.getListORF();
+	}
+
+	/**
+	 * Wegschrijven ORFs in fasta bestand.
+	 * @param curORFList
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	public void saveORFs(ArrayList<ORF> curORFList) throws FileNotFoundException, UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+
+		for(ORF o: curORFList){
+			writer.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop() + "|strand: " + o.getStrand());
+			String subSeq = curChromosome.getSeqTemp().substring(o.getStart(), o.getStop());
+			writer.println(subSeq);
+		}
+		writer.close();
 	}
 
 }

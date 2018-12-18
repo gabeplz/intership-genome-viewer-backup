@@ -61,17 +61,13 @@ public class TranslationManager {
                 TranslationManager newInstance = new TranslationManager();
                 newInstance.loadCodonTabels(DEFAULT_CODON_TABLE_PATH);
                 instance = newInstance;
-                System.out.println("new made");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
-      System.out.println("existing send");
-      return instance;
+        return instance;
     }
 
 

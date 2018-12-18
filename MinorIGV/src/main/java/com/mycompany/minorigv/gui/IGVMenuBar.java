@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -208,7 +210,6 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 	private void SaveorfAction() {
-		System.out.println("hoi");
 		buttonAll = new JRadioButton("All",true);
 		buttonBetween = new JRadioButton("Between");
 		ButtonGroup groupRadioButton = new ButtonGroup();
@@ -242,29 +243,32 @@ public class IGVMenuBar extends JMenuBar {
 
 		f.pack();
 		f.setLocationRelativeTo(null);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveButtonAction();
-            }
+				try {
+					saveButtonAction();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+			}
         });
 	}
 
-    private void saveButtonAction() {
-        int lengthORFUser = (int) Integer.parseInt(textField.getValue().toString());
+    private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException {
+        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
 
         cont.setCurORFListALL(lengthORFUser);
 
         Boolean m = buttonAll.isSelected();
         if(m == true){
-            System.out.println("ALL");
-            cont.getCurORFListALL();
+            cont.saveORFs(cont.getCurORFListALL());
         }else{
-            System.out.println("BETWEEN");
-            cont.getCurORFListBetween();
+            cont.saveORFs(cont.getCurORFListBetween());
         }
     }
 
