@@ -56,8 +56,17 @@ public class gffReader {
                 String[] columns = line.split("\\t");
 
                 // Class waarin de kolom met attributen wordt verwerkt.
-                String featName = line.split("\\t")[2];
-                Feature feat = FeatureFactory.makeFeature(featName,columns[1], columns[3], columns[4], columns[5], columns[6], columns[7], columns[8]);
+
+                String featType     = line.split("\\t")[2];
+                String seqID        = columns[1];
+                String start        = columns[3];
+                String end          = columns[4];
+                String score        = columns[5];
+                String strand       = columns[6];
+                String phase        = columns[7];
+                HashMap attributen  = attributes.splitAtt(columns[8]);
+
+                Feature feat = FeatureFactory.makeFeature(featType, seqID, start, end, score, strand, phase, attributen);
                 // Als er in de regel in kolom 3 gene, mRNA, exon, CDS of region staat, bevat de regel relevante data dat wordt opgeslagen.
 
                 chrom.addFeature(feat);

@@ -18,25 +18,23 @@ public class FeatureFactory {
      * @param attributen de Attributen als String die nog geparsed gaan worden in de factory.
      * @return een Feature Object corresponderend met featType.
      */
-    public static Feature makeFeature(String featType, String seqID, String start, String end, String score, String strand, String phase, String attributen) {
-
-        HashMap<String, Object> attributesHashMap = attributes.splitAtt(attributen);
+    public static Feature makeFeature(String featType, String seqID, String start, String end, String score, String strand, String phase, HashMap attributen) {
 
         switch (featType) {
             case "gene":
-                return new Gene(seqID, start, end, score, strand, phase, attributesHashMap);
+                return new Gene(seqID, start, end, score, strand, phase, attributen);
 
             case "mRNA":
-                return new mRNA(seqID, start, end, score, strand, phase, attributesHashMap);
+                return new mRNA(seqID, start, end, score, strand, phase, attributen);
 
             case "exon":
-                return new Exon(seqID, start, end, score, strand, phase, attributesHashMap);
+                return new Exon(seqID, start, end, score, strand, phase, attributen);
 
             case "CDS":
-                return new CDS(seqID, start, end, score, strand, phase, attributesHashMap);
+                return new CDS(seqID, start, end, score, strand, phase, attributen);
 
             case "region":
-                return new Region(seqID, start, end, score, strand, phase, attributesHashMap);
+                return new Region(seqID, start, end, score, strand, phase, attributen);
 
         }
 
