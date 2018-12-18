@@ -17,8 +17,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.swing.*;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -33,10 +31,10 @@ public class IGVMenuBar extends JMenuBar {
 
 	private Context cont;
 	// Define all the items for the menu bar that will have sub items
-	JMenu Files, Tools, features;
+	JMenu files, tools, features;
 
 	// Define all the sub items for the menu bar that will not have their own sub items in the menu
-	JMenuItem  Open_ref,Open_data, Save_orf, Find_orf, Blast,Genes, mRNA ,Exon, Region, CDS;
+	JMenuItem openRef, openData, saveORF, findORF, blast,Genes, mRNA ,Exon, Region, CDS, featureList;
 
 	// List containing the features that the user wants to have visualized
 	ArrayList<String> featureArray = new ArrayList<String>();
@@ -45,84 +43,91 @@ public class IGVMenuBar extends JMenuBar {
     JFormattedTextField textField;
 
 	/**
-	 * init
+	 * Initialize the de different menu items.
 	 */
 	public void init() {
 		this.setPreferredSize(new Dimension(200, 25));
 		this.setMinimumSize(new Dimension(100, 25));
-		Menus();
+		menus();
 		featureMenu();
         condonTableMenu();
 	}
 
 	/**
-	 * function creating the first 2 menus on the menu bar "Files" and "Tools"
+	 * function creating the first 2 menus on the menu bar "files" and "tools"
 	 */
-	public void Menus(){
+	public void menus(){
 	//first menu item "File"
-		Files = new JMenu("Files");
+		files = new JMenu("files");
 
 	//sub items for menu item 1 "File"
-		Open_ref = new JMenuItem("Load reference");
-		Open_data = new JMenuItem("Load GFF");
+		openRef = new JMenuItem("Load reference");
+		openData = new JMenuItem("Load Data");
+		saveORF = new JMenuItem("Save ORF's");
 
 	//action listeners for the sub item of File
-		Open_ref.addActionListener(new ActionListener() {
+		openRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadReferenceAction();
 			}
 		});
-		Open_data.addActionListener(new ActionListener() {
+		openData.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				OpenDataAction();
+				openDataAction();
 			}
 		});
-
+		saveORF.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveOrfAction();
+			}
+		});
 
 	//add the sub items to "File"
-		Files.add(Open_ref);
-		Files.add(Open_data);
+		files.add(openRef);
+		files.add(openData);
+		files.add(saveORF);
 
-	//add the Files to the menu bar
-		add(Files);
+	//add the files to the menu bar
+		add(files);
 
-	//second menu item "Tools"
-		Tools = new JMenu("ORF");
+	//second menu item "tools"
+		tools = new JMenu("tools");
 
-	//sub items for menu itm 2 "Tools"
-		Find_orf = new JMenuItem("Find ORF");
-        Save_orf = new JMenuItem("Save ORF's");
-		Blast = new JMenuItem("Blast");
+	//sub items for menu itm 2 "tools"
+		findORF = new JMenuItem("Find ORF");
+		blast = new JMenuItem("blast");
+		featureList = new JMenuItem("Show features");
 
-	//action listeners for the sub item of Tools
-		Find_orf.addActionListener(new ActionListener() {
+	//action listeners for the sub item of tools
+		findORF.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FindorfAction();
+				findOrfAction();
 			}
 		});
-        Save_orf.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SaveorfAction();
-            }
-        });
-		Blast.addActionListener(new ActionListener() {
+		blast.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BlastAction();
+				blastAction();
+			}
+		});
+		featureList.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				featureListAction();
 			}
 		});
 
-	//add the sub items to "Tools"
-		Tools.add(Find_orf);
-		Tools.add(Save_orf);
-		Tools.add(Blast);
+	//add the sub items to "tools"
+		tools.add(findORF);
+		tools.add(blast);
+		tools.add(featureList);
 
-	//add Tools to the menu bar
-		add(Tools);
+	//add tools to the menu bar
+		add(tools);
 	}
 
 	/**
@@ -189,7 +194,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 
-	// action performed for Files and Tools
+	// action performed for files and tools
 	private void loadReferenceAction() {
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
@@ -198,7 +203,7 @@ public class IGVMenuBar extends JMenuBar {
 
 		}catch (Exception e){}
 	}
-	private void OpenDataAction() {
+	private void openDataAction() {
 
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
@@ -216,7 +221,7 @@ public class IGVMenuBar extends JMenuBar {
 	 * In het Textfield kan de lengte ingevoerd worden die het ORF minimaal moet hebben in nucleotide.
 	 * Bij de RadioButton kan er gekozen worden of gezocht wordt over het hele sequentie of tussen een bepaalde start en stop.
 	 */
-	private void SaveorfAction() {
+	private void saveOrfAction() {
 		// Radio Button wordt aangemaakt.
 		buttonAll = new JRadioButton("All",true);
 		buttonBetween = new JRadioButton("Between");
@@ -292,14 +297,17 @@ public class IGVMenuBar extends JMenuBar {
 	 * Wanneer er op de button Find ORF gedrukt wordt, komt er een pop-up waarin de lengte van het ORF ingevuld kan worden (nt).
 	 * Vervolgens worden de ORFs gezocht en gevisualiseerd.
 	 */
-    private void FindorfAction() {
+    private void findOrfAction() {
 		int lenghtORF = Integer.parseInt(JOptionPane.showInputDialog("Length ORF (nt)"));
 		cont.setCurORFListALL(lenghtORF);
 	}
 
-	private void BlastAction() {
+	private void blastAction() {
+
 
 	}
+        private void featureListAction() {
+            PopUpFrame popup = new PopUpFrame(cont);}
 
 	// action performed for the choose Feature menu
 	// if check box is selected it will add the feature to a list that contains the features that should be visualized
@@ -354,7 +362,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	/**
 	 *
-	 * @return
+	 * @return Arraylist<Strings> bevat geslecteerde features.
 	 */
 	public ArrayList<String> getFeatureArray() {
 		return featureArray;

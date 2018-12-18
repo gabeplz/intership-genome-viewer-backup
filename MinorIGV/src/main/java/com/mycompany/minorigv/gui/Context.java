@@ -266,6 +266,7 @@ public class Context implements Serializable, PropertyChangeListener {
         if (currentFeatureList == null || featStart != start || featStop != stop) {
             updateCurrentFeatureList();
         }
+		System.out.println(currentFeatureList);
         return this.currentFeatureList;
     }
 
