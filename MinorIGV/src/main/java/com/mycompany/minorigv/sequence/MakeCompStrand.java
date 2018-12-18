@@ -24,7 +24,7 @@
  */
 package com.mycompany.minorigv.sequence;
 
-public class makeCompStrand {
+public class MakeCompStrand {
 
    /**
     * creates a reverse complemantary strand van nucleotides. de volgorde van de nucleotide word bepaald door de volgorde

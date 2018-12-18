@@ -4,14 +4,17 @@ package com.mycompany.minorigv.gui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
-import com.mycompany.minorigv.gffparser.gffReader;
+import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
@@ -37,6 +40,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	private int start;
 	private int stop;
 	private ArrayList<String> keuze_gebruiker;
+	private HashMap<String,String> fastaMap = new HashMap<>();
 
 
 	private final int DEFAULT_START = 0;
@@ -91,61 +95,6 @@ public class Context implements Serializable, PropertyChangeListener {
         this.keuze_gebruiker = new ArrayList<String>();
         this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
 	}
-	
-	public Context(String test, String tes1) throws Exception {
-		ArrayList<Chromosome> testList;
-		testList = new ArrayList<Chromosome>();
-
-		String seq = "ATCgatcGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG";
-
-		Organisms org = new Organisms("piet");
-		org.addSequence("jan",seq);
-		this.organism = org;
-		try {
-			this.curChromosome = organism.getChromosome("jan");
-		}catch (Exception e){
-			System.out.println("oeps");
-		}
-
-		start = 0;
-		stop = 100;
-
-
-	}
-
-	public Context(String test) throws Exception {
-		//// ----- information user ----- ////
-		start = 7000;
-		stop = 7800;
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		String path_gff = classLoader.getResource("voorbeeldgff.gff").getFile();
-		String path_fasta = classLoader.getResource("GCF_000146045.2_R64_genomic.fna").getFile();
-
-	    organism = new Organisms();
-		organism = gffReader.readData(organism,path_gff);
-
-		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path_fasta);
-
-		for(String id : fastaMap.keySet()){
-			organism.addSequence(id,fastaMap.get(id));
-			organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
-		}
-
-		String chromosoom_id = "NC_001134.8";
-		this.keuze_gebruiker = new ArrayList<String>(){{add("Gene"); add("mRNA");}};
-
-		try {
-			curChromosome = organism.getChromosome(chromosoom_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ArrayList<Feature> featureList = curChromosome.getFeaturesBetween(start,stop);
-		//this.currentFeatureList = curChromosome.filterFeatures(featureList, keuze_gebruiker);
-
-		//// ----- information user ----- ////
-
-
-	}
 
 
 	public void addFasta(String path) throws Exception{
@@ -171,12 +120,12 @@ public class Context implements Serializable, PropertyChangeListener {
 			//voor volledigheid
 		}
 
-		HashMap<String,String> fastaMap = FastaFileReader.getSequences(path);
+		fastaMap = FastaFileReader.getSequences(path);
 
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
-			organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
+			//organism.getChromosome(id).setListORF(); //TODO laat dit de keuze zijn van de gebruiker.
 		}
 
 		setChromosomeNames(); //update chromosoom namen
@@ -218,7 +167,7 @@ public class Context implements Serializable, PropertyChangeListener {
 			//voor volledigheid
 		}
 
-		gffReader.readData(organism, path);
+		GffReader.readData(organism, path);
 		setChromosomeNames();
 		this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
 		this.updateCurrentFeatureList(); //resetten featureList
@@ -341,10 +290,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		return stop;
 	}
 
-	//Wanneer je alle ORFs wilt hebben (voor bijv. wegschrijven)
-	public ArrayList<ORF> getCurORFListALL(){
-		return curChromosome.getListORF();
-	}
+
 	public void setOrganism(Organisms organism) {
 		Organisms oldValue = this.organism;
 		this.organism = organism;
@@ -436,8 +382,47 @@ public class Context implements Serializable, PropertyChangeListener {
 		return curChromosome.getSeqTemp();
 	}
 
+	/**
+	 *
+	 * @return een ArrayList met ORFs tussen een bepaalde start en stop.
+	 */
     public ArrayList<ORF> getCurORFListBetween() {
         return curChromosome.getORFsBetween(start, stop);
+	}
+
+	/**
+	 * Zoekt naar alle ORFs die liggen op het chromosoom/contig met minimaal een bepaalde lengte die is ingevoerd door de gebruiker.
+	 * @param lenghtORF		de lengte die het ORF minimaal mag hebben, ingevoerd door de gebruiker.
+	 */
+	public void setCurORFListALL(int lenghtORF){
+		curChromosome.setListORF(lenghtORF);
+	}
+
+	/**
+	 *
+	 * @return een ArrayList met ORFs van het hele chromosoom/contig.
+	 */
+	public ArrayList<ORF> getCurORFListALL(){
+		return curChromosome.getListORF();
+	}
+
+	/**
+	 * Wegschrijven ORFs in fasta bestand.
+	 * @param curORFList
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	public void saveORFs(ArrayList<ORF> curORFList) throws FileNotFoundException, UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+
+		for(ORF o: curORFList){
+			// Header
+			writer.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop() + "|strand: " + o.getStrand());
+			// Sequentie in nt.
+			String subSeq = curChromosome.getSeqTemp().substring(o.getStart(), o.getStop());
+			writer.println(subSeq);
+		}
+		writer.close();
 	}
 
 }

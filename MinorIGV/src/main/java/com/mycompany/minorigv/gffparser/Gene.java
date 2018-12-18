@@ -17,7 +17,7 @@ private HashMap attributes;
      * Het opslaan van alle informatie van het gen in een object.
      * Contstructor.
      *
-     * @param seqid       Het ID van het contig/chromosoom waarin het gen aanwezig is.
+     * @param seqID       Het ID van het contig/chromosoom waarin het gen aanwezig is.
      * @param start       Start positie van het gen op het chromosoom/contig
      * @param end         Stop positie van het gen op het chromosoom/contig
      * @param score       Score van het gen
@@ -25,8 +25,8 @@ private HashMap attributes;
      * @param phase       Het geeft het reading frame aan waarin het gen voorkomt (0,1,2 of ".")
      * @param attributes  HashMap met daarin de informatie over het gen.
      */
-    Gene(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqid, start, end, score, strand, phase, attributes);
+    Gene(String seqID, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        super(seqID, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 

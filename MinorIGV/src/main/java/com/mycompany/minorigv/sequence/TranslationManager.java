@@ -26,9 +26,6 @@ package com.mycompany.minorigv.sequence;
 
 
 
-import com.mycompany.minorigv.gui.CodonPanel;
-import com.mycompany.minorigv.gui.Context;
-
 import java.util.*;
 import java.io.*;
 
@@ -150,7 +147,7 @@ public class TranslationManager {
         List<String> acids = new ArrayList<String>(readLength);
         
         if (direction == Strand.NEGATIVE) {
-            sequence = makeCompStrand.getReverseComplement(sequence);
+            sequence = MakeCompStrand.getReverseComplement(sequence);
         }
         
         for (int i = 0; i <= sequence.length() - 3; i += 3) {

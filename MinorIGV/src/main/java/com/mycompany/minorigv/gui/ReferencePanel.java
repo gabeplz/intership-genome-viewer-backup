@@ -8,7 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
 
-import com.mycompany.minorigv.sequence.makeCompStrand;
+import com.mycompany.minorigv.sequence.MakeCompStrand;
 
 /**
  * ReferencePanel draws the nucleotides of the forward en reverse strand.
@@ -63,7 +63,7 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
         Dimension dim = this.getSize();       // grootte dit Paneel.
         int length = cont.getLength();        // lengte subsequentie.
 
-        String revComp = makeCompStrand.getReverseComplement(seq);  //Reverse Complement van de sub sequentie.
+        String revComp = MakeCompStrand.getReverseComplement(seq);  //Reverse Complement van de sub sequentie.
 
         int real_width = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), length);  //bepaal de toegewezen breedte per pixel.
 
@@ -105,7 +105,7 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
         Dimension dim = this.getSize();       // grootte dit Paneel
         int length = cont.getLength();        // lengte subsequentie
 
-        String revComp = makeCompStrand.getReverseComplement(seq);  //reverse complement.
+        String revComp = MakeCompStrand.getReverseComplement(seq);  //reverse complement.
 		for(int i = 0; i < length; i++  ) {
 			int j = length-i-1;  //rechts naar links (reverse)
 

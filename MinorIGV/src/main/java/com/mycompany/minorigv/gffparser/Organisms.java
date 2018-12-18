@@ -21,7 +21,6 @@ public class Organisms {
      */
     public Organisms(String id, ArrayList<Chromosome> chromosomes) {
         this.id = id;
-        //this.chromosomes = chromosomes;
     }
 
     /**
@@ -80,15 +79,15 @@ public class Organisms {
     /**
      * Voegt de sequentie van het chromosoom toe aan het chromosoom.
      * @param id    id van het chromosoom die de gebruiker heeft uitgekozen.
-     * @param Seq   de sequentie van het chromosoom.
+     * @param seq   de sequentie van het chromosoom.
      */
-    public void addSequence(String id, String Seq){
+    public void addSequence(String id, String seq){
 
         if(chromosomes.containsKey(id)){
-            chromosomes.get(id).setSeqTemp(Seq);
+            chromosomes.get(id).setSeqTemp(seq);
         }else {
             Chromosome chr = new Chromosome();
-            chr.setSeqTemp(Seq);
+            chr.setSeqTemp(seq);
             chr.setId(id);
             chromosomes.put(id,chr);
         }
