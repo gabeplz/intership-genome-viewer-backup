@@ -31,8 +31,8 @@ import java.util.Set;
 
 /**
  * @author jrobinso, Stan Wehkamp
- * bevat constructor voor codontable
- * bevat method "build" om arguments te genereren voor de constuctor
+ * Bevat constructor voor codontable.
+ * Bevat method "build" om arguments te genereren voor de constuctor.
  */
 public class CodonTable {
 	private Integer key;
@@ -41,8 +41,8 @@ public class CodonTable {
 	private Map<String, String> codonMap;
 
 	/**
-	 * constructor voor CodonTable
-	 * @param key key functioneert als id for the tabel and als key voor de hashmap die de CodonTable objecten gaat bevatten
+	 * Constructor voor CodonTable
+	 * @param key key functioneert als id voor de tabel and als key voor de hashmap die de CodonTable objecten gaat bevatten
 	 * @param names array voor de namen van de codontabel
 	 * @param starts set voor de alternative start aminozuren
 	 * @param codonMap Map met een 3 letterige codons als key en een een letterige afkorting voor een aminozuur als value
@@ -54,14 +54,14 @@ public class CodonTable {
 		this.codonMap = codonMap;        
 	}
 	
-        /**
-	 * genereerd de argumenten codonMap en Starts voor de CodonTable constructor en returnt een new CodonTable
-	 * @param key functioneerd als id voor the table and als key voor de hasmap die de CodonTable objecten gaat bevatten 
+	 /**
+	 * Genereerd de argumenten codonMap en Starts voor de CodonTable constructor die een nieuwe CodonTable terug geeft.
+	 * @param key functioneerd als id voor de table en als key voor de hasmap die de CodonTable objecten gaat bevatten
 	 * @param names array voor de namen van de codontabel
 	 * @param base arrays met nucleotides om elke codon combinatie te maken
 	 * @param aas string van aminozuren
 	 * @param startString alternative start aminozuren
-	 * @return call naar codontable contstructor (new CodonTable). als het object gemaakt word returnd het de nieuwe CodonTable
+	 * @return een aanroep naar de codontable constructor (new CodonTable). als het object gemaakt word geeft het de nieuwe CodonTable terug
 	 **/
 	public static CodonTable build(Integer key, String[] names, String[] base, String aas, String startString) {
 
@@ -87,59 +87,32 @@ public class CodonTable {
 	}
 
 	/**
-	 * @return de key
+	 * @return de Integer key
 	 */
 	public Integer getKey() {
 		return key;
 	}
 
 	/**
-	 * @param key de key om setten
-	 */
-	public void setKey(Integer key) {
-		this.key = key;
-	}
-
-	/**
-	 * @return String array names
+	 * @return de String array names
 	 */
 	public String[] getNames() {
 		return names;
 	}
 
 	/**
-	 * @param names the names to set
-	 */
-	public void setNames(String[] names) {
-		this.names = names;
-	}
-
-	/**
-	 * @return the starts
+	 * @return de Set<String> starts
 	 */
 	public Set<String> getStarts() {
 		return starts;
 	}
 
 	/**
-	 * @param starts de starts om setten
-	 */
-	public void setStarts(Set<String> starts) {
-		this.starts = starts;
-	}
-
-	/**
-	 * @return de Map codonMap
+	 * @return de Map<String, String> codonMap
 	 */
 	public Map<String, String> getCodonMap() {
 		return codonMap;
 	}
 
-	/**
-	 * @param codonMap de codonMap to settten
-	 */
-	public void setCodonMap(Map<String, String> codonMap) {
-		this.codonMap = codonMap;
-	}
 }
 
