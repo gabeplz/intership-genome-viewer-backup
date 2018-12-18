@@ -324,9 +324,9 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * Functie voor het krijgen van alle Features van het huidige chromosoom.
 	 * @return een array met alle huidige features.
 	 */
-	public Feature[] getWholeFeatureList() {
+	public ArrayList<Feature> getWholeFeatureList() {
 
-		this.curChromosome.getFeatures();
+		return this.curChromosome.getFeatures();
 	}
 
 	public void setKeuze_gebruiker(ArrayList<String> keuzes){
