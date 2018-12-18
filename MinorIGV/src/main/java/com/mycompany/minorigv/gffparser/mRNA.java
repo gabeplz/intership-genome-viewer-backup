@@ -17,6 +17,7 @@ public class mRNA extends Feature{
      * Constructor.
      *
      * @param seqID         Het ID van het contig/chromosoom waarin het mRNA aanwezig is.
+     * @param theType       Het type zoals vermeld in het bestand.
      * @param start         Start positie van het mRNA op het chromosoom/contig
      * @param end           Stop positie van het mRNA op het chromosoom/contig
      * @param score         Score van het mRNA
@@ -24,8 +25,8 @@ public class mRNA extends Feature{
      * @param phase         Het geeft het reading frame aan waarin het mRNA voorkomt (0,1,2 of ".")
      * @param attributes    HashMap met daarin de informatie over het mRNA.
      */
-    mRNA(String seqID, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqID, start, end, score, strand, phase, attributes);
+    mRNA(String seqID,String theType, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        super(seqID,theType, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 
@@ -46,5 +47,15 @@ public class mRNA extends Feature{
      */
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;
+    }
+
+    @Override
+    public String getName() {
+        return "mRNA";
+    }
+
+    @Override
+    public String getClassName() {
+        return "mRNA";
     }
 }

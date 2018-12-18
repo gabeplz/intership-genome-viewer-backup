@@ -12,6 +12,7 @@ import com.mycompany.minorigv.sequence.Strand;
  */
 public class Feature implements MappableFeature {
     private String id;
+    private String theType;
     private String start;
     private String stop;
     private String score;
@@ -22,14 +23,16 @@ public class Feature implements MappableFeature {
     /**
      * De constructor.
      * @param seqID     Het ID van het contig/chromosoom waarin de feature aanwezig is.
+     * @param theType   Het type zoals vermeld in het bestand.
      * @param start     Start positie van de feature op het chromosoom/contig
      * @param end       Stop positie van de feature op het chromosoom/contig
      * @param score     De score van de feature.
      * @param strand    Of de feature aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase     Het geeft het readingframe aan waarin het feature voorkomt (0,1,2).
      */
-    Feature(String seqID, String start, String end, String score, String strand, String phase, HashMap attributes) {
+    Feature(String seqID, String theType, String start, String end, String score, String strand, String phase, HashMap attributes) {
         this.id = seqID;
+        this.theType = theType;
         this.start = start;
         this.stop = end;
         this.score = score;
@@ -162,4 +165,29 @@ public class Feature implements MappableFeature {
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;
     }
+
+    /**
+     * hulp functie voor het geven van de manier hoe het in de GFF files staat.
+     * @return een String met de weergave in de GFF file.
+     */
+    public String getGFFName(){
+        return this.theType;
+    }
+
+    /**
+     * Hulp functie voor het geven van de Nederlandse Naam.
+     * @return een String met de leesbare naam.
+     */
+    public String getName(){
+        return this.theType;
+    }
+
+    /**
+     * Functie voor het retourneren van de className.
+     * @return een String met de class name want reflectie is beetje hackish.
+     */
+    public String getClassName(){
+        return "Feature";
+    }
+
 }
