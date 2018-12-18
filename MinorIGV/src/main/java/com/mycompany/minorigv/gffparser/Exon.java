@@ -16,6 +16,7 @@ public class Exon extends Feature{
      * Contstructor.
      *
      * @param seqid         Het ID van het contig/chromosoom waarin het exon aanwezig is.
+     * @param theType       Het type zoals vermeld in het bestand.
      * @param start         Start positie van het exon op het chromosoom/contig
      * @param end           Stop positie van het exon op het chromosoom/contig
      * @param score         Score van het exon
@@ -23,8 +24,8 @@ public class Exon extends Feature{
      * @param phase         Het geeft het reading frame aan waarin het Exon voorkomt (0,1,2 of ".")
      * @param attributes    HashMap met daarin de informatie over het exon.
      */
-    Exon(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqid, start, end, score, strand, phase, attributes);
+    Exon(String seqid,String theType, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        super(seqid, theType, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 
@@ -45,11 +46,6 @@ public class Exon extends Feature{
      */
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;
-    }
-
-    @Override
-    public String getGFFName() {
-        return "exon";
     }
 
     @Override

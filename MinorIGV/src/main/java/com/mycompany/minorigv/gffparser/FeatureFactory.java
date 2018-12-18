@@ -22,22 +22,22 @@ public class FeatureFactory {
 
         switch (featType) {
             case "gene":
-                return new Gene(seqID, start, end, score, strand, phase, attributen);
+                return new Gene(seqID,featType, start, end, score, strand, phase, attributen);
 
             case "mRNA":
-                return new mRNA(seqID, start, end, score, strand, phase, attributen);
+                return new mRNA(seqID,featType, start, end, score, strand, phase, attributen);
 
             case "exon":
-                return new Exon(seqID, start, end, score, strand, phase, attributen);
+                return new Exon(seqID,featType, start, end, score, strand, phase, attributen);
 
             case "CDS":
-                return new CDS(seqID, start, end, score, strand, phase, attributen);
+                return new CDS(seqID,featType, start, end, score, strand, phase, attributen);
 
             case "region":
-                return new Region(seqID, start, end, score, strand, phase, attributen);
+                return new Region(seqID,featType, start, end, score, strand, phase, attributen);
 
         }
 
-        return null;
+        return new Feature(seqID,featType, start, end, score, strand, phase, attributen); //Generiekste Feature mogelijk.
     }
 }
