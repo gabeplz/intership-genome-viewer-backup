@@ -30,7 +30,7 @@ public class IGVMenuBar extends JMenuBar {
 	ArrayList<String> featureArray = new ArrayList<String>();
 
 	/**
-	 * init
+	 * Initialize the de different menu items.
 	 */
 	public void init() {
 		this.setPreferredSize(new Dimension(200, 25));
@@ -268,7 +268,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	/**
 	 *
-	 * @return
+	 * @return Arraylist<Strings> bevat geslecteerde features.
 	 */
 	public ArrayList<String> getFeatureArray() {
 		return featureArray;

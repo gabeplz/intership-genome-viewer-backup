@@ -1,8 +1,6 @@
 package com.mycompany.minorigv.gui;
 
-import com.mycompany.minorigv.gffparser.Chromosome;
-import com.mycompany.minorigv.gffparser.Feature;
-import com.mycompany.minorigv.gffparser.Organisms;
+import com.mycompany.minorigv.gffparser.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,7 +11,7 @@ public class PopUpFrame extends JFrame {
     Context cont;
 
     /**
-     *
+     * PopUpFrame construeerd een JavaFrame als pop up wanneer er om de get featueres button word geklikt. Het frame bevat alle features die de gebruiker will zien in een tabel
      * @param cont
      */
     public PopUpFrame(Context cont) {
@@ -25,23 +23,44 @@ public class PopUpFrame extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        Feature[] featureFilteredList = cont.getCurrentFeatureList();
+        //Arraylist die alle features van eht chromosome bevat
+        ArrayList<Feature> featureFilteredList = cont.getWholeFeatureList();
 
+        //Aan maken van een nieuwe Jtable
         DefaultTableModel model = new DefaultTableModel();
         JTable table = new JTable(model);
 
+        // voeg de collom namen toe aan het model
         model.addColumn("ID");
-        model.addColumn("Phase");
+        model.addColumn("Type");
         model.addColumn("Strand");
         model.addColumn("Start");
         model.addColumn("stop");
-        model.addRow(new Object[]{"ID","Phase","Strand","Start","Stop"});
 
+        //bepaal het feature type door te kijken of het een instance of .... is.
         for (Feature feat:featureFilteredList) {
-            model.addRow(new Object[]{feat.getId(), feat.getPhase(),feat.getStrand(),feat.getStart(),feat.getStop()});
+            String featureName="";
+            if (feat instanceof mRNA){
+                featureName = "mRNA";
+            };
+            if (feat instanceof CDS){
+                featureName = "CDS";
+            };
+            if (feat instanceof Exon){
+                featureName = "Exon";
+            };
+            if (feat instanceof Region){
+                featureName = "Region";
+            };
+            if (feat instanceof Gene){
+                featureName = "Gene";
+            };
+
+            //Voeg een regel toe aan het model.
+            model.addRow(new Object[]{feat.getId(), featureName,feat.getStrand(),feat.getStart(),feat.getStop()});
         }
 
-        frame.add(table);
+        frame.add(new JScrollPane(table));
         frame.setVisible(true);
             }
     /**
