@@ -99,7 +99,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             cont.changeChromosome((String) Chromosome.getSelectedItem());
 
         } catch (Exception e) {
-            System.out.println("Idk what went wrong");
+            System.err.println("Error changing chromosome");
 
         }
 

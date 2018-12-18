@@ -15,7 +15,7 @@ public class GffReader {
      * Het inlezen van het bestand per regel en het opslaan van data in de regels wanneer er in de derde kolom gene, mRNA,
      * exon, CDS of region staat.
      *
-     * @param path                      Het pad waar het bestand staat wordt vanuit de main meegegeven.
+     * @param path                      Het pad waar het bestand staat.
      * @throws FileNotFoundException    Afvangen van een error zodra het bestand niet gevonden kan worden.
      * @throws IOException              Als er een input of output exception plaatsvindt.
      */
