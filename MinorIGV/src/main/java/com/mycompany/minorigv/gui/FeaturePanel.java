@@ -29,7 +29,7 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 		super.paintComponent(g);
 
 		try {
-			if (cont == null || cont.getOrganism() == null || cont.getCurORFListALL() == null) return;
+			if (cont == null || cont.getOrganism() == null || cont.getCurrentFeatureList() == null) return;
 
 		}catch(Exception e){
 			return; // Dit is zo'n harde hack dat het pijn doet.
