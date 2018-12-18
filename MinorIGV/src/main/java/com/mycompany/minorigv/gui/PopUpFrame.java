@@ -27,10 +27,16 @@ public class PopUpFrame extends JFrame {
         ArrayList<Feature> featureFilteredList = cont.getWholeFeatureList();
 
         //Aan maken van een nieuwe Jtable
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int Column){
+                return false;
+            }
+        };
+
         JTable table = new JTable(model);
 
-        // voeg de collom namen toe aan het model
+        // voeg de kolomnamen toe aan het model
         model.addColumn("ID");
         model.addColumn("Type");
         model.addColumn("Strand");

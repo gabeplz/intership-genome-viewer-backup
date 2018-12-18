@@ -30,20 +30,20 @@ import javax.swing.text.NumberFormatter;
 public class IGVMenuBar extends JMenuBar {
 
 	private Context cont;
-	// Define all the items for the menu bar that will have sub items
+	// Defineer de menu items die zelf sub items zullen bevatten.
 	JMenu files, tools, features;
 
-	// Define all the sub items for the menu bar that will not have their own sub items in the menu
+	// Defineer de menu itmes die zelf niet sub items zullen bevatten.
 	JMenuItem openRef, openData, saveORF, findORF, blast,Genes, mRNA ,Exon, Region, CDS, featureList;
 
-	// List containing the features that the user wants to have visualized
+	// Een lijst die de features bevat die de gebruiker op dat moment wil zien.
 	ArrayList<String> featureArray = new ArrayList<String>();
 
     JRadioButton buttonAll ,buttonBetween;
     JFormattedTextField textField;
 
 	/**
-	 * Initialize the de different menu items.
+	 * Initializeer de verschillende menus.
 	 */
 	public void init() {
 		this.setPreferredSize(new Dimension(200, 25));
@@ -54,18 +54,18 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	/**
-	 * function creating the first 2 menus on the menu bar "files" and "tools"
+	 * Het maken van de eerste 2 menus "File" en "Tools"
 	 */
 	public void menus(){
-	//first menu item "File"
+	//Eerst menu item Files
 		files = new JMenu("files");
 
-	//sub items for menu item 1 "File"
+	//sub items voor Files
 		openRef = new JMenuItem("Load reference");
 		openData = new JMenuItem("Load Data");
 		saveORF = new JMenuItem("Save ORF's");
 
-	//action listeners for the sub item of File
+	//action listeners voor de sub items van Files
 		openRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -85,23 +85,23 @@ public class IGVMenuBar extends JMenuBar {
 			}
 		});
 
-	//add the sub items to "File"
+	//Voeg de subitems toe aan  "File"
 		files.add(openRef);
 		files.add(openData);
 		files.add(saveORF);
 
-	//add the files to the menu bar
+	//Voeg Files toe aan de menubar.
 		add(files);
 
-	//second menu item "tools"
+	//Tweede menu item "tools"
 		tools = new JMenu("tools");
 
-	//sub items for menu itm 2 "tools"
+	//Sub items voor menu item 2 "tools"
 		findORF = new JMenuItem("Find ORF");
 		blast = new JMenuItem("blast");
 		featureList = new JMenuItem("Show features");
 
-	//action listeners for the sub item of tools
+	//Action listeners voor de sub item van tools
 		findORF.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -121,30 +121,30 @@ public class IGVMenuBar extends JMenuBar {
 			}
 		});
 
-	//add the sub items to "tools"
+	//Voeg de sub items toe aan "tools"
 		tools.add(findORF);
 		tools.add(blast);
 		tools.add(featureList);
 
-	//add tools to the menu bar
+	//Voeg tools toe aan de menu bar.
 		add(tools);
 	}
 
 	/**
-	 * function creating the third menu item for the menu bar "features"
+	 *Het aan maken van het 3de menu  "features".
 	 */
 	public void featureMenu(){
 	// create the feature menu for the menu bar
 		features = new JMenu("Features");
 
-	// Checkboxes the contain the features that can be visualized
+	// Checkboxes die de verschillende features bevatten die de gebruiker kan kiezen.
 		Genes = new JCheckBoxMenuItem("Genes");
 		mRNA = new JCheckBoxMenuItem("mRNA");
 		Exon = new JCheckBoxMenuItem("Exon");
 		Region = new JCheckBoxMenuItem("Region");
 		CDS = new JCheckBoxMenuItem("CDS");
 
-	// add action listeners to the check boxes
+	// Voeg action listeners toe aan de check boxes.
 		Genes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -176,17 +176,17 @@ public class IGVMenuBar extends JMenuBar {
 			}
 		});
 
-	// add the checkboxes to the features menu
+	// Voeg de checkboxes toe aan features menu
 		features.add(Genes);
 		features.add(mRNA);
 		features.add(Exon);
 		features.add(Region);
 		features.add(CDS);
 
-	// add the features menu to the menu bar
+	// Voeg het features menu aan de menu bar
 		add(features);
 
-	// create booleans that will be true if check box is selected and false if not selected
+	// Aanmaken van booleans. Een boolean is true als een checkbock is aan geselecteerd en false als dit niet het geval is
 		boolean m = mRNA.isSelected();
 		boolean e = Exon.isSelected();
 		boolean r = Region.isSelected();
@@ -194,7 +194,7 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 
-	// action performed for files and tools
+	// Action performed voor files en tools.
 	private void loadReferenceAction() {
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
@@ -309,8 +309,8 @@ public class IGVMenuBar extends JMenuBar {
         private void featureListAction() {
             PopUpFrame popup = new PopUpFrame(cont);}
 
-	// action performed for the choose Feature menu
-	// if check box is selected it will add the feature to a list that contains the features that should be visualized
+	// action performed voor het choose Feature menu
+    // Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
 	private void genesAction() {
 		Boolean m = Genes.isSelected();
 		if (m == true){
