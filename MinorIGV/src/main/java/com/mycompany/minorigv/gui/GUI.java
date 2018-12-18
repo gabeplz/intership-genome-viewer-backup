@@ -13,7 +13,7 @@ import java.util.Observer;
 
 
 /**
- * Class waarin de main staat waarmee de GUI geinitialiseerd wordt en verschillende objecten worden toegevoegt.
+ * Class waarin de Main staat waarmee de GUI geinitialiseerd wordt en verschillende objecten worden toegevoegt.
  * @author kahuub
  * Date: 19/11/18
  */

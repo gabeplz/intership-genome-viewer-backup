@@ -16,6 +16,7 @@ public class CDS extends Feature{
      * Constructor
      *
      * @param seqID         Het ID van het contig/chromosoom waarin het CDS aanwezig is.
+     * @param theType       Het type zoals vermeld in het bestand.
      * @param start         Start positie van het CDS op het chromosoom/contig
      * @param end           Stop positie van het CDS op het chromosoom/contig
      * @param score         De score van de CDS
@@ -23,8 +24,8 @@ public class CDS extends Feature{
      * @param phase         Het geeft het reading frame aan waarin het CDS voorkomt (0,1,2)
      * @param attributes    HashMap met daarin de informatie over het CDS.
      */
-    CDS(String seqID, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqID, start, end, score, strand, phase, attributes);
+    CDS(String seqID, String theType, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        super(seqID,theType, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 
@@ -45,6 +46,16 @@ public class CDS extends Feature{
      */
     public void setAttributes(HashMap attributes) {
         this.attributes = attributes;
+    }
+
+    @Override
+    public String getName() {
+        return "Coding sequence";
+    }
+
+    @Override
+    public String getClassName() {
+        return "CDS";
     }
 
 
