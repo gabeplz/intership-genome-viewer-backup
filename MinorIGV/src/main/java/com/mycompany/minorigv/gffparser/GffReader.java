@@ -9,7 +9,7 @@ import java.util.*;
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek
  */
-public class gffReader {
+public class GffReader {
 
     /**
      * Het inlezen van het bestand per regel en het opslaan van data in de regels wanneer er in de derde kolom gene, mRNA,

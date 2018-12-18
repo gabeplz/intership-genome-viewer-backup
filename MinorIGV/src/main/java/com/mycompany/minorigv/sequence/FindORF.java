@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  *
  * @author Anne van Ewijk en Amber Janssen Groesbeek.
  */
-public class findORF {
+public class FindORF {
 
     /**
      * Het vinden van het ORF in drie verschillende reading frames (Template strand). Elk ORF wordt opgeslagen in een object.
@@ -38,18 +38,18 @@ public class findORF {
             int stop = match.start() + match.group(1).length();         // Positie stopcodon
             idORF++;
 
-            int readingframe = ORF.calcFrame(start, Strand.POSITIVE, seq.length());
+            int readingframe = ORF.calcFrame(start, Strand.POSITIVE, seq.length()); // Readingframe wordt bepaald
 
-            String id_ORF = "ORF" + idORF +"_T";
-            Strand strand = Strand.POSITIVE;
+            String id_ORF = "ORF" + idORF +"_T"; // ID van het ORF wordt bepaald.
+            Strand strand = Strand.POSITIVE; // Strand wordt ingesteld.
 
-            int lengthORF = stop - start;
+            int lengthORF = stop - start; // Lengte van het ORF wordt bepaald.
 
+            // Slaat alleen het ORF op wanneer de lenge van het ORF minimaal de lengte heeft die de gebruiker heeft ingesteld.
             if(lengthORF >= lengthORFUser){
                 ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand, lengthORF);
                 listORF.add(ORF_Object);
             }
-
         }
         return listORF;
     }
@@ -77,18 +77,17 @@ public class findORF {
             int start = stop - match.group(1).length();           // Positie van het stopcodon op de orginele sequentie (+)
             idORF++;
 
-            int readingframe = ORF.calcFrame(stop, Strand.NEGATIVE, seq.length());
+            int readingframe = ORF.calcFrame(stop, Strand.NEGATIVE, seq.length()); // Readingframe wordt bepaald
 
-            String id_ORF = "ORF" + idORF +"_C";
-            Strand strand = Strand.NEGATIVE;
-            int lengthORF = stop - start;
+            String id_ORF = "ORF" + idORF +"_C"; // ID van het ORF wordt bepaald.
+            Strand strand = Strand.NEGATIVE;    // Strand wordt ingesteld.
+            int lengthORF = stop - start; // Lengte van het ORF wordt bepaald.
 
+            // Slaat alleen het ORF op wanneer de lenge van het ORF minimaal de lengte heeft die de gebruiker heeft ingesteld.
             if(lengthORF >= lengthORFUser){
                 ORF ORF_Object = new ORF(start, stop, readingframe, id_ORF, strand, lengthORF);
                 listORF.add(ORF_Object);
             }
-
-
         }
         return listORF;
     }

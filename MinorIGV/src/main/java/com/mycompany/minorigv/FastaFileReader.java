@@ -1,11 +1,6 @@
 package com.mycompany.minorigv;
-import com.mycompany.minorigv.gffparser.Chromosome;
-import com.mycompany.minorigv.gffparser.ORF;
-import com.mycompany.minorigv.sequence.findORF;
-import com.mycompany.minorigv.sequence.makeCompStrand;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
