@@ -21,15 +21,15 @@ public class Feature implements MappableFeature {
 
     /**
      * De constructor.
-     * @param seqid     Het ID van het contig/chromosoom waarin de feature aanwezig is.
+     * @param seqID     Het ID van het contig/chromosoom waarin de feature aanwezig is.
      * @param start     Start positie van de feature op het chromosoom/contig
      * @param end       Stop positie van de feature op het chromosoom/contig
      * @param score     De score van de feature.
      * @param strand    Of de feature aanwezig is in de strand (+) of complementaire strand (-)
      * @param phase     Het geeft het readingframe aan waarin het feature voorkomt (0,1,2).
      */
-    Feature(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        this.id = seqid;
+    Feature(String seqID, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        this.id = seqID;
         this.start = start;
         this.stop = end;
         this.score = score;

@@ -122,8 +122,10 @@ public class Chromosome {
         // ORFs zoeken in de template en complementaire strand.
         String seqComp = MakeCompStrand.getReverseComplement(getSeqTemp());
 
+        // ORFs zoeken in de template strand
         listORF = FindORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length(), lenghtORF);
 
+        // ORFs zoeken in de complement strand
         ArrayList orfs_comp = FindORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length(), lenghtORF);
         listORF.addAll(orfs_comp);
     }

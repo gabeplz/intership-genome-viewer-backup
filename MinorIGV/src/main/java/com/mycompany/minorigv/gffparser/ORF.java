@@ -132,6 +132,7 @@ public class ORF implements MappableFeature{
      * @return
      */
     public static int calcFrame(int index, Strand strand, int lenghtSeq){
+        // Frame bepalen van positieve en negatieve strand.
         if(strand == Strand.POSITIVE){
             return index % 3;
         }else if(strand == Strand.NEGATIVE){

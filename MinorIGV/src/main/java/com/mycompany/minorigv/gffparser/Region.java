@@ -16,7 +16,7 @@ public class Region extends Feature{
      * chromosoom zelf.
      * Constructor
      *
-     * @param seqid         Het ID van het contig/chromosoom.
+     * @param seqID         Het ID van het contig/chromosoom.
      * @param start         Start positie van het contig/chromosoom
      * @param end           Stop positie van het contig/chromosoom
      * @param score         Score van het Region
@@ -24,8 +24,8 @@ public class Region extends Feature{
      * @param phase         Het geeft het reading frame aan waarin de Region voorkomt (0,1,2 of ".")
      * @param attributes    HashMap met daarin de informatie over een Region.
      */
-    Region(String seqid, String start, String end, String score, String strand, String phase, HashMap attributes) {
-        super(seqid, start, end, score, strand, phase, attributes);
+    Region(String seqID, String start, String end, String score, String strand, String phase, HashMap attributes) {
+        super(seqID, start, end, score, strand, phase, attributes);
         this.attributes = attributes;
     }
 

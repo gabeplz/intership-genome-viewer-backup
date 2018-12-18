@@ -258,6 +258,7 @@ public class IGVMenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent e) {
 				try {
 					saveButtonAction();
+					f.dispose();
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (UnsupportedEncodingException e1) {
