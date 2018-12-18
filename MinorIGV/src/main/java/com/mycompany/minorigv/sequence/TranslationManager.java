@@ -35,10 +35,10 @@ import java.io.*;
 
 /**
  * @author jrobinso. Stan Wehkamp
- * singleton class that call on helper functions to build the codontabels
- * also translates nucleotides sequences to aminoacids.
- * takes the codon table to be used from context
- * the codontables in context are pulled from the allCodonTables in this class
+ * singleton class die hulperfuncties aanroept om de CodonTables te bouwen
+ * vertaald ook nucleotide sequenties naar aminzuur sequenties
+ * neemt de codontabel van context
+ * de codontabellen in context worden uit allCodonTables in deze class gehaald
  */
 public class TranslationManager {
     private static final String[] BASE_SEQUENCES = {    "TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG",      //hardcoded aangezien de codon volgorde altijd gelijk is in het dataformat voor codontabellen
@@ -76,13 +76,13 @@ public class TranslationManager {
     }
 
     /**
-     *loads file from recource map and parses the contents to CodonTable.build.
-     * which returns the codon table back to this method which puts it in the hashmap allCodonTables
+     * laad bestand out de resource map en parses de inhoud naar CodonTable.build.
+     * die returnt de codonTable terug naar deze methode die het in de hashmap allCodonTables zet.
      * @param codonTablesPath
      * @throws FileNotFoundException
      * @throws IOException
      */
-	void loadCodonTabels(String codonTablesPath) throws FileNotFoundException, IOException {
+	private void loadCodonTabels(String codonTablesPath) throws FileNotFoundException, IOException {
         
         ClassLoader classLoader = getClass().getClassLoader();
         String file = java.net.URLDecoder.decode(classLoader.getResource(DEFAULT_CODON_TABLE_PATH).getFile(),"UTF-8");

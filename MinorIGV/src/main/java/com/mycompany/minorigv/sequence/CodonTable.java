@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author jrobinso, Stan Wehkamp
- * bevat constructor for codontable
+ * bevat constructor voor codontable
  * bevat method "build" om arguments te genereren voor de constuctor
  */
 public class CodonTable {
@@ -42,7 +42,7 @@ public class CodonTable {
 
         /**
          * constructor voor CodonTable
-         * @param key key functions as id for the table and as key for the hasmap that will contaion codonTable objects
+         * @param key key functioneert als id for the tabel and als key voor de hashmap die de CodonTable objecten gaat bevatten
          * @param names array voor de namen van de codontabel
          * @param starts set voor de alternative start aminozuren
          * @param codonMap Map met een 3 letterige codons als key en een een letterige afkorting voor een aminozuur als value
@@ -59,7 +59,7 @@ public class CodonTable {
 	 * @param key functioneerd als id voor the table and als key voor de hasmap die de CodonTable objecten gaat bevatten 
 	 * @param names array voor de namen van de codontabel
 	 * @param base arrays met nucleotides om elke codon combinatie te maken
-	 * @param aas aminozuren
+	 * @param aas string van aminozuren
 	 * @param startString alternative start aminozuren
 	 * @return call naar codontable contstructor (new CodonTable). als het object gemaakt word returnd het de nieuwe CodonTable
 	 **/
@@ -87,21 +87,21 @@ public class CodonTable {
 	}
 
 	/**
-	 * @return the key
+	 * @return de key
 	 */
 	public Integer getKey() {
 		return key;
 	}
 
 	/**
-	 * @param key the key to set
+	 * @param key de key om setten
 	 */
 	public void setKey(Integer key) {
 		this.key = key;
 	}
 
 	/**
-	 * @return the names
+	 * @return String array names
 	 */
 	public String[] getNames() {
 		return names;
@@ -122,21 +122,21 @@ public class CodonTable {
 	}
 
 	/**
-	 * @param starts the starts to set
+	 * @param starts de starts om setten
 	 */
 	public void setStarts(Set<String> starts) {
 		this.starts = starts;
 	}
 
 	/**
-	 * @return the codonMap
+	 * @return de Map codonMap
 	 */
 	public Map<String, String> getCodonMap() {
 		return codonMap;
 	}
 
 	/**
-	 * @param codonMap the codonMap to set
+	 * @param codonMap de codonMap to settten
 	 */
 	public void setCodonMap(Map<String, String> codonMap) {
 		this.codonMap = codonMap;
