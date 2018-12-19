@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Deze class maakt een menubar voorde aplicatie die verschillende menus bevat zoals menus voor het laden van files tools .etc
+ * Deze class maakt een menubar voor de applicatie die verschillende menus bevat zoals menus voor het laden van files tools etc.
  * @Auteur: Tim Kuijpers
  */
 public class IGVMenuBar extends JMenuBar {
@@ -57,11 +57,11 @@ public class IGVMenuBar extends JMenuBar {
 	//Eerst menu item Files
 		files = new JMenu("files");
 
-	//sub items voor Files
+	//Sub items voor Files
 		openRef = new JMenuItem("Load reference");
 		openData = new JMenuItem("Load GFF");
 
-	//action listeners voor de sub items van Files
+	//Action listeners voor de sub items van Files
 		openRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -321,7 +321,7 @@ public class IGVMenuBar extends JMenuBar {
 		PopUpFrame popup = new PopUpFrame(cont);
 	}
 
-	// action performed voor het choose Feature menu
+	// Action performed voor het choose Feature menu
     // Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
 	private void genesAction() {
 		Boolean m = genes.isSelected();
