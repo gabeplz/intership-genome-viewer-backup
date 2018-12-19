@@ -50,7 +50,7 @@ public class Exon extends Feature{
 
     @Override
     public String getName() {
-        return "exon";
+        return "Exon";
     }
 
     @Override

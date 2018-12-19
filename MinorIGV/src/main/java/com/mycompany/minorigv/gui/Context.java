@@ -244,7 +244,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 	/**
-	 * Functie die de chromosoomNamen synchroniseert met het organism.
+	 * Functie die de chromosoom namen synchroniseert met het organism.
 	 */
 	public void setChromosomeNames() {
 		String[] oldValue = this.chromosomeNameArray;
@@ -253,7 +253,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		Arrays.sort(nameArray);
 		this.chromosomeNameArray = nameArray;
 
-		pcs.firePropertyChange("chromosomeNameArray", oldValue, this.chromosomeNameArray); //fire het chromosomeNameArray event
+		pcs.firePropertyChange("chromosomeNameArray", oldValue, this.chromosomeNameArray); //vuur het chromosomeNameArray event af.
 
 	}
 

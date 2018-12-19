@@ -14,15 +14,17 @@ import com.mycompany.minorigv.sequence.MakeCompStrand;
  * ReferencePanel draws the nucleotides of the forward en reverse strand.
  */
 public class ReferencePanel extends JPanel implements PropertyChangeListener {
-	//Hardcoded String ff want moeten nog Context objecten hebben
+
 	Context cont;
 	public static final int HEIGHT = 20;
 
-    /**
-     * using coordinates from drawingtools this function draws nucleotides of the forward and reverse strand in the correct spot in the GUI //TODO
-     * paintComponent functie overridden uit JPanel.
-     * @param g
-     */
+	public static Color ThymineKleur = new Color(128,0,255);
+    public static Color AdenineKleur = new Color(255,0,0);
+	public static Color CytosineKleur = new Color(123, 215,0);
+	public static Color GuanineKleur = new Color(0, 215, 215);
+
+
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -65,29 +67,29 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
         String revComp = MakeCompStrand.getReverseComplement(seq);  //Reverse Complement van de sub sequentie.
 
-        int real_width = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), length);  //bepaal de toegewezen breedte per pixel.
+        int realWidth = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), length);  //bepaal de toegewezen breedte per pixel.
 
-        int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, -0.5); //linkerkant van rechthoekje, positie op de x-as.
-        int old_x_pos; //onthouden oude x_pos.
+        int xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, -0.5); //linkerkant van rechthoekje, positie op de x-as.
+        int oldXPos; //onthouden oude xPos.
 
         for(int i = 0; i < length; i++  ) {
             int j = length-i-1;
 
-            old_x_pos = x_pos;
-            x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i+0.5); //nieuwe x_pos bepalen.
+            oldXPos = xPos;
+            xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i+0.5); //nieuwe xPos bepalen.
 
-            int width = x_pos-old_x_pos;  //breedte vierkantje
+            int width = xPos-oldXPos;  //breedte vierkantje
 
-            if(real_width > 2){
-                width = x_pos-old_x_pos-1; //pixelbrede streep wit rechts.
+            if(realWidth > 2){
+                width = xPos-oldXPos-1; //pixelbrede streep wit rechts.
             }
 
             this.chooseLetterColor(g,seq.charAt(i)); //letterkleur kiezen.
 
-            g2.fillRect(old_x_pos,HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
+            g2.fillRect(oldXPos,HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
 
             this.chooseLetterColor(g,revComp.charAt(j)); //letterkleur kiezen reverse.
-            g2.fillRect(old_x_pos,HEIGHT+HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
+            g2.fillRect(oldXPos,HEIGHT+HEIGHT/2,width,HEIGHT); //tekenen net rechthoekje.
 
             g.setColor(Color.BLACK); //Zwarte kleur resetten.
         }
@@ -132,28 +134,28 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		//http://phrogz.net/css/distinct-colors.html
 		switch (c) {
 		case 'T':
-			g.setColor(new Color(128,0,255));
+			g.setColor(ThymineKleur);
 			break;
 		case 'A':
-			g.setColor(new Color(255,0,0));
+			g.setColor(AdenineKleur);
 			break;
 		case 'C':
-			g.setColor(new Color(123, 215,0));
+			g.setColor(CytosineKleur);
 			break;
 		case 'G':
-			g.setColor(new Color(0, 215, 215));
+			g.setColor(GuanineKleur);
 			break;
 		case 't':
-			g.setColor(new Color(128,0,255));
+			g.setColor(ThymineKleur);
 			break;
 		case 'a':
-			g.setColor(new Color(255,0,0));
+			g.setColor(AdenineKleur);
 			break;
 		case 'c':
-			g.setColor(new Color(123, 215,0));
+			g.setColor(CytosineKleur);
 			break;
 		case 'g':
-			g.setColor(new Color(0, 215, 215));
+			g.setColor(GuanineKleur);
 			break;
 		default:
 			g.setColor(Color.BLACK);
@@ -186,7 +188,7 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {  //als range/chromosome veranderen updaten.
+	public void propertyChange(PropertyChangeEvent evt) {  //als range/chromosome veranderen updaten.
 		this.invalidate();
 		this.repaint();
 		

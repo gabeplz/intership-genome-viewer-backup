@@ -197,7 +197,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * changeContext changes the chromosomes in the dropdown menu with new model containing chromosomes from set in context.java
+     * changeContext functie die het model update van het dropdown menu.
      */
     public void changedContext() {
         DefaultComboBoxModel model = new DefaultComboBoxModel(cont.getChromosomeNames());
@@ -205,18 +205,14 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 
     }
 
-    /**
-     * function telling the application what to do when 1 of the 2 scenarios in setContext is met
-     * @param evt
-     */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		
-		if (evt.getPropertyName().equals("chromosomeNameArray")) {
+		if (evt.getPropertyName().equals("chromosomeNameArray")) { //andere chromosomen
 			changedContext();
 			syncSize();
 		}
-		else if(evt.getPropertyName().equals("range")) {
+		else if(evt.getPropertyName().equals("range")) { //andere view (start/stop)
 			syncSize();
 		}	
 	}

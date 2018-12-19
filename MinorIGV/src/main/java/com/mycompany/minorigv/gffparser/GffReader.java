@@ -22,15 +22,16 @@ public class GffReader {
     public static Organisms readData(Organisms org, String path) throws FileNotFoundException, IOException, Exception {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String> allContigs = new ArrayList<String>();
-        
+
         String line;
         String ID = null;
         String IdOrganism;
-        
+        String[] columns;
+
         if (org == null) {
         	org = new Organisms();
         }
-        
+
         Chromosome chrom = null;
         // inlezen van het bestand per regel.
         while ((line = reader.readLine()) != null) {
@@ -53,7 +54,7 @@ public class GffReader {
                 // Als de regel met ID begint is het mogelijk relevante data om op te slaan.
             } else if (line.startsWith("#")) {
             } else if (line.startsWith(ID)) {
-                String[] columns = line.split("\\t");
+                columns = line.split("\\t");
 
                 // Class waarin de kolom met attributen wordt verwerkt.
 

@@ -51,7 +51,7 @@ private HashMap attributes;
 
     @Override
     public String getName() {
-        return "gene";
+        return "Gene";
     }
 
     @Override
