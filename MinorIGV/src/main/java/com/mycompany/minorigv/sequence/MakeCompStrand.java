@@ -27,8 +27,8 @@ package com.mycompany.minorigv.sequence;
 public class MakeCompStrand {
 
    /**
-    * creates a reverse complemantary strand van nucleotides. de volgorde van de nucleotide word bepaald door de volgorde
-    * waarin ze tegengekomen zouden worden als de leesrichting van het readingframe gevolgd word
+    * Creëert een omgekeerde complementaire sequentie van nucleotides. De volgorde van de nucleotide wordt bepaald door de volgorde
+    * waarin ze tegengekomen zouden worden als de leesrichting van het readingframe gevolgd word.
     * in: atg aaa ccg -> out:ccg ttt cat
     * @param sequence een string die een nucleotide sequentie voorsteld.
     * @return complement een string die een nucleotide sequentie voorsteld.

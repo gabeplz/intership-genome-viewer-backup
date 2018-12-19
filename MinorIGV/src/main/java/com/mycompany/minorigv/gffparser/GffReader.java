@@ -1,4 +1,5 @@
 package com.mycompany.minorigv.gffparser;
+
 import java.io.*;
 import java.util.*;
 
@@ -15,21 +16,25 @@ public class GffReader {
      * Het inlezen van het bestand per regel en het opslaan van data in de regels wanneer er in de derde kolom gene, mRNA,
      * exon, CDS of region staat.
      *
-     * @param path                      Het pad waar het bestand staat.
-     * @throws FileNotFoundException    Afvangen van een error zodra het bestand niet gevonden kan worden.
-     * @throws IOException              Als er een input of output exception plaatsvindt.
+     * @param path Het pad waar het bestand staat.
+     * @throws FileNotFoundException Afvangen van een error zodra het bestand niet gevonden kan worden.
+     * @throws IOException           Als er een input of output exception plaatsvindt.
      */
     public static Organisms readData(Organisms org, String path) throws FileNotFoundException, IOException, Exception {
+        if (!(path.endsWith(".gff") || path.endsWith(".gtf") || path.endsWith(".gff3") || path.endsWith(".txt"))) {
+            throw new IOException("Niet ondersteund file type");
+        }
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String> allContigs = new ArrayList<String>();
 
         String line;
         String ID = null;
         String IdOrganism;
+
         String[] columns;
 
         if (org == null) {
-        	org = new Organisms();
+            org = new Organisms();
         }
 
         Chromosome chrom = null;
@@ -41,7 +46,7 @@ public class GffReader {
                 allContigs.add(ID);
 
                 chrom = org.getChromosome(ID);
-                if(chrom == null){
+                if (chrom == null) {
                     chrom = new Chromosome();
                     chrom.setId(ID);
                     org.addChromosome(chrom);
@@ -58,14 +63,14 @@ public class GffReader {
 
                 // Class waarin de kolom met attributen wordt verwerkt.
 
-                String featType     = line.split("\\t")[2];
-                String seqID        = columns[1];
-                String start        = columns[3];
-                String end          = columns[4];
-                String score        = columns[5];
-                String strand       = columns[6];
-                String phase        = columns[7];
-                HashMap attributen  = attributes.splitAttributes(columns[8]);
+                String featType = line.split("\\t")[2];
+                String seqID = columns[1];
+                String start = columns[3];
+                String end = columns[4];
+                String score = columns[5];
+                String strand = columns[6];
+                String phase = columns[7];
+                HashMap attributen = attributes.splitAttributes(columns[8]);
 
                 Feature feat = FeatureFactory.makeFeature(featType, seqID, start, end, score, strand, phase, attributen);
                 // Als er in de regel in kolom 3 gene, mRNA, exon, CDS of region staat, bevat de regel relevante data dat wordt opgeslagen.

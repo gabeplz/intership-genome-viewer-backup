@@ -87,55 +87,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 	}
 
     /**
-     * Tekent de negative CodonPanel.
-     * @param g     Graphics context
-     * @param seq   Sequentie van het chromosoom/contig.
-     * @param letterWidth
-     */
-	private void drawNegative(Graphics g, String seq, double letterWidth) {
-
-		int start = cont.getStart(); 					//start van het beeld.
-		int stop = cont.getStop(); 						//stop van het beeld.
-		int length = cont.getLength();					//lengte subsequentie.
-		int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
-
-        CodonTable huidigeTabel = cont.getCurrentCodonTable();
-
-		for (int f = 0; f < 3; f++) { //loopen over de drie mogelijke frames.
-            int frame = ORF.calcFrame(stop-f, Strand.NEGATIVE, cont.getFullLenght());  //bepalen frame van de subsequentie.
-
-            ArrayList<ORF> strandORFs = getORFs(Strand.NEGATIVE, frame); //ORF's ophalen behorend bij dit frame.
-			String aaSeq = TranslationManager.getInstance().getAminoAcids(strand,seq.substring(start,stop-f),huidigeTabel); //sequentie behorend bij dit frame.
-
-            int xPosRight; //linkerkant van rechthoekje, positie op de x-as.
-            int xPosLeft = (int) DrawingTools.calculateLetterPosition( panelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
-
-			int aa = 0; // aa teller
-			for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) { //loopen van rechts naar links op de referentie <-> links naar rechts complement
-				char letter = aaSeq.charAt(aa); //character op de positie bijbehorend aminozuur.
-
-				int indexSubSeq = indexRef-start-2; //index op referentie ten opzichte subsequentie
-                xPosRight = xPosLeft; //oude links -> rechts.
-                xPosLeft = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq-1.5); //nieuwe xPos bepalen.
-				int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
-
-                int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
-				int height = calcHeight(strand,frame);//20+20*(frame);
-
-                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
-                g.fillRect(xPosLeft,height,width,20);
-
-				g.setColor(Color.BLACK);
-
-                if(letterWidth > ZOOM_SIZE_2){ //teken de letters alleen als ze nog leesbaar zijn,
-                    DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),xPos,height+5);
-                }
-				aa++; // aa teller ophogen.
-			}
-		}
-	}
-
-    /**
      *Tekent het positive CodonPanel.
      * @param g     Graphics context
      * @param seq   Sequentie van het chromosoom/contig.
@@ -148,14 +99,14 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		int length = cont.getLength();					//lengte subsequentie.
 		int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
 
-        CodonTable huidigeTabel = cont.getCurrentCodonTable();
+        CodonTable curTable = cont.getCurrentCodonTable();
 
 		for (int f = 0; f < 3; f++) { // f teller voor de frames.
 			int frameStart = start+f;
             int frame = ORF.calcFrame(frameStart, Strand.POSITIVE, cont.getFullLenght());
 
             ArrayList<ORF> strandORFs = getORFs(Strand.POSITIVE, frame);
-			String aaSeq = TranslationManager.getInstance().getAminoAcids(strand,seq.substring(start+f,stop),huidigeTabel);
+			String aaSeq = TranslationManager.getInstance().getAminoAcids(strand,seq.substring(start+f,stop),curTable);
 			int xPosLeft; //linkerkant van rechthoekje, positie op de x-as.
             int xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, f- 0.5); //onthouden oude x_pos.
 
@@ -182,6 +133,56 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 			}
 		}
 	}
+
+    /**
+     * Tekent de negative CodonPanel.
+     * @param g     Graphics context
+     * @param seq   Sequentie van het chromosoom/contig.
+     * @param letterWidth
+     */
+    private void drawNegative(Graphics g, String seq, double letterWidth) {
+
+        int start = cont.getStart(); 					//start van het beeld.
+        int stop = cont.getStop(); 						//stop van het beeld.
+        int length = cont.getLength();					//lengte subsequentie.
+        int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
+
+        CodonTable curTable = cont.getCurrentCodonTable();
+
+        for (int f = 0; f < 3; f++) { //loopen over de drie mogelijke frames.
+            int frame = ORF.calcFrame(stop-f, Strand.NEGATIVE, cont.getFullLenght());  //bepalen frame van de subsequentie.
+
+            ArrayList<ORF> strandORFs = getORFs(Strand.NEGATIVE, frame); //ORF's ophalen behorend bij dit frame.
+            String aaSeq = TranslationManager.getInstance().getAminoAcids(strand,seq.substring(start,stop-f),curTable); //sequentie behorend bij dit frame.
+
+            int xPosRight; //linkerkant van rechthoekje, positie op de x-as.
+            int xPosLeft = (int) DrawingTools.calculateLetterPosition( panelWidth, length, stop-f-start-2+1.5); //onthouden oude x_pos.
+
+            int aa = 0; // aa teller
+            for (int indexRef = stop-f; indexRef > start+2; indexRef-=3) { //loopen van rechts naar links op de referentie <-> links naar rechts complement
+                char letter = aaSeq.charAt(aa); //character op de positie bijbehorend aminozuur.
+
+                int indexSubSeq = indexRef-start-2; //index op referentie ten opzichte subsequentie
+                xPosRight = xPosLeft; //oude links -> rechts.
+                xPosLeft = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq-1.5); //nieuwe xPos bepalen.
+                int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
+
+                int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
+                int height = calcHeight(strand,frame);//20+20*(frame);
+
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                g.fillRect(xPosLeft,height,width,20);
+
+                g.setColor(Color.BLACK);
+
+                if(letterWidth > ZOOM_SIZE_2){ //teken de letters alleen als ze nog leesbaar zijn,
+                    DrawingTools.drawCenteredChar(g,aaSeq.charAt(aa),xPos,height+5);
+                }
+                aa++; // aa teller ophogen.
+            }
+        }
+    }
+
 
     /**
      * instellen context
@@ -226,15 +227,15 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
      * @param g Graphics Context Object.
      * @param indexRef Index op de referentie.
      * @param letter de letter van het aminozuur
-     * @param bevest bevestigings String.
+     * @param sign bevestigings String.
      * @param letterWidth breedte van de letter
      */
-	public void colorFrames(Graphics g, int indexRef, char letter, String bevest, double letterWidth){
+	public void colorFrames(Graphics g, int indexRef, char letter, String sign, double letterWidth){
 	    if('M' == letter){
             g.setColor(new Color(0, 153, 0));
 		}else if('*' == letter){
             g.setColor(new Color(250, 0, 0));
-        }else if(bevest.equals("ORF")){
+        }else if(sign.equals("ORF")){
             g.setColor(new Color(255, 255, 0));
         }else if(indexRef%2 > 0 || letterWidth < ZOOM_SIZE_1 ) {  //als te smalle vakjes voor 2 kleuren blauw.
             g.setColor(new Color(127, 191, 226));
@@ -297,7 +298,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
      * @return de hoogte in pixels waarop getekent moet worden.
      */
     private static int calcHeight(Strand strand, int frame){
-
 	    if(strand == Strand.NEGATIVE){
 	        return 10+20*(frame);
         }else if(strand == Strand.POSITIVE){

@@ -111,14 +111,14 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		for(int i = 0; i < length; i++  ) {
 			int j = length-i-1;  //rechts naar links (reverse)
 
-			int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);  //letter corresponderend bepalen.
+			int xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);  //letter corresponderend bepalen.
 
 			this.chooseLetterColor(g,seq.charAt(i));  //letterkleur kiezen.
 
-			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, HEIGHT);  //gecentreerd character tekenen.
+			DrawingTools.drawCenteredChar(g2, seq.charAt(i), xPos, HEIGHT);  //gecentreerd character tekenen.
 
 			this.chooseLetterColor(g,revComp.charAt(j));  //letterkeuze  <-, loop richting ->
-			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), x_pos, 2*HEIGHT);  //tekenen reverse
+			DrawingTools.drawCenteredChar(g2, revComp.charAt(j), xPos, 2*HEIGHT);  //tekenen reverse
 			g.setColor(Color.BLACK);  //kleur terugzetten
 		}
 
@@ -167,7 +167,6 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 	 * initiatie van het paneel waarin de sequenties worden getekent
  	 */
 	public void init() {
-
 		setPreferredSize(new Dimension(500,55));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));

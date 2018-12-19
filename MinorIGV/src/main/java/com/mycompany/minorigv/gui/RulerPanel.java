@@ -18,12 +18,10 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 	 * initializes the panel
 	 */
 	public void init() {
-
 		this.setBackground(Color.lightGray);
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
-
 	}
 
 	/**
@@ -77,12 +75,12 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 			}
 		}
 
-		return -1;
 		//1-2-5-10-20-50-100-200-500-1000-2000-5000-10000
+		return -1;
 	}
 
 	/**
-	 *set de context object voor RulerPanel en voegt een PropertyChangeListener toe aan context
+	 * set de context object voor RulerPanel en voegt een PropertyChangeListener toe aan context
 	 * @param conti
 	 */
 	public void setContext(Context conti) {

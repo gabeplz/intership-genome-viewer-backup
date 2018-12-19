@@ -1,17 +1,12 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
-import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
@@ -30,41 +25,42 @@ import javax.swing.text.NumberFormatter;
 public class IGVMenuBar extends JMenuBar {
 
 	private Context cont;
-	// Define all the items for the menu bar that will have sub items
-	private JMenu files, tools, features;
+	// Defineer de menu items die zelf sub items zullen bevatten.
+	JMenu files, tools, features;
 
-	// Define all the sub items for the menu bar that will not have their own sub items in the menu
-	private JMenuItem openRef, openData, saveORF, findORF, blast,Genes, mRNA ,Exon, Region, CDS, featureList;
+	// Defineer de menu items die zelf niet sub items zullen bevatten.
+	JMenuItem openRef, openData, saveORF, findORF, blast,genes, mRNA ,exon, region, CDS, featureList;
 
-	// List containing the features that the user wants to have visualized
-	private ArrayList<String> featureArray = new ArrayList<String>();
+
+	// Een lijst die de features bevat die de gebruiker op dat moment wil zien.
+	ArrayList<String> featureArray = new ArrayList<String>();
 
 	private JRadioButton buttonAll ,buttonBetween;
 	private JFormattedTextField textField;
 
 	/**
-	 * Initialize the de different menu items.
+	 * Initializeer de verschillende menus.
 	 */
 	public void init() {
 		this.setPreferredSize(new Dimension(200, 25));
 		this.setMinimumSize(new Dimension(100, 25));
-		add(menus());
-		add(featureMenu());
+		menus();
+		featureMenu();
 		condonTableMenu();
 	}
 
 	/**
-	 * function creating the first 2 menus on the menu bar "files" and "tools"
+	 * Het maken van de eerste 2 menus "File" en "Tools"
 	 */
-	public JMenu menus(){
-		//first menu item "File"
+	public void menus(){
+	//Eerst menu item Files
 		files = new JMenu("files");
 
-		//sub items for menu item 1 "File"
+	//sub items voor Files
 		openRef = new JMenuItem("Load reference");
 		openData = new JMenuItem("Load GFF");
 
-		//action listeners for the sub item of File
+	//action listeners voor de sub items van Files
 		openRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -79,22 +75,22 @@ public class IGVMenuBar extends JMenuBar {
 		});
 
 
-		//add the sub items to "File"
+	//Voeg de subitems toe aan  "File"
 		files.add(openRef);
 		files.add(openData);
 
-		//add the files to the menu bar
+	//Voeg Files toe aan de menubar.
 		add(files);
 
-		//second menu item "tools"
+	//Tweede menu item "tools"
 		tools = new JMenu("ORF");
 
-		//sub items for menu itm 2 "tools"
+	//Sub items voor menu item 2 "tools"
 		findORF = new JMenuItem("Find ORFs");
 		saveORF = new JMenuItem("Save ORFs");
 		blast = new JMenuItem("Blast");
 
-		//action listeners for the sub item of tools
+	//Action listeners voor de sub item van tools
 		findORF.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -115,28 +111,32 @@ public class IGVMenuBar extends JMenuBar {
 		});
 
 
-		//add the sub items to "tools"
+	//Voeg de sub items toe aan "tools"
 		tools.add(findORF);
 		tools.add(saveORF);
 		tools.add(blast);
 
-		return tools;
+	//Voeg tools toe aan de menu bar.
+		add(tools);
 	}
 
 	/**
-	 * function creating the third menu item for the menu bar "features"
+	 *Het aan maken van het 3de menu  "features".
 	 */
-	public JMenu featureMenu(){
+	public void featureMenu(){
 		// create the feature menu for the menu bar
 		features = new JMenu("Features");
 
-		featureList = new JMenuItem("Show features");
-		// Checkboxes the contain the features that can be visualized
-		Genes = new JCheckBoxMenuItem("Genes");
+		featureList = new JMenuItem("Show features");// Checkboxes die de verschillende features bevatten die de gebruiker kan kiezen.
+
+
+	// Checkboxes die de verschillende features bevatten die de gebruiker kan kiezen.
+		genes = new JCheckBoxMenuItem("Genes");
 		mRNA = new JCheckBoxMenuItem("mRNA");
-		Exon = new JCheckBoxMenuItem("Exon");
-		Region = new JCheckBoxMenuItem("Region");
+		exon = new JCheckBoxMenuItem("Exon");
+		region = new JCheckBoxMenuItem("Region");
 		CDS = new JCheckBoxMenuItem("CDS");
+
 
 		featureList.addActionListener(new ActionListener() {
 			@Override
@@ -144,8 +144,9 @@ public class IGVMenuBar extends JMenuBar {
 				featureListAction();
 			}
 		});
-		// add action listeners to the check boxes
-		Genes.addActionListener(new ActionListener() {
+
+		// Voeg action listeners toe aan de check boxes.
+		genes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				genesAction();
@@ -157,13 +158,13 @@ public class IGVMenuBar extends JMenuBar {
 				mrnaAction();
 			}
 		});
-		Region.addActionListener(new ActionListener() {
+		region.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				regionAction();
 			}
 		});
-		Exon.addActionListener(new ActionListener() {
+		exon.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				exonAction();
@@ -176,25 +177,24 @@ public class IGVMenuBar extends JMenuBar {
 			}
 		});
 
-		// add the checkboxes to the features menu
-
+	// Voeg de checkboxes toe aan features menu
 		features.add(featureList);
-		features.add(Genes);
+		features.add(genes);
 		features.add(mRNA);
-		features.add(Exon);
-		features.add(Region);
+		features.add(exon);
+		features.add(region);
 		features.add(CDS);
 
-		// create booleans that will be true if check box is selected and false if not selected
+	// Aanmaken van booleans. Een boolean is true als een checkbock is aan geselecteerd en false als dit niet het geval is
 		boolean m = mRNA.isSelected();
-		boolean e = Exon.isSelected();
-		boolean r = Region.isSelected();
+		boolean e = exon.isSelected();
+		boolean r = region.isSelected();
 		boolean c =CDS.isSelected();
 
-        return features;
+        add(features);
     }
 
-	// action performed for files and tools
+	// Action performed voor files en tools.
 	private void loadReferenceAction() {
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
@@ -204,15 +204,12 @@ public class IGVMenuBar extends JMenuBar {
 		}catch (Exception e){}
 	}
 	private void openDataAction() {
-
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
 			String path = fasta.fastafile();
 			cont.addGFF(path);
 
 		}catch (Exception e){}
-
-
 	}
 
 	/**
@@ -227,8 +224,10 @@ public class IGVMenuBar extends JMenuBar {
 		buttonBetween = new JRadioButton("Between");
 		ButtonGroup groupRadioButton = new ButtonGroup();
 		groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
+
 		// Label wordt aangemaakt.
 		final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
+
 		// Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
 		NumberFormat format = NumberFormat.getInstance();
 		NumberFormatter formatter = new NumberFormatter(format);
@@ -238,18 +237,23 @@ public class IGVMenuBar extends JMenuBar {
 		formatter.setAllowsInvalid(true);
 		textField = new JFormattedTextField(formatter);
 		textField.setValue(100); // Strandaard lengte van het ORF.
+
 		// Save button wordt aangemaakt.
 		JButton saveButton = new JButton();
 		saveButton.setText("Save");
+
 		// Panel voor Radio Button, Label en Textfield wordt aangemaakt
 		JPanel panel = new JPanel(new GridLayout(2,2));
-		panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+
 		// Panel voor de Button wordt aangemaakt.
-		JPanel panelForButton = new JPanel();
-		panelForButton.add(saveButton);
+        JPanel panelForButton = new JPanel();
+        panelForButton.add(saveButton);
+
 		// Er wordt een Padding ingesteld.
-		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		// Er wordt een frame aangemaakt.
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Er wordt een frame aangemaakt.
 		JFrame f = new JFrame();
 		f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
 		f.getContentPane().add(panel);
@@ -257,6 +261,7 @@ public class IGVMenuBar extends JMenuBar {
 		f.pack();
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);
+
 		// ActionListener voor de Save Button
 		saveButton.addActionListener(new ActionListener() {
 			@Override
@@ -311,10 +316,10 @@ public class IGVMenuBar extends JMenuBar {
 		PopUpFrame popup = new PopUpFrame(cont);
 	}
 
-	// action performed for the choose Feature menu
-	// if check box is selected it will add the feature to a list that contains the features that should be visualized
+	// action performed voor het choose Feature menu
+    // Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
 	private void genesAction() {
-		Boolean m = Genes.isSelected();
+		Boolean m = genes.isSelected();
 		if (m == true){
 			featureArray.add("Gene");
 		}else{
@@ -333,7 +338,7 @@ public class IGVMenuBar extends JMenuBar {
 		tellContext();
 	}
 	private void regionAction() {
-		Boolean m = Region.isSelected();
+		Boolean m = region.isSelected();
 		if (m == true){
 			featureArray.add("Region");
 		}else{
@@ -342,7 +347,7 @@ public class IGVMenuBar extends JMenuBar {
 		tellContext();
 	}
 	private void exonAction() {
-		Boolean m = Exon.isSelected();
+		Boolean m = exon.isSelected();
 		if (m == true){
 			featureArray.add("Exon");
 		}else{
@@ -371,8 +376,8 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	public void tellContext(){
-		cont.setKeuze_gebruiker(this.featureArray);
-	}
+	    cont.setChoiceUser(this.featureArray);
+    }
 
 	public void setContext(Context cont) {
 		this.cont = cont;

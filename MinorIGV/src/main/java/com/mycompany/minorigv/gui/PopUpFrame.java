@@ -11,7 +11,8 @@ public class PopUpFrame extends JFrame {
     Context cont;
 
     /**
-     * PopUpFrame construeerd een JavaFrame als pop up wanneer er om de get featueres button word geklikt. Het frame bevat alle features die de gebruiker will zien in een tabel
+     * PopUpFrame construeerd een JavaFrame als pop up wanneer er om de get featueres button word geklikt.
+     * Het frame bevat alle features die de gebruiker will zien in een tabel
      * @param cont
      */
     public PopUpFrame(Context cont) {
@@ -26,11 +27,17 @@ public class PopUpFrame extends JFrame {
         //Arraylist die alle features van eht chromosome bevat
         ArrayList<Feature> featureFilteredList = cont.getWholeFeatureList();
 
-        //Aan maken van een nieuwe Jtable
-        DefaultTableModel model = new DefaultTableModel();
+        //Aan maken van een nieuwe Jtable and make it non editable
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int Column){
+                return false;
+            }
+        };
+
         JTable table = new JTable(model);
 
-        // voeg de collom namen toe aan het model
+        // voeg de kolomnamen toe aan het model
         model.addColumn("ID");
         model.addColumn("Type");
         model.addColumn("Strand");
@@ -42,20 +49,15 @@ public class PopUpFrame extends JFrame {
             String featureName="";
             if (feat instanceof mRNA){
                 featureName = "mRNA";
-            };
-            if (feat instanceof CDS){
+            } else if (feat instanceof CDS){
                 featureName = "CDS";
-            };
-            if (feat instanceof Exon){
+            } else if (feat instanceof Exon){
                 featureName = "Exon";
-            };
-            if (feat instanceof Region){
+            } else if (feat instanceof Region){
                 featureName = "Region";
-            };
-            if (feat instanceof Gene){
+            } else if (feat instanceof Gene){
                 featureName = "Gene";
-            };
-
+            }
             //Voeg een regel toe aan het model.
             model.addRow(new Object[]{feat.getId(), featureName,feat.getStrand(),feat.getStart(),feat.getStop()});
         }
