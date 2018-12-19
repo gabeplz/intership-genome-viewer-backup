@@ -7,6 +7,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * PopUpFrame construeerd een JavaFrame als pop up wanneer er om de get featueres button word geklikt.
+ * Het frame bevat alle features die de gebruiker will zien in een tabel
+ * @Auteur: Tim Kuijpers
+ */
 public class PopUpFrame extends JFrame {
     Context cont;
 
@@ -24,7 +29,7 @@ public class PopUpFrame extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        //Arraylist die alle features van eht chromosome bevat
+        //Arraylist die alle features van het chromosome bevat
         ArrayList<Feature> featureFilteredList = cont.getWholeFeatureList();
 
         //Aan maken van een nieuwe Jtable and make it non editable
@@ -37,14 +42,14 @@ public class PopUpFrame extends JFrame {
 
         JTable table = new JTable(model);
 
-        // voeg de kolomnamen toe aan het model
+        //Voeg de kolomnamen toe aan het model
         model.addColumn("ID");
         model.addColumn("Type");
         model.addColumn("Strand");
         model.addColumn("Start");
         model.addColumn("stop");
 
-        //bepaal het feature type door te kijken of het een instance of .... is.
+        //Bepaal het feature type door te kijken of het een instance of .... is.
         for (Feature feat:featureFilteredList) {
             String featureName="";
             if (feat instanceof mRNA){
