@@ -159,13 +159,15 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         parseInput();
         int length = stop - start;
         // TODO: 11/12/2018
-        //if (length*0.1 <= cont.getLength()
         int scale = (int) Math.round(length * 0.1);
         start = start - scale +1;
         stop = stop + scale +1;
         if (start <= 0) {
             start = 0;
             }
+        if (stop >= cont.getFullLenght()){
+            stop = cont.getFullLenght();
+        }
         cont.changeSize(start, stop);
     }
 

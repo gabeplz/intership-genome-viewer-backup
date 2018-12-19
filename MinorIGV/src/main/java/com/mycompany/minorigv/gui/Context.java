@@ -74,7 +74,8 @@ public class Context implements Serializable, PropertyChangeListener {
 			//TODO error handling
 		}
 		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
-			//TODO
+			this.setStart(newStart);
+			this.setStop(this.curChromosome.getSeqTemp().length()-1);
 		}
 		else if(newStart < 0){
 			//TODO

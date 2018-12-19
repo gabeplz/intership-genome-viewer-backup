@@ -1,5 +1,6 @@
 package com.mycompany.minorigv;
 
+import javax.sound.sampled.AudioFileFormat;
 import java.io.*;
 import java.util.HashMap;
 
@@ -20,7 +21,9 @@ public class FastaFileReader {
      * @throws IOException  Input/output exceptie
      */
     public static HashMap<String,String> getSequences(String pad) throws IOException{
-
+        if (!(pad.endsWith(".fna") || pad.endsWith(".fa") || pad.endsWith(".fasta") || pad.endsWith(".txt"))){
+            throw new IOException("Niet ondersteund file type");
+        }
         BufferedReader f_reader = new BufferedReader(new FileReader(pad));
         HashMap<String,String> CH_list = new HashMap<String, String>();
         String regel = f_reader.readLine();

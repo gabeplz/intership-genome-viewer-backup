@@ -27,7 +27,7 @@ public class PopUpFrame extends JFrame {
         //Arraylist die alle features van eht chromosome bevat
         ArrayList<Feature> featureFilteredList = cont.getWholeFeatureList();
 
-        //Aan maken van een nieuwe Jtable
+        //Aan maken van een nieuwe Jtable and make it non editable
         DefaultTableModel model = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int Column){
