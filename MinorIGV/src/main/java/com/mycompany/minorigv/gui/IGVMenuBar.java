@@ -20,7 +20,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Class for building the Menu bar of the application
+ * Deze class maakt een menubar voorde aplicatie die verschillende menus bevat zoals menus voor het laden van files tools .etc
+ * @Auteur: Tim Kuijpers
  */
 public class IGVMenuBar extends JMenuBar {
 
@@ -124,7 +125,7 @@ public class IGVMenuBar extends JMenuBar {
 	 *Het aan maken van het 3de menu  "features".
 	 */
 	public void featureMenu(){
-		// create the feature menu for the menu bar
+	// Aanmaken van een feature menu voor op de menu bar
 		features = new JMenu("Features");
 
 		featureList = new JMenuItem("Show features");// Checkboxes die de verschillende features bevatten die de gebruiker kan kiezen.
@@ -185,13 +186,17 @@ public class IGVMenuBar extends JMenuBar {
 		features.add(region);
 		features.add(CDS);
 
+
+
 	// Aanmaken van booleans. Een boolean is true als een checkbock is aan geselecteerd en false als dit niet het geval is
 		boolean m = mRNA.isSelected();
 		boolean e = exon.isSelected();
 		boolean r = region.isSelected();
 		boolean c =CDS.isSelected();
 
+        // Voeg het features menu aan de menu bar
         add(features);
+
     }
 
 	// Action performed voor files en tools.
