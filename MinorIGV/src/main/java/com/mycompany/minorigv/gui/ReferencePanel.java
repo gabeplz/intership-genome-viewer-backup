@@ -11,17 +11,17 @@ import javax.swing.JPanel;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 
 /**
- * ReferencePanel draws the nucleotides of the forward en reverse strand.
+ * ReferencePanel tekent de nucleotiden van de referentie sequentie.
  */
 public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 	Context cont;
 	public static final int HEIGHT = 20;
 
-	public static Color ThymineKleur = new Color(128,0,255);
-    public static Color AdenineKleur = new Color(255,0,0);
-	public static Color CytosineKleur = new Color(123, 215,0);
-	public static Color GuanineKleur = new Color(0, 215, 215);
+	public static Color thymineKleur = new Color(128,0,255);
+    public static Color adenineKleur = new Color(255,0,0);
+	public static Color cytosineKleur = new Color(123, 215,0);
+	public static Color guanineKleur = new Color(0, 215, 215);
 
 
 	@Override
@@ -134,28 +134,28 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		//http://phrogz.net/css/distinct-colors.html
 		switch (c) {
 		case 'T':
-			g.setColor(ThymineKleur);
+			g.setColor(thymineKleur);
 			break;
 		case 'A':
-			g.setColor(AdenineKleur);
+			g.setColor(adenineKleur);
 			break;
 		case 'C':
-			g.setColor(CytosineKleur);
+			g.setColor(cytosineKleur);
 			break;
 		case 'G':
-			g.setColor(GuanineKleur);
+			g.setColor(guanineKleur);
 			break;
 		case 't':
-			g.setColor(ThymineKleur);
+			g.setColor(thymineKleur);
 			break;
 		case 'a':
-			g.setColor(AdenineKleur);
+			g.setColor(adenineKleur);
 			break;
 		case 'c':
-			g.setColor(CytosineKleur);
+			g.setColor(cytosineKleur);
 			break;
 		case 'g':
-			g.setColor(GuanineKleur);
+			g.setColor(guanineKleur);
 			break;
 		default:
 			g.setColor(Color.BLACK);
