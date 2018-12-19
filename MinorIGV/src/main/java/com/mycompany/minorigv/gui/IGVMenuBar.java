@@ -128,6 +128,8 @@ public class IGVMenuBar extends JMenuBar {
 		features = new JMenu("Features");
 
 		featureList = new JMenuItem("Show features");// Checkboxes die de verschillende features bevatten die de gebruiker kan kiezen.
+
+
 	// Checkboxes die de verschillende features bevatten die de gebruiker kan kiezen.
 		genes = new JCheckBoxMenuItem("Genes");
 		mRNA = new JCheckBoxMenuItem("mRNA");
