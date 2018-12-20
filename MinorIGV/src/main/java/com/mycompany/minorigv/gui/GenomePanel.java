@@ -103,7 +103,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * Function creating the +, - and search zoom buttons
      */
     private void makeZoomButtons() {
-
+        // TODO: 20/12/2018 disable zoom out while fasta is not loaded
         zoomIn = new JButton("+");
         zoomIn.addActionListener(new ActionListener() {
             @Override
