@@ -218,8 +218,12 @@ public class Context implements Serializable, PropertyChangeListener {
 	 */
 	public void changeChromosome(String id) throws Exception {
 		this.setCurChromosome(organism.getChromosome(id));
+		this.updateCurrentFeatureList();
+		if(this.stop > this.curChromosome.getSeqTemp().length()-1) {
+            defaultSize();
+		}
 
-		if(this.stop > this.curChromosome.getSeqTemp().length()-1) defaultSize();
+        this.updateCurrentFeatureList();
 		pcs.firePropertyChange("chromosome", null, null);
 	}
 

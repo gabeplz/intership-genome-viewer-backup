@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MinorIGV:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MinorIGV_jar</output-path>
+    <root id="archive" name="MinorIGV.jar">
+      <element id="module-output" name="MinorIGV" />
+    </root>
+  </artifact>
+</component>

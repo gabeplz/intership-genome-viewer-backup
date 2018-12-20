@@ -126,6 +126,8 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	public void setContext(Context context) {
 		this.cont = context;
 		context.addPropertyChangeListener("currentFeatureList",this);
+        cont.addPropertyChangeListener("chromosome",this);
+
 	}
 
 
