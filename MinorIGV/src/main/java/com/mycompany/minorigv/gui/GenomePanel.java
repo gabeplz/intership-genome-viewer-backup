@@ -57,10 +57,25 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * Convection user input to pc input by subtracting 1 so a user input of 1 will be seen by the pc as index 0.
      */
     private void parseInput() {
-        String positions = locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
-        String[] parts = positions.split("-");
-        start = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
-        stop = Integer.parseInt(parts[1]) - 1;
+
+        try {
+            String positions = locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
+
+            if(!positions.matches("^([+-]?[0-9][0-9]*)-([+-]?[0-9][0-9]*)$")){
+                ExceptionDialogs.ErrorDialog("Verkeerde invoer start-stop veld","foutieve invoer");
+                return;
+            }
+            String[] parts = positions.split("-");
+            int newStart = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
+            int newStop = Integer.parseInt(parts[1]) - 1;
+            start = newStart;
+            stop = newStop;
+
+
+        } catch (Exception e) {
+            ExceptionDialogs.ErrorDialog("Verkeerde invoer start-stop veld","foutieve invoer");
+        }
+
     }
 
     /**
@@ -96,7 +111,6 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             System.err.println("Error changing chromosome");
 
         }
-
     }
 
     /**
@@ -143,13 +157,24 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      */
     private void zoomInAction() {
         parseInput();
-        int length = stop - start;
-        if (length > 10) {
-            int scale = (int) Math.round(length * 0.1);
-            start = start + scale +1;
-            stop = stop - scale +1;
 
-            cont.changeSize(start, stop);
+        try {
+            int length = stop - start;
+            if (length > 10) {
+                int scale = (int) Math.round(length * 0.1);
+                start = start + scale + 1;
+                stop = stop - scale + 1;
+                cont.getFullLenght();
+                cont.changeSize(start, stop);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            //e.printStackTrace();
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+
+
+        } catch (NullPointerException e) {
+            ExceptionDialogs.ErrorDialog("Geen sequentie ingelezen","error");
+
         }
     }
 
@@ -158,18 +183,25 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      */
     private void zoomOutAction() {
         parseInput();
-        int length = stop - start;
-        // TODO: 11/12/2018
-        int scale = (int) Math.round(length * 0.1);
-        start = start - scale +1;
-        stop = stop + scale +1;
-        if (start <= 0) {
-            start = 0;
+        try {
+            int length = stop - start;
+            // TODO: 11/12/2018
+            int scale = (int) Math.round(length * 0.1);
+            start = start - scale +1;
+            stop = stop + scale +1;
+            if (start <= 0) {
+                start = 0;
+                }
+            if (stop >= cont.getFullLenght()){
+                stop = cont.getFullLenght();
             }
-        if (stop >= cont.getFullLenght()){
-            stop = cont.getFullLenght();
+            cont.changeSize(start, stop);
+        } catch (IndexOutOfBoundsException e) {
+            //e.printStackTrace();
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+        } catch (NullPointerException e) {
+            ExceptionDialogs.ErrorDialog("Geen sequentie ingelezen","error");
         }
-        cont.changeSize(start, stop);
     }
 
     /**
@@ -192,7 +224,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * changeContext changes the chromosomes in the dropdown menu with new model containing chromosomes from set in context.java
+     * changeContext functie die het model update van het dropdown menu.
      */
     public void changedContext() {
         DefaultComboBoxModel model = new DefaultComboBoxModel(cont.getChromosomeNames());
@@ -200,18 +232,14 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 
     }
 
-    /**
-     * function telling the application what to do when 1 of the 2 scenarios in setContext is met
-     * @param evt
-     */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		
-		if (evt.getPropertyName().equals("chromosomeNameArray")) {
+		if (evt.getPropertyName().equals("chromosomeNameArray")) { //andere chromosomen
 			changedContext();
 			syncSize();
 		}
-		else if(evt.getPropertyName().equals("range")) {
+		else if(evt.getPropertyName().equals("range")) { //andere view (start/stop)
 			syncSize();
 		}	
 	}

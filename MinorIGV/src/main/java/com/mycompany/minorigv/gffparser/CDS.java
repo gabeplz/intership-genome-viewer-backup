@@ -50,7 +50,7 @@ public class CDS extends Feature{
 
     @Override
     public String getName() {
-        return "Coding sequence";
+        return "CDS";
     }
 
     @Override

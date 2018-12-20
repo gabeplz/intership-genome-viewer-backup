@@ -52,7 +52,7 @@ public class Region extends Feature{
 
     @Override
     public String getName() {
-        return "region";
+        return "Region";
     }
 
     @Override

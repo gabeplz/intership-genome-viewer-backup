@@ -1,6 +1,7 @@
 package com.mycompany.minorigv;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
@@ -18,6 +19,7 @@ public class FastaFileChooser {
             File SelectedFile = jfc.getSelectedFile();
             fasta = (SelectedFile.getAbsolutePath());
         }
+
         return fasta;
 
     }

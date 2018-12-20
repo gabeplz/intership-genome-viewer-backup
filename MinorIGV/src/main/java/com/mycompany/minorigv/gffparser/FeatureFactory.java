@@ -40,4 +40,7 @@ public class FeatureFactory {
 
         return new Feature(seqID,featType, start, end, score, strand, phase, attributen); //Generiekste Feature mogelijk.
     }
+
+
 }
+

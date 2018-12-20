@@ -4,10 +4,7 @@ package com.mycompany.minorigv.gui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
@@ -65,20 +62,20 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param newStart de nieuwe start,
 	 * @param newStop de nieuwe stop
 	 */
-	public void changeSize(int newStart, int newStop) {
+	public void changeSize(int newStart, int newStop) throws IndexOutOfBoundsException {
 		if(this.organism == null || this.curChromosome == null) {
 			return;
 		}
 
-		if(newStop-2 < newStart){
-			//TODO error handling
+		if(newStop < newStart){
+			throw new IndexOutOfBoundsException("nieuwe stop kleiner dan nieuwe start");
 		}
 		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
 			this.setStart(newStart);
 			this.setStop(this.curChromosome.getSeqTemp().length()-1);
 		}
 		else if(newStart < 0){
-			//TODO
+			throw new IndexOutOfBoundsException("start onder nul");
 		}
 		else {
 			this.setStart(newStart);
@@ -99,6 +96,11 @@ public class Context implements Serializable, PropertyChangeListener {
 
 
 	public void addFasta(String path) throws Exception{
+
+	    File file = new File(path);
+        if (!file.exists()){
+            return;
+        }
 
 		//Als er geen organism is, maak hem aan. eerste fasta.
 		if (organism == null){
@@ -146,6 +148,11 @@ public class Context implements Serializable, PropertyChangeListener {
 	 */
 	public void addGFF(String path) throws Exception {
 
+        File file = new File(path);
+        if (!file.exists()){
+            return;
+        }
+
 		//als er nog geen organism object is.
 		if (organism == null){
 			this.setOrganism(new Organisms());
@@ -189,7 +196,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * Functie die de volledige lengte van de sequentie van het huidige chromosoom retourneert.
 	 * @return De lengte van de sequentie van het huidige chromosoom.
 	 */
-	public int getFullLenght() {
+	public int getFullLenght() throws NullPointerException {
 		return curChromosome.getSeqTemp().length();
 	}
 
@@ -244,7 +251,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 	/**
-	 * Functie die de chromosoomNamen synchroniseert met het organism.
+	 * Functie die de chromosoom namen synchroniseert met het organism.
 	 */
 	public void setChromosomeNames() {
 		String[] oldValue = this.chromosomeNameArray;
@@ -253,7 +260,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		Arrays.sort(nameArray);
 		this.chromosomeNameArray = nameArray;
 
-		pcs.firePropertyChange("chromosomeNameArray", oldValue, this.chromosomeNameArray); //fire het chromosomeNameArray event
+		pcs.firePropertyChange("chromosomeNameArray", oldValue, this.chromosomeNameArray); //vuur het chromosomeNameArray event af.
 
 	}
 

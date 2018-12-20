@@ -11,18 +11,21 @@ import javax.swing.JPanel;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 
 /**
- * ReferencePanel draws the nucleotides of the forward en reverse strand.
+ * @author Huub Goltstein
+ * ReferencePanel tekent de nucleotiden van de referentie sequentie.
  */
 public class ReferencePanel extends JPanel implements PropertyChangeListener {
-	//Hardcoded String ff want moeten nog Context objecten hebben
+
 	Context cont;
 	public static final int HEIGHT = 20;
 
-    /**
-     * using coordinates from drawingtools this function draws nucleotides of the forward and reverse strand in the correct spot in the GUI //TODO
-     * paintComponent functie overridden uit JPanel.
-     * @param g
-     */
+	public static Color thymineColor = new Color(128,0,255);
+    public static Color adenineColor = new Color(255,0,0);
+	public static Color cytosineColor = new Color(123, 215,0);
+	public static Color guanineColor = new Color(0, 215, 215);
+
+
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -132,28 +135,28 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 		//http://phrogz.net/css/distinct-colors.html
 		switch (c) {
 		case 'T':
-			g.setColor(new Color(128,0,255));
+			g.setColor(thymineColor);
 			break;
 		case 'A':
-			g.setColor(new Color(255,0,0));
+			g.setColor(adenineColor);
 			break;
 		case 'C':
-			g.setColor(new Color(123, 215,0));
+			g.setColor(cytosineColor);
 			break;
 		case 'G':
-			g.setColor(new Color(0, 215, 215));
+			g.setColor(guanineColor);
 			break;
 		case 't':
-			g.setColor(new Color(128,0,255));
+			g.setColor(thymineColor);
 			break;
 		case 'a':
-			g.setColor(new Color(255,0,0));
+			g.setColor(adenineColor);
 			break;
 		case 'c':
-			g.setColor(new Color(123, 215,0));
+			g.setColor(cytosineColor);
 			break;
 		case 'g':
-			g.setColor(new Color(0, 215, 215));
+			g.setColor(guanineColor);
 			break;
 		default:
 			g.setColor(Color.BLACK);
@@ -185,7 +188,7 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {  //als range/chromosome veranderen updaten.
+	public void propertyChange(PropertyChangeEvent evt) {  //als range/chromosome veranderen updaten.
 		this.invalidate();
 		this.repaint();
 		

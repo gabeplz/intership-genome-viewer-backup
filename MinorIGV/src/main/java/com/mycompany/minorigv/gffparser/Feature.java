@@ -78,7 +78,7 @@ public class Feature implements MappableFeature {
      * @return      stop is de positie waar de feature eindigd. Stop is een Integer.
      */
     public int getStop() {
-        return Integer.parseInt(stop)-1;
+        return Integer.parseInt(stop);
     }
 
     /**

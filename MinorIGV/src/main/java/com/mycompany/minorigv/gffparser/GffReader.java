@@ -31,6 +31,8 @@ public class GffReader {
         String ID = null;
         String IdOrganism;
 
+        String[] columns;
+
         if (org == null) {
             org = new Organisms();
         }
@@ -57,7 +59,7 @@ public class GffReader {
                 // Als de regel met ID begint is het mogelijk relevante data om op te slaan.
             } else if (line.startsWith("#")) {
             } else if (line.startsWith(ID)) {
-                String[] columns = line.split("\\t");
+                columns = line.split("\\t");
 
                 // Class waarin de kolom met attributen wordt verwerkt.
 

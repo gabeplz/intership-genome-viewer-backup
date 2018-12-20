@@ -7,6 +7,7 @@ import com.mycompany.minorigv.sequence.TranslationManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
@@ -20,7 +21,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Deze class maakt een menubar voorde aplicatie die verschillende menus bevat zoals menus voor het laden van files tools .etc
+ * Deze class maakt een menubar voor de applicatie die verschillende menus bevat zoals menus voor het laden van files tools etc.
  * @Auteur: Tim Kuijpers
  */
 public class IGVMenuBar extends JMenuBar {
@@ -36,8 +37,8 @@ public class IGVMenuBar extends JMenuBar {
 	// Een lijst die de features bevat die de gebruiker op dat moment wil zien.
 	ArrayList<String> featureArray = new ArrayList<String>();
 
-    JRadioButton buttonAll ,buttonBetween;
-    JFormattedTextField textField;
+	private JRadioButton buttonAll ,buttonBetween;
+	private JFormattedTextField textField;
 
 	/**
 	 * Initializeer de verschillende menus.
@@ -47,7 +48,7 @@ public class IGVMenuBar extends JMenuBar {
 		this.setMinimumSize(new Dimension(100, 25));
 		menus();
 		featureMenu();
-        condonTableMenu();
+		condonTableMenu();
 	}
 
 	/**
@@ -57,11 +58,11 @@ public class IGVMenuBar extends JMenuBar {
 	//Eerst menu item Files
 		files = new JMenu("files");
 
-	//sub items voor Files
+	//Sub items voor Files
 		openRef = new JMenuItem("Load reference");
 		openData = new JMenuItem("Load GFF");
 
-	//action listeners voor de sub items van Files
+	//Action listeners voor de sub items van Files
 		openRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -186,8 +187,7 @@ public class IGVMenuBar extends JMenuBar {
 		features.add(region);
 		features.add(CDS);
 
-	// Voeg het features menu aan de menu bar
-		add(features);
+
 
 	// Aanmaken van booleans. Een boolean is true als een checkbock is aan geselecteerd en false als dit niet het geval is
 		boolean m = mRNA.isSelected();
@@ -195,21 +195,29 @@ public class IGVMenuBar extends JMenuBar {
 		boolean r = region.isSelected();
 		boolean c =CDS.isSelected();
 
-	}
+        // Voeg het features menu aan de menu bar
+        add(features);
+
+    }
 
 	// Action performed voor files en tools.
 	private void loadReferenceAction() {
 		try{
+
 			FastaFileChooser fasta = new FastaFileChooser();
 			String path = fasta.fastafile();
+
 			cont.addFasta(path);
 
-		}catch (Exception e){}
+		}catch (Exception e){
+
+		}
 	}
 	private void openDataAction() {
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
 			String path = fasta.fastafile();
+
 			cont.addGFF(path);
 
 		}catch (Exception e){}
@@ -232,12 +240,12 @@ public class IGVMenuBar extends JMenuBar {
 		final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
 
 		// Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
-        NumberFormat format = NumberFormat.getInstance();
-        NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(true);
+		NumberFormat format = NumberFormat.getInstance();
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(0);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(true);
 		textField = new JFormattedTextField(formatter);
 		textField.setValue(100); // Strandaard lengte van het ORF.
 
@@ -266,9 +274,9 @@ public class IGVMenuBar extends JMenuBar {
 		f.setVisible(true);
 
 		// ActionListener voor de Save Button
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				try {
 					saveButtonAction();
 					f.dispose();
@@ -278,7 +286,7 @@ public class IGVMenuBar extends JMenuBar {
 					e1.printStackTrace();
 				}
 			}
-        });
+		});
 	}
 
 	/**
@@ -287,25 +295,25 @@ public class IGVMenuBar extends JMenuBar {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-    private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException {
-    	// haalt de ingevoerde lengte op van het ORF.
-        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+	private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException {
+		// haalt de ingevoerde lengte op van het ORF.
+		int lengthORFUser = Integer.parseInt(textField.getValue().toString());
 		// Set de ORFs
-        cont.setCurORFListALL(lengthORFUser);
+		cont.setCurORFListALL(lengthORFUser);
 		// Kijkt welke Radio Button is aangeklikt.
-        Boolean m = buttonAll.isSelected();
-        if(m == true){
-            cont.saveORFs(cont.getCurORFListALL());
-        }else{
-            cont.saveORFs(cont.getCurORFListBetween());
-        }
-    }
+		Boolean m = buttonAll.isSelected();
+		if(m == true){
+			cont.saveORFs(cont.getCurORFListALL());
+		}else{
+			cont.saveORFs(cont.getCurORFListBetween());
+		}
+	}
 
 	/**
 	 * Wanneer er op de button Find ORF gedrukt wordt, komt er een pop-up waarin de lengte van het ORF ingevuld kan worden (nt).
 	 * Vervolgens worden de ORFs gezocht en gevisualiseerd.
 	 */
-    private void findOrfAction() {
+	private void findOrfAction() {
 		int lenghtORF = Integer.parseInt(JOptionPane.showInputDialog("Length ORF (nt)"));
 		cont.setCurORFListALL(lenghtORF);
 	}
@@ -316,10 +324,10 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	private void featureListAction() {
-    	PopUpFrame popup = new PopUpFrame(cont);
-    }
+		PopUpFrame popup = new PopUpFrame(cont);
+	}
 
-	// action performed voor het choose Feature menu
+	// Action performed voor het choose Feature menu
     // Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
 	private void genesAction() {
 		Boolean m = genes.isSelected();
@@ -328,7 +336,7 @@ public class IGVMenuBar extends JMenuBar {
 		}else{
 			featureArray.remove("Gene");
 		}
-        tellContext();
+		tellContext();
 	}
 	private void mrnaAction() {
 		Boolean m = mRNA.isSelected();
@@ -338,7 +346,7 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("mRNA");
 		}
 
-        tellContext();
+		tellContext();
 	}
 	private void regionAction() {
 		Boolean m = region.isSelected();
@@ -347,7 +355,7 @@ public class IGVMenuBar extends JMenuBar {
 		}else{
 			featureArray.remove("Region");
 		}
-        tellContext();
+		tellContext();
 	}
 	private void exonAction() {
 		Boolean m = exon.isSelected();
@@ -357,7 +365,7 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("Exon");
 		}
 
-        tellContext();
+		tellContext();
 	}
 	private void cdsAction() {
 		Boolean m = CDS.isSelected();
@@ -367,7 +375,7 @@ public class IGVMenuBar extends JMenuBar {
 			featureArray.remove("CDS");
 		}
 
-        tellContext();
+		tellContext();
 	}
 
 	/**
@@ -386,26 +394,26 @@ public class IGVMenuBar extends JMenuBar {
 		this.cont = cont;
 	}
 
-    /**
-     * maakt en voegt de translatie tabel menu aan de menubalk toe
-     * gebruikt getCodonTableMenuItem om de items te genereren
-     */
+	/**
+	 * maakt en voegt de translatie tabel menu aan de menubalk toe
+	 * gebruikt getCodonTableMenuItem om de items te genereren
+	 */
 	public void condonTableMenu(){
-	    JMenu transTableMenu = new JMenu("Translation Table");
+		JMenu transTableMenu = new JMenu("Translation Table");
 		ButtonGroup group = new ButtonGroup();
-        for (CodonTable codonTable : TranslationManager.getInstance().getAllCodonTables()) {
-		    JMenuItem item = getCodonTableMenuItem(codonTable);
-		    transTableMenu.add(item);
-		    group.add(item);
-	    }
-        add(transTableMenu);
-    }
+		for (CodonTable codonTable : TranslationManager.getInstance().getAllCodonTables()) {
+			JMenuItem item = getCodonTableMenuItem(codonTable);
+			transTableMenu.add(item);
+			group.add(item);
+		}
+		add(transTableMenu);
+	}
 
-    /**
-     * maakt de menu items voor codonTableMenu
-     * @param codonTable
-     * @return
-     */
+	/**
+	 * maakt de menu items voor codonTableMenu
+	 * @param codonTable
+	 * @return
+	 */
 	private JRadioButtonMenuItem getCodonTableMenuItem(CodonTable codonTable) {
 		JRadioButtonMenuItem item = new JRadioButtonMenuItem();
 		String fullName = codonTable.getNames()[0];
@@ -416,7 +424,7 @@ public class IGVMenuBar extends JMenuBar {
 		}
 		item.setText(shortName);
 		final Integer curKey = codonTable.getKey();
-        item.setSelected(item.getText().contentEquals("Standard"));
+		item.setSelected(item.getText().contentEquals("Standard"));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
