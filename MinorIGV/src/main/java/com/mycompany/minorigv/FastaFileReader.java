@@ -1,11 +1,7 @@
 package com.mycompany.minorigv;
-import com.mycompany.minorigv.gffparser.Chromosome;
-import com.mycompany.minorigv.gffparser.ORF;
-import com.mycompany.minorigv.sequence.findORF;
-import com.mycompany.minorigv.sequence.makeCompStrand;
 
+import javax.sound.sampled.AudioFileFormat;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -25,30 +21,38 @@ public class FastaFileReader {
      * @throws IOException  Input/output exceptie
      */
     public static HashMap<String,String> getSequences(String pad) throws IOException{
-
+        if (!(pad.endsWith(".fna") || pad.endsWith(".fa") || pad.endsWith(".fasta") || pad.endsWith(".txt"))){
+            throw new IOException("Niet ondersteund file type");
+        }
         BufferedReader f_reader = new BufferedReader(new FileReader(pad));
         HashMap<String,String> CH_list = new HashMap<String, String>();
         String regel = f_reader.readLine();
+        StringBuilder chromosoomSeq = new StringBuilder();
+        String seq;
 
         // Loopen over de headers
         while(regel != null) {
+            chromosoomSeq.delete(0,chromosoomSeq.length());
             String header = regel;
             // ID uit fasta header halen
             String id = header.split("\\s+")[0].replace(">", "");
 
             regel = f_reader.readLine();
 
-            StringBuilder chromosoomSeq = new StringBuilder();
+
 
             // Loopen over de sequentie van een header
             while (regel != null && !regel.startsWith(">")) {
                 regel = regel.trim();
-                chromosoomSeq.append(regel);
+                chromosoomSeq.append(regel.toUpperCase());
                 regel = f_reader.readLine();
             }
 
-            CH_list.put(id,chromosoomSeq.toString().toUpperCase());
+            seq = chromosoomSeq.toString();
+            CH_list.put(id,seq);
+
         }
+        f_reader.close();
         return CH_list;
     }
 }

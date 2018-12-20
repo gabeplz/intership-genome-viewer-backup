@@ -1,14 +1,10 @@
 package com.mycompany.minorigv.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.*;
 
@@ -23,135 +19,195 @@ import javax.swing.*;
 
 public class GenomePanel extends JPanel implements PropertyChangeListener {
     private Context cont;
-    private JTextArea Organism;
-    private JComboBox Chromosome;
-    private JTextArea Locus;
-    private JButton ZoomIn;
-    private JButton ZoomOut;
-    private JButton Search;
+    private JTextArea organism;
+    private JComboBox chromosome;
+    private JTextField locus;
+    private JButton zoomIn;
+    private JButton zoomOut;
+    private JButton search;
     private int start;
     private int stop;
 
-
+    /**
+     * function building the Genomepanel in the application
+     */
     public void init() {
-
         this.setBackground(Color.CYAN);
         this.setLayout(new FlowLayout());
         this.setPreferredSize(new Dimension(200, 50));
-
         makeTextAreas();
         makeZoomButtons();
         addElements();
-
     }
 
+    /**
+     * Function that adds all the elements to the Genomepanel
+     */
     private void addElements() {
-        this.add(Organism);
-        this.add(Chromosome);
-        this.add(Locus);
-        this.add(ZoomIn);
-        this.add(ZoomOut);
-        this.add(Search);
+        this.add(organism);
+        this.add(chromosome);
+        this.add(locus);
+        this.add(zoomIn);
+        this.add(zoomOut);
+        this.add(search);
 
     }
 
-    //Converteren user input naar pc input door middel van -1 zodat een user input can 1 door de pc word gezien als index0
+    /**
+     * Convection user input to pc input by subtracting 1 so a user input of 1 will be seen by the pc as index 0.
+     */
     private void parseInput() {
-        String positions = Locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
-        String[] parts = positions.split("-");
-        start = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
-        stop = Integer.parseInt(parts[1]) - 1;
+
+        try {
+            String positions = locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
+
+            if(!positions.matches("^([+-]?[0-9][0-9]*)-([+-]?[0-9][0-9]*)$")){
+                ExceptionDialogs.ErrorDialog("Verkeerde invoer start-stop veld","foutieve invoer");
+                return;
+            }
+            String[] parts = positions.split("-");
+            int newStart = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
+            int newStop = Integer.parseInt(parts[1]) - 1;
+            start = newStart;
+            stop = newStop;
+
+
+        } catch (Exception e) {
+            ExceptionDialogs.ErrorDialog("Verkeerde invoer start-stop veld","foutieve invoer");
+        }
+
     }
 
+    /**
+     * function creating the text area that will display the name of an organism who's dna sequence is shown on screen and the position of the DNA sequence the user is looking at
+     */
     private void makeTextAreas() {
+        organism = new JTextArea(1, 20);
+        organism.setEditable(false);
+        organism.setText("Organism");
+        chromosome = new JComboBox();
+        locus = new JTextField(20);
+        locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        locus.setText("1-100");
 
-        Organism = new JTextArea(1, 20);
-        Organism.setText("Organism");
-        Chromosome = new JComboBox();
-        Locus = new JTextArea(1, 20);
-        Locus.setText("1-100");
-
-        ActionListener chromosomeListener = new ActionListener() {//add actionlistner to listen for change
+        ActionListener chromosomeListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 changeChromosome();
             }
         };
 
-        Chromosome.addActionListener(chromosomeListener);
-
+        chromosome.addActionListener(chromosomeListener);
     }
 
+    /**
+     * Functie verantwoordelijk voor het veranderen van het huidige chromosoom.
+     */
     private void changeChromosome() {
         try {
-            //cont.changeSize(0,2);
-            cont.changeChromosome((String) Chromosome.getSelectedItem());
+            cont.changeChromosome((String) chromosome.getSelectedItem());
 
         } catch (Exception e) {
-            System.out.println("Idk what went wrong");
+            System.err.println("Error changing chromosome");
 
         }
-
     }
 
+    /**
+     * Function creating the +, - and search zoom buttons
+     */
     private void makeZoomButtons() {
-
-        ZoomIn = new JButton("+");
-        ZoomIn.addActionListener(new ActionListener() {
+        // TODO: 20/12/2018 disable zoom out while fasta is not loaded
+        zoomIn = new JButton("+");
+        zoomIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ZoomInAction();
+                zoomInAction();
             }
         });
 
-        ZoomOut = new JButton("-");
-        ZoomOut.addActionListener(new ActionListener() {
+        zoomOut = new JButton("-");
+        zoomOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ZoomOutAction();
+                zoomOutAction();
             }
         });
 
-        Search = new JButton("Search");
-        Search.addActionListener(new ActionListener() {
+        search = new JButton("Search");
+        search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SearchAction();
+                searchAction();
             }
         });
 
     }
 
-    private void SearchAction() {
+    /**
+     * Function changing the start and stop used in context with a start and stop chosen by the user
+     */
+    private void searchAction() {
         parseInput();
         cont.changeSize(start, stop);
     }
 
-    private void ZoomInAction() {
+    /**
+     * ZoomInAction contains the logic behind the zoom in button
+     */
+    private void zoomInAction() {
         parseInput();
-        int length = stop - start;
-        if (length > 10) {
-            int scale = (int) Math.round(length * 0.1);
-            start = start + scale +1;
-            stop = stop - scale +1;
 
-            cont.changeSize(start, stop);
+        try {
+            int length = stop - start;
+            if (length > 10) {
+                int scale = (int) Math.round(length * 0.1);
+                start = start + scale + 1;
+                stop = stop - scale + 1;
+                cont.getFullLenght();
+                cont.changeSize(start, stop);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            //e.printStackTrace();
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+
+
+        } catch (NullPointerException e) {
+            ExceptionDialogs.ErrorDialog("Geen sequentie ingelezen","error");
+
         }
     }
 
-    private void ZoomOutAction() {
+    /**
+     * ZoomOutAction contains the logic behind the zoom out button
+     */
+    private void zoomOutAction() {
         parseInput();
-        int length = stop - start;
-        //if (length*0.1 <= cont.getLength()
-        int scale = (int) Math.round(length * 0.1);
-        start = start - scale +1;
-        stop = stop + scale +1;
-        if (start <= 0) {
-            start = 0;
+        try {
+            int length = stop - start;
+            // TODO: 11/12/2018
+            int scale = (int) Math.round(length * 0.1);
+            start = start - scale +1;
+            stop = stop + scale +1;
+            if (start <= 0) {
+                start = 0;
+                }
+            if (stop >= cont.getFullLenght()){
+                stop = cont.getFullLenght();
             }
-        cont.changeSize(start, stop);
+            cont.changeSize(start, stop);
+        } catch (IndexOutOfBoundsException e) {
+            //e.printStackTrace();
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+        } catch (NullPointerException e) {
+            ExceptionDialogs.ErrorDialog("Geen sequentie ingelezen","error");
+        }
     }
 
+    /**
+     * change the context when a new chromosome is chosen when loading a new fasta file or a new range is selected
+     * @param cont
+     */
     public void setContext(Context cont) {
         this.cont = cont;
         cont.addPropertyChangeListener("chromosomeNameArray", this);
@@ -159,25 +215,31 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         
 
     }
-    
+
+    /**
+     * set the correct start "-" stop for Locus
+     */
     private void syncSize() {
-    	this.Locus.setText((cont.getStart()+1)+"-"+(cont.getStop()+1));
+    	this.locus.setText((cont.getStart()+1)+"-"+(cont.getStop()+1));
     }
 
+    /**
+     * changeContext functie die het model update van het dropdown menu.
+     */
     public void changedContext() {
         DefaultComboBoxModel model = new DefaultComboBoxModel(cont.getChromosomeNames());
-        Chromosome.setModel(model);
+        chromosome.setModel(model);
 
     }
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		
-		if (evt.getPropertyName().equals("chromosomeNameArray")) {
+		if (evt.getPropertyName().equals("chromosomeNameArray")) { //andere chromosomen
 			changedContext();
 			syncSize();
 		}
-		else if(evt.getPropertyName().equals("range")) {
+		else if(evt.getPropertyName().equals("range")) { //andere view (start/stop)
 			syncSize();
 		}	
 	}

@@ -10,7 +10,7 @@ import java.util.Map;
  *  @author Anne van Ewijk en Amber Janssen Groesbeek
  */
 public class attributes {
-    Map<String, Object> attribute = new HashMap<String, Object>();
+
 
     /**
      * De kolom 8 (attributen) wordt gesplit waarna de informatie wordt opgeslagen in een hashmap.
@@ -19,33 +19,34 @@ public class attributes {
      * @param attr     Kolom 8 uit de ingeladen bestanden die informatie van element bevat.
      * @return         Er wordt een hashmap gereturned verdere informatie over het element.
      */
-    public HashMap splitAtt(String attr){
+    public static HashMap splitAttributes(String attr){
+        Map<String, Object> attribute = new HashMap<String, Object>();
         // Alle informatie in kolom 8 is gescheiden doormiddel van ;.
         String[] subAttr = attr.split(";");
 
         // Er wordt een hashmap gemaakt van de informatie van het element.
         for(String s: subAttr){
-            String[] split_s = s.split("=");
-            attribute.put(split_s[0], split_s[1]);
+            String[] splitString = s.split("=");
+            attribute.put(splitString[0], splitString[1]);
         }
 
         // Als de hashmap een key heeft Dbxref, word er gekeken of er een "," aanwezig is.
         if (attribute.containsKey("Dbxref")){
-            Map<String, String> dbxref_ids = new HashMap<String, String>();
+            Map<String, String> dbxrefIDs = new HashMap<String, String>();
             String line = (String) attribute.get("Dbxref");
 
             // Een "," geef aan dat er meerdere IDs zijn. Er wordt een nieuwe hashmap gemaakt met deze IDs.
             if(line.contains(",")){
                 String[] splitIDs = line.split(",");
                 for(String ID: splitIDs){
-                    String[] ID_kv = ID.split(":");
-                    dbxref_ids.put(ID_kv[0], ID_kv[1]);
+                    String[] IdKeyValue = ID.split(":");
+                    dbxrefIDs.put(IdKeyValue[0], IdKeyValue[1]);
                 }
             }else{
-                String[] ID_kv = line.split(":");
-                dbxref_ids.put(ID_kv[0], ID_kv[1]);
+                String[] idKeyValue = line.split(":");
+                dbxrefIDs.put(idKeyValue[0], idKeyValue[1]);
             }
-            attribute.put("Dbxref", dbxref_ids);
+            attribute.put("Dbxref", dbxrefIDs);
         }
         return (HashMap) attribute;
     }

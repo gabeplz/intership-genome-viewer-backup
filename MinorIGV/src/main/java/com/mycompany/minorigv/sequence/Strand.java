@@ -34,4 +34,3 @@ public enum Strand {
 //    public static Strand fromString(String strandString) {
 //        return strandString.equals("+") ? POSITIVE : (strandString.equals("-") ? NEGATIVE : NONE);
 //    }
-

@@ -1,10 +1,8 @@
 package com.mycompany.minorigv.gffparser;
 
-import com.mycompany.minorigv.sequence.findORF;
-import com.mycompany.minorigv.sequence.makeCompStrand;
+import com.mycompany.minorigv.sequence.FindORF;
+import com.mycompany.minorigv.sequence.MakeCompStrand;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -120,13 +118,16 @@ public class Chromosome {
     /**
      * Het genereerd de ArrayList met daarin de ORFs
      */
-    public void setListORF() throws FileNotFoundException, UnsupportedEncodingException {
+    public void setListORF(int lenghtORF)  {
         // ORFs zoeken in de template en complementaire strand.
-        String seqComp = makeCompStrand.getReverseComplement(getSeqTemp());
-        listORF = findORF.searchORF(getId(), getSeqTemp());
-        ArrayList orfs_comp = findORF.searchORF(getId(), seqComp, "comp");
+        String seqComp = MakeCompStrand.getReverseComplement(getSeqTemp());
+
+        // ORFs zoeken in de template strand
+        listORF = FindORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length(), lenghtORF);
+
+        // ORFs zoeken in de complement strand
+        ArrayList orfs_comp = FindORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length(), lenghtORF);
         listORF.addAll(orfs_comp);
-        this.listORF = listORF;
     }
 
     /**
@@ -157,9 +158,9 @@ public class Chromosome {
         for(Feature f : features){
             if (f.getStop() > start && f.getStop() < stop){
                 featureList.add(f);
-            }else if(f.getStart() > start && f.getStart() < stop){
+            }else if(f.getStart() >= start && f.getStart() < stop){
                 featureList.add(f);
-            }else if(f.getStart() < start && f.getStop() > stop){
+            }else if(f.getStart() <= start && f.getStop() > stop){
                 featureList.add(f);
             }
         }
@@ -175,6 +176,7 @@ public class Chromosome {
      */
     public static ArrayList<Feature> filterFeatures(ArrayList<Feature> featureList, ArrayList<String> SelectedFeatures){
         ArrayList<Feature> featureFilteredList = new ArrayList<Feature>();
+
         for (Feature feat : featureList){
             String klas = feat.getClass().toString();
             for (String optie : SelectedFeatures){
@@ -194,18 +196,22 @@ public class Chromosome {
      */
     public ArrayList<ORF> getORFsBetween(int start, int stop){
         ArrayList<ORF> orfsFilteredList = new ArrayList<>();
-
-        for(ORF o : listORF){
-            if (o.getStop() > start && o.getStop() < stop){
-                orfsFilteredList.add(o);
-            }else if(o.getStart() > start && o.getStart() < stop){
-                orfsFilteredList.add(o);
-            }else if(o.getStart() < start && o.getStop() > stop){
-                orfsFilteredList.add(o);
+        if(listORF != null){
+            for(ORF o : listORF){
+                if (o.getStop() > start && o.getStop() < stop){
+                    orfsFilteredList.add(o);
+                }else if(o.getStart() > start && o.getStart() < stop){
+                    orfsFilteredList.add(o);
+                }else if(o.getStart() < start && o.getStop() > stop){
+                    orfsFilteredList.add(o);
+                }
             }
+
+            return orfsFilteredList;
+        }else{
+            return null;
         }
 
-        return orfsFilteredList;
     }
 
 
