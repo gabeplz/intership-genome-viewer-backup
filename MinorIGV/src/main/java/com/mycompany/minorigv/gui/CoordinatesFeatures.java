@@ -4,9 +4,7 @@ import com.mycompany.minorigv.gffparser.*;
 import com.mycompany.minorigv.sequence.Strand;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Coordinaten bepalen van elke feature, rekening gehouden met overlappende features.
@@ -38,24 +36,64 @@ public class CoordinatesFeatures {
         ArrayList<Integer> newCoord = new ArrayList<>(Arrays.asList(4,4,0,0));
 
         // TODO : In het aanmaken van de featureFilteredList al een hashmap genereren.
-        ArrayList<Feature> featureGene = new ArrayList<>();
-        ArrayList<Feature> featuremRNA = new ArrayList<>();
-        ArrayList<Feature> featureExon = new ArrayList<>();
-        ArrayList<Feature> featureCDS = new ArrayList<>();
-        ArrayList<Feature> featureRegion = new ArrayList<>();
+        ArrayList<Feature> featureGenePos = new ArrayList<>();
+        ArrayList<Feature> featureGeneNeg = new ArrayList<>();
+
+        ArrayList<Feature> featuremRNAPos = new ArrayList<>();
+        ArrayList<Feature> featuremRNANeg = new ArrayList<>();
+
+
+        ArrayList<Feature> featureExonPos = new ArrayList<>();
+        ArrayList<Feature> featureExonNeg = new ArrayList<>();
+
+        ArrayList<Feature> featureCDSPos = new ArrayList<>();
+        ArrayList<Feature> featureCDSNeg = new ArrayList<>();
+
+        ArrayList<Feature> featureRegionPos = new ArrayList<>();
+        ArrayList<Feature> featureRegionNeg = new ArrayList<>();
 
         // Elke feature in een aparte lijst zetten
         for(Feature feat : featureFilteredList) {
             if (feat instanceof Gene) {
-                featureGene.add(feat);
+                if(feat.getStrand().equals(Strand.POSITIVE)){
+                    featureGenePos.add(feat);
+                }else if(feat.getStrand().equals(Strand.NEGATIVE)){
+                    featureGeneNeg.add(feat);
+                }else{
+                    //pass
+                }
             } else if (feat instanceof mRNA) {
-                featuremRNA.add(feat);
+                if(feat.getStrand().equals(Strand.POSITIVE)){
+                    featuremRNAPos.add(feat);
+                }else if(feat.getStrand().equals(Strand.NEGATIVE)){
+                    featuremRNANeg.add(feat);
+                }else{
+                    //pass
+                }
             } else if (feat instanceof Exon){
-                featureExon.add(feat);
+                if(feat.getStrand().equals(Strand.POSITIVE)){
+                    featureExonPos.add(feat);
+                }else if(feat.getStrand().equals(Strand.NEGATIVE)){
+                    featureExonNeg.add(feat);
+                }else{
+                    //pass
+                }
             } else if (feat instanceof CDS){
-                featureCDS.add(feat);
+                if(feat.getStrand().equals(Strand.POSITIVE)){
+                    featureCDSPos.add(feat);
+                }else if(feat.getStrand().equals(Strand.NEGATIVE)){
+                    featureCDSNeg.add(feat);
+                }else{
+                    //pass
+                }
             } else if (feat instanceof Region){
-                featureRegion.add(feat);
+                if(feat.getStrand().equals(Strand.POSITIVE)){
+                    featureRegionPos.add(feat);
+                }else if(feat.getStrand().equals(Strand.NEGATIVE)){
+                    featureRegionNeg.add(feat);
+                }else{
+                    //pass
+                }
             } else {
                 // voor volledigheid
             }
@@ -63,17 +101,26 @@ public class CoordinatesFeatures {
 
         // TODO : Als er een hashmap is gemaakt, dan de if statements aanpassen.
         // Als de lijsten niet leeg zijn, dan worden de coordinaten bepaald voor het mappen.
-        if(!featureGene.isEmpty()){
-            newCoord = setCoordinates(featureGene, g, newCoord.get(0), newCoord.get(1),newCoord.get(3),newCoord.get(2), new Color(255, 135, 12));
-        }if(!featuremRNA.isEmpty()){
-            newCoord = setCoordinates(featuremRNA, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 229, 57));
-        }if(!featureExon.isEmpty()){
-            newCoord = setCoordinates(featureExon, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 79, 35));
-        }if(!featureCDS.isEmpty()){
-            newCoord = setCoordinates(featureCDS, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(140, 183, 255));
-        }if(!featureRegion.isEmpty()){
-            newCoord = setCoordinates(featureRegion, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(150, 238, 75));
-
+        if(!featureGenePos.isEmpty()){
+            newCoord = setCoordinates(featureGenePos, g, newCoord.get(0), newCoord.get(1),newCoord.get(3),newCoord.get(2), new Color(255, 135, 12));
+        }if(!featureGeneNeg.isEmpty()){
+            newCoord = setCoordinates(featureGeneNeg, g, newCoord.get(0), newCoord.get(1),newCoord.get(3),newCoord.get(2), new Color(255, 135, 12));
+        }if(!featuremRNAPos.isEmpty()){
+            newCoord = setCoordinates(featuremRNAPos, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 229, 57));
+        }if(!featuremRNANeg.isEmpty()){
+            newCoord = setCoordinates(featuremRNANeg, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 229, 57));
+        }if(!featureExonPos.isEmpty()){
+            newCoord = setCoordinates(featureExonPos, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 79, 35));
+        }if(!featureExonNeg.isEmpty()){
+            newCoord = setCoordinates(featureExonNeg, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2), new Color(255, 79, 35));
+        }if(!featureCDSPos.isEmpty()){
+            newCoord = setCoordinates(featureCDSPos, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(140, 183, 255));
+        }if(!featureCDSNeg.isEmpty()){
+            newCoord = setCoordinates(featureCDSNeg, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(140, 183, 255));
+        }if(!featureRegionPos.isEmpty()){
+            newCoord = setCoordinates(featureRegionPos, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(150, 238, 75));
+        }if(!featureRegionNeg.isEmpty()){
+            newCoord = setCoordinates(featureRegionNeg, g, newCoord.get(0), newCoord.get(1), newCoord.get(3), newCoord.get(2),  new Color(150, 238, 75));
         }
     }
 
@@ -91,6 +138,9 @@ public class CoordinatesFeatures {
     public ArrayList<Integer> setCoordinates(ArrayList<Feature> oneFeature, Graphics g, int yCoodReverse, int yCoodForward, int yCoodReverseMax, int yCoodForwardMax, Color col){
         int latestStopReverse = 0;
         int latestStopForward = 0;
+
+        int latestStartReverse = 0;
+        int latestStartForward = 0;
         HashMap<Feature, Integer> listOvFt = new HashMap<>();
         Feature feat = null;
         ArrayList<Integer> newCoord = new ArrayList<>();
@@ -99,8 +149,7 @@ public class CoordinatesFeatures {
         for(Feature feature: oneFeature){
             if (feature.getStrand().equals(Strand.NEGATIVE)){
                 // Ophalen van de coordinaten op de reverse strand van de Feature.
-                yCoodReverse = getCoordinates(feature, latestStopReverse, listOvFt, yCoodReverse, feat);
-
+                yCoodReverse = getCoordinates(feature, latestStopReverse, listOvFt, yCoodReverse, feat, latestStartReverse);
                 // Ophalen tags
                 String tag = getTag(feature);
 
@@ -109,19 +158,18 @@ public class CoordinatesFeatures {
 
                 // Opslaan van de stop positie van de laaste feature om overlap te achterhalen.
                 latestStopReverse = feat.getStop();
-
+                latestStartReverse = feat.getStart();
                 // Ophalen van de hoogste y-coordinaat voor het tekenen van andere Features (bijv. mRNA na genen)
                 yCoodReverseMax = getMaxCoordinates(yCoodReverse, yCoodReverseMax);
             }else if(feature.getStrand().equals(Strand.POSITIVE)){
                 // Ophalen van de coordinaten op de template strand van de Feature.
-                yCoodForward = getCoordinates(feature, latestStopForward, listOvFt, yCoodForward, feat);
-
+                yCoodForward = getCoordinates(feature, latestStopForward, listOvFt, yCoodForward, feat, latestStartForward);
                 String tag = getTag(feature);
 
                 feat = draw.drawFeatures(feature,g,tag, yCoodForward, col);
 
                 latestStopForward = feat.getStop();
-
+                latestStartForward = feat.getStart();
                 yCoodForwardMax = getMaxCoordinates(yCoodForward, yCoodForwardMax);
             }
         }
@@ -172,9 +220,11 @@ public class CoordinatesFeatures {
      * @param listOvFt    Lijst met features die mogelijk overlap veroorzaken
      * @param yCood        y coordinaat waarna verder gegaan  moet worden
      * @param lastFeature   Vorige feature.
+     * @param latestStart
      * @return              Integer van de y as coordinaat.
      */
-    private int getCoordinates(Feature curFeature, int latestStop, HashMap<Feature, Integer> listOvFt, int yCood, Feature lastFeature){
+    private int getCoordinates(Feature curFeature, int latestStop, HashMap<Feature, Integer> listOvFt, int yCood, Feature lastFeature, int latestStart){
+
         // Bepalen of er overlap is van twee features: dan is de start van de huidige feature kleiner dan de stop van de laatste feature.
         if(curFeature.getStart() < latestStop){
             // Als er overlap is wordt de vorige feature (object) opgeslagen in een hashmap met als value de y as coordinaat.
@@ -188,8 +238,16 @@ public class CoordinatesFeatures {
                 }
             }
         }else{
-            yCood += 0;
+            if(listOvFt.size() > 1){
+                yCood = Collections.min(listOvFt.values());
+            }else if (listOvFt.size() == 1){
+                yCood = (int) listOvFt.values().toArray()[0];
+
+            }else{
+                //pass
+            }
             listOvFt.clear();
+
         }
         return yCood;
     }
