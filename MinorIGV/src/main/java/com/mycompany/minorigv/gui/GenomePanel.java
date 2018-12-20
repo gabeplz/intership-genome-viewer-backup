@@ -157,13 +157,24 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      */
     private void zoomInAction() {
         parseInput();
-        int length = stop - start;
-        if (length > 10) {
-            int scale = (int) Math.round(length * 0.1);
-            start = start + scale +1;
-            stop = stop - scale +1;
 
-            cont.changeSize(start, stop);
+        try {
+            int length = stop - start;
+            if (length > 10) {
+                int scale = (int) Math.round(length * 0.1);
+                start = start + scale + 1;
+                stop = stop - scale + 1;
+                cont.getFullLenght();
+                cont.changeSize(start, stop);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            //e.printStackTrace();
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+
+
+        } catch (NullPointerException e) {
+            ExceptionDialogs.ErrorDialog("Geen sequentie ingelezen","error");
+
         }
     }
 
@@ -172,18 +183,25 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      */
     private void zoomOutAction() {
         parseInput();
-        int length = stop - start;
-        // TODO: 11/12/2018
-        int scale = (int) Math.round(length * 0.1);
-        start = start - scale +1;
-        stop = stop + scale +1;
-        if (start <= 0) {
-            start = 0;
+        try {
+            int length = stop - start;
+            // TODO: 11/12/2018
+            int scale = (int) Math.round(length * 0.1);
+            start = start - scale +1;
+            stop = stop + scale +1;
+            if (start <= 0) {
+                start = 0;
+                }
+            if (stop >= cont.getFullLenght()){
+                stop = cont.getFullLenght();
             }
-        if (stop >= cont.getFullLenght()){
-            stop = cont.getFullLenght();
+            cont.changeSize(start, stop);
+        } catch (IndexOutOfBoundsException e) {
+            //e.printStackTrace();
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+        } catch (NullPointerException e) {
+            ExceptionDialogs.ErrorDialog("Geen sequentie ingelezen","error");
         }
-        cont.changeSize(start, stop);
     }
 
     /**

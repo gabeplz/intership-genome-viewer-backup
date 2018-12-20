@@ -65,20 +65,20 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param newStart de nieuwe start,
 	 * @param newStop de nieuwe stop
 	 */
-	public void changeSize(int newStart, int newStop) {
+	public void changeSize(int newStart, int newStop) throws IndexOutOfBoundsException {
 		if(this.organism == null || this.curChromosome == null) {
 			return;
 		}
 
-		if(newStop-2 < newStart){
-			//TODO error handling
+		if(newStop < newStart){
+			throw new IndexOutOfBoundsException("nieuwe stop kleiner dan nieuwe start");
 		}
 		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
 			this.setStart(newStart);
 			this.setStop(this.curChromosome.getSeqTemp().length()-1);
 		}
 		else if(newStart < 0){
-			//TODO
+			throw new IndexOutOfBoundsException("start onder nul");
 		}
 		else {
 			this.setStart(newStart);
@@ -189,7 +189,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * Functie die de volledige lengte van de sequentie van het huidige chromosoom retourneert.
 	 * @return De lengte van de sequentie van het huidige chromosoom.
 	 */
-	public int getFullLenght() {
+	public int getFullLenght() throws NullPointerException {
 		return curChromosome.getSeqTemp().length();
 	}
 
