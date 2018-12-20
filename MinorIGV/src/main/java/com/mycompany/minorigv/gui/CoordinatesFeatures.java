@@ -226,7 +226,10 @@ public class CoordinatesFeatures {
     private int getCoordinates(Feature curFeature, int latestStop, HashMap<Feature, Integer> listOvFt, int yCood, Feature lastFeature, int latestStart){
 
         // Bepalen of er overlap is van twee features: dan is de start van de huidige feature kleiner dan de stop van de laatste feature.
-        if(curFeature.getStart() < latestStop){
+        if((curFeature.getStart() < latestStop && curFeature.getStop() > latestStop) ||
+                (curFeature.getStart() > latestStart && curFeature.getStop() < latestStop) ||
+                (curFeature.getStart() < latestStop && curFeature.getStop() > latestStop) ||
+                (curFeature.getStop() > latestStart && curFeature.getStop() < latestStop)){
             // Als er overlap is wordt de vorige feature (object) opgeslagen in een hashmap met als value de y as coordinaat.
             listOvFt.put(lastFeature, yCood);
             // loopen over de overlappende features en achterhalen of er nog steeds overlapping plaatsvindt over die vorige features.
