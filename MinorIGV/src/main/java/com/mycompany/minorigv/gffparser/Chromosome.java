@@ -158,9 +158,9 @@ public class Chromosome {
         for(Feature f : features){
             if (f.getStop() > start && f.getStop() < stop){
                 featureList.add(f);
-            }else if(f.getStart() > start && f.getStart() < stop){
+            }else if(f.getStart() >= start && f.getStart() < stop){
                 featureList.add(f);
-            }else if(f.getStart() < start && f.getStop() > stop){
+            }else if(f.getStart() <= start && f.getStop() > stop){
                 featureList.add(f);
             }
         }

@@ -57,10 +57,25 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * Convection user input to pc input by subtracting 1 so a user input of 1 will be seen by the pc as index 0.
      */
     private void parseInput() {
-        String positions = locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
-        String[] parts = positions.split("-");
-        start = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
-        stop = Integer.parseInt(parts[1]) - 1;
+
+        try {
+            String positions = locus.getText();              // input van de user ophalen en spliten op "-" naar een start en stop
+
+            if(!positions.matches("^([+-]?[0-9][0-9]*)-([+-]?[0-9][0-9]*)$")){
+                ExceptionDialogs.ErrorDialog("Verkeerde invoer start-stop veld","foutieve invoer");
+                return;
+            }
+            String[] parts = positions.split("-");
+            int newStart = Integer.parseInt(parts[0]) - 1;         // converteren van user input naar index 0
+            int newStop = Integer.parseInt(parts[1]) - 1;
+            start = newStart;
+            stop = newStop;
+
+
+        } catch (Exception e) {
+            ExceptionDialogs.ErrorDialog("Verkeerde invoer start-stop veld","foutieve invoer");
+        }
+
     }
 
     /**
@@ -96,7 +111,6 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             System.err.println("Error changing chromosome");
 
         }
-
     }
 
     /**
