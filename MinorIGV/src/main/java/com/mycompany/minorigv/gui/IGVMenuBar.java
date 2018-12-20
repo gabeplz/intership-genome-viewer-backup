@@ -7,6 +7,7 @@ import com.mycompany.minorigv.sequence.TranslationManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
@@ -202,16 +203,21 @@ public class IGVMenuBar extends JMenuBar {
 	// Action performed voor files en tools.
 	private void loadReferenceAction() {
 		try{
+
 			FastaFileChooser fasta = new FastaFileChooser();
 			String path = fasta.fastafile();
+
 			cont.addFasta(path);
 
-		}catch (Exception e){}
+		}catch (Exception e){
+
+		}
 	}
 	private void openDataAction() {
 		try{
 			FastaFileChooser fasta = new FastaFileChooser();
 			String path = fasta.fastafile();
+
 			cont.addGFF(path);
 
 		}catch (Exception e){}
