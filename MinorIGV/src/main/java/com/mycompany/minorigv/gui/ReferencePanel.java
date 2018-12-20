@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 
 /**
- * @author Huub Goltstein 
+ * @author Huub Goltstein
  * ReferencePanel tekent de nucleotiden van de referentie sequentie.
  */
 public class ReferencePanel extends JPanel implements PropertyChangeListener {

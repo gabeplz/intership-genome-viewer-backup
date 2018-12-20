@@ -26,6 +26,7 @@ package com.mycompany.minorigv.sequence;
 
 
 
+import java.net.URL;
 import java.util.*;
 import java.io.*;
 
@@ -82,9 +83,9 @@ public class TranslationManager {
 	private void loadCodonTabels(String codonTablesPath) throws FileNotFoundException, IOException {
         
         ClassLoader classLoader = getClass().getClassLoader();
-        String file = java.net.URLDecoder.decode(classLoader.getResource(DEFAULT_CODON_TABLE_PATH).getFile(),"UTF-8");
+        InputStream file = classLoader.getResourceAsStream(DEFAULT_CODON_TABLE_PATH);
 
-        BufferedReader fileReader = new BufferedReader(new FileReader(file));
+        BufferedReader fileReader = new BufferedReader(new InputStreamReader(file, "UTF-8"));
         String line = fileReader.readLine();
         while (line != null) {
             // huidige line bevat de opende brace
