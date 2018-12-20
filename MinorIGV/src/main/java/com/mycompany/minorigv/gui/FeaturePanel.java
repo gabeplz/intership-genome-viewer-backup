@@ -78,14 +78,14 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 
 			// Kleiner lettertype bij een kleiner balkje
 			if(g.getFontMetrics().stringWidth(tag) > infoStop-infoStart){
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+				// pass
 			}else{
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+				// locus tag in midden van gen visualiseren.
+				int centerTag = g.getFontMetrics().stringWidth(tag)/2;
+				g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, (dim.height - (7 +overlapCoord)));
 			}
 
-			// locus tag in midden van gen visualiseren.
-			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, (dim.height - (7 +overlapCoord)));
+
 
 			// Als de strand van het gen - is, wordt er op de reverse panel getekend.
 		}else if(strand.equals(Strand.NEGATIVE) && forward == false){
@@ -95,15 +95,15 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 			g.fillRect(infoStart, overlapCoord, infoStop-infoStart, 15);
 			g.setColor(Color.BLACK);
 
+
 			// Kleiner lettertype bij een kleiner balkje
 			if(g.getFontMetrics().stringWidth(tag) > infoStop-infoStart){
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+                // pass
 			}else{
-				g.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			}
-			// locus tag in midden van gen visualiseren.
-			int centerTag = g.getFontMetrics().stringWidth(tag)/2;
-			g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, overlapCoord+12);
+                // locus tag in midden van gen visualiseren.
+                int centerTag = g.getFontMetrics().stringWidth(tag)/2;
+                g.drawString(tag, ((infoStop+infoStart)/2)-centerTag, overlapCoord+12);
+            }
 
 		}
 
