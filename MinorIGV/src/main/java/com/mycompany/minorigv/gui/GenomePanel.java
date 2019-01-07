@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -19,8 +22,8 @@ import javax.swing.*;
 
 public class GenomePanel extends JPanel implements PropertyChangeListener {
     private Context cont;
-    private JTextArea organism;
-    private JComboBox chromosome;
+//    private JTextArea organism;
+    private JComboBox chromosome, organism;
     private JTextField locus;
     private JButton zoomIn;
     private JButton zoomOut;
@@ -67,9 +70,35 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * function creating the text area that will display the name of an organism who's dna sequence is shown on screen and the position of the DNA sequence the user is looking at
      */
     private void makeTextAreas() {
-        organism = new JTextArea(1, 20);
-        organism.setEditable(false);
-        organism.setText("Organism");
+        organism = new JComboBox();
+        String pathNAS = "/NAS/filesPython/genomes/refseq/fungi/";
+        File f = new File(pathNAS);
+        if (f.exists() && f.isDirectory()) {
+            String[] directories = f.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return new File(dir, name).isDirectory();
+                }
+            });
+            Arrays.sort(directories);
+            organism.setModel(new DefaultComboBoxModel(directories));
+        } else {
+            organism.addItem("Select fungi");
+        }
+
+        ActionListener organismListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeOrganism();
+            }
+        };
+
+        organism.addActionListener(organismListener);
+
+
+
+
+
         chromosome = new JComboBox();
         locus = new JTextField(20);
         locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -92,6 +121,17 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         try {
             cont.changeChromosome((String) chromosome.getSelectedItem());
 
+        } catch (Exception e) {
+            System.err.println("Error changing chromosome");
+
+        }
+
+    }
+    private void changeOrganism() {
+        try {
+            String name = (String) organism.getSelectedItem();
+            System.out.println(name);
+            
         } catch (Exception e) {
             System.err.println("Error changing chromosome");
 
