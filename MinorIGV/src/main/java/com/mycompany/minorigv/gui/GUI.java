@@ -52,8 +52,8 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 760, 680);
-		frame.setMinimumSize(new Dimension(760,680));
+		frame.setBounds(100, 100, 760, 710);
+		frame.setMinimumSize(new Dimension(760,710));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
