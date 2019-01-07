@@ -1,6 +1,8 @@
 package com.mycompany.minorigv.gui;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -13,6 +15,11 @@ import javax.swing.JPanel;
 public class RulerPanel extends JPanel implements PropertyChangeListener{
 
 	Context conti;			//bevat de start stop and lengte van de sequentie waarop de ruler uitgelijnd word
+    int x;
+
+    int x2;
+
+
 
 	/**
 	 * initializes the panel
@@ -22,6 +29,13 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
+
+
+		x = x2 = 0; //
+        MyMouseListener listener = new MyMouseListener();
+        addMouseListener(listener);
+        addMouseMotionListener(listener);
+
 	}
 
 	/**
@@ -53,7 +67,16 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 
 
 		}
+
+
+        int alpha = 127; // 50% transparent
+        Color myColour = new Color(255, 0, 0, alpha);
+		g.setColor(myColour);
+		g.fillRect(x,0,x2-x,getHeight());
+
 	}
+
+
 
 	/**
 	 * calculates the stepSize
@@ -100,5 +123,56 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 		this.repaint();
 		
 	}
+
+    public void setStartPoint(int x) {
+        this.x = x;
+
+    }
+
+    public void setEndPoint(int x) {
+        x2 = (x);
+
+    }
+
+    class MyMouseListener extends MouseAdapter {
+
+        public void mousePressed(MouseEvent e) {
+            setStartPoint(e.getX());
+        }
+
+        public void mouseDragged(MouseEvent e) {
+            setEndPoint(e.getX());
+            dragPaint();
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            setEndPoint(e.getX());
+            dragZoom();
+
+        }
+    }
+
+    private void dragZoom() {
+
+	    int width = this.getWidth();
+
+	    int start = conti.getStart();
+	    int stop = conti.getStop();
+        double amount = stop-start;
+
+	    int newStart = (int) (((double)x / (double)width) * amount) + start;
+        int newStop =  (int) (((double)x2 / (double)width) * amount) + start;
+        x = x2 = 0;
+        conti.changeSize(newStart,newStop);
+
+
+
+    }
+
+    private void dragPaint() {
+
+	    //buffer die image ooit
+	    repaint();
+    }
 
 }
