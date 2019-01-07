@@ -56,4 +56,12 @@ public class DrawingTools {
 		g.fillRect(x1, y1, (int) width, height);
 
 	}
+    public static void drawStringRect(Graphics g, int x, int y, double width, int height) {
+
+
+        int x1 = (int) (x - Math.floor( width /2) );
+        int y1 = (int) (y - Math.floor( height/2) );
+        g.drawRect(x1, y1, (int) width, height);
+
+    }
 }

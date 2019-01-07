@@ -8,11 +8,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.gffparser.Chromosome;
-import com.mycompany.minorigv.gffparser.Feature;
-import com.mycompany.minorigv.gffparser.Organisms;
-import com.mycompany.minorigv.gffparser.gffReader;
-import com.mycompany.minorigv.gffparser.ORF;
+import com.mycompany.minorigv.gffparser.*;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -29,6 +25,12 @@ public class Context implements Serializable, PropertyChangeListener {
 	private String[] chromosomeNameArray;
 
 	private CodonTable currentCodonTable;
+
+	private String regexPattern;
+
+	private TreeMap currentMotifMapForward;
+	private TreeMap currentMotifMapReverse;
+	private boolean mustDrawMotif;
 
 	private Feature[] currentFeatureList;
 	private int featStart;
@@ -378,6 +380,30 @@ public class Context implements Serializable, PropertyChangeListener {
 		CodonTable oldValue = this.currentCodonTable;
 		this.currentCodonTable = TranslationManager.getInstance().getCodonTable(key);
 		pcs.firePropertyChange("CodonTable", oldValue, currentCodonTable);
+	}
+
+	public String getRegexPattern() {
+		return regexPattern;
+	}
+
+	public void setRegexPattern(String pattern) {
+		String oldValue = this.regexPattern;
+		this.regexPattern = pattern;
+		System.out.println("pattern in context changed");
+		pcs.firePropertyChange("regexPattern", oldValue, regexPattern);
+	}
+
+	public void setMotifMap(String sPattern, String sequence){
+		boolean x = Motif.checkCompile(sPattern);
+		if (x == true) {
+			TreeMap oldValue = this.currentMotifMapForward;
+			this.currentMotifMapForward = Motif.buildMotifMapForward(sPattern, sequence);
+			this.currentMotifMapReverse = Motif.buildMotifMapReverse(sPattern, sequence);
+			System.out.println("setMotive klaar");
+			pcs.firePropertyChange("motif", oldValue, currentMotifMapForward);
+        } else { }
+
+
 	}
 
 	/**

@@ -14,10 +14,8 @@ public class main {
     public static String path_fasta;
     public static void main(String[] args) throws Exception {
         String ncseq = new String("https://stackoverflow.com/questions/tagged/regex\n");
-
-        System.out.println(ncseq.matches("(https?|ftp)://([^/\r\n]+)(/[^\r\n]*)?"));
-
-
+        String pattern = "(https?|ftp)://([^/\r\n]+)(/[^\r\n]*)?";
+       // MotifFinder.gogo(ncseq, pattern);
     }
         /**
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

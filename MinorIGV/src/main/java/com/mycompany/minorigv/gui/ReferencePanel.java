@@ -111,8 +111,10 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
 
 			int x_pos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), length, i);  //letter corresponderend bepalen.
 
-			this.chooseLetterColor(g,seq.charAt(i));  //letterkleur kiezen.
 
+            g.setColor(Color.ORANGE);
+            DrawingTools.drawStringRect(g2, x_pos, HEIGHT, dim.getWidth(), HEIGHT); //kut
+            this.chooseLetterColor(g,seq.charAt(i));  //letterkleur kiezen.
 			DrawingTools.drawCenteredChar(g2, seq.charAt(i), x_pos, HEIGHT);  //gecentreerd character tekenen.
 
 			this.chooseLetterColor(g,revComp.charAt(j));  //letterkeuze  <-, loop richting ->

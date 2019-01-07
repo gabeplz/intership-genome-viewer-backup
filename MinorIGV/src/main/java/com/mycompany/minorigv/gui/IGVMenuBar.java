@@ -2,6 +2,7 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.gffparser.MotifFinder;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -43,6 +44,7 @@ public class IGVMenuBar extends JMenuBar {
 		Menus();
 		featureMenu();
         condonTableMenu();
+        motifSearchMenu();
 	}
 
 	/**
@@ -319,5 +321,17 @@ public class IGVMenuBar extends JMenuBar {
 		return item;
 	}
 
-
+    public void motifSearchMenu(){
+	    JMenu motifSearchMenu = new JMenu("motif search");
+        JTextField searchbar = new JTextField(20);
+        searchbar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cont.setRegexPattern(searchbar.getText());
+                cont.setMotifMap(cont.getRegexPattern(), cont.getSubSequentie());
+            }
+        });
+        motifSearchMenu.add(searchbar);
+	    add(motifSearchMenu);
+    }
 }
