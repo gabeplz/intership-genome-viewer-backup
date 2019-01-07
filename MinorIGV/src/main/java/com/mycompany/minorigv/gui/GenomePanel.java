@@ -1,5 +1,6 @@
 package com.mycompany.minorigv.gui;
 
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
+import com.mycompany.minorigv.gffparser.OrganismFiles;
 
 import javax.swing.*;
 
@@ -86,10 +88,11 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             organism.addItem("Select fungi");
         }
 
+        organism.setSelectedIndex(-1);
         ActionListener organismListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeOrganism();
+                changeOrganism(pathNAS);
             }
         };
 
@@ -127,11 +130,14 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         }
 
     }
-    private void changeOrganism() {
+    private void changeOrganism(String pathNAS) {
         try {
             String name = (String) organism.getSelectedItem();
-            System.out.println(name);
-            
+//            System.out.println(name);
+            OrganismFiles file = new OrganismFiles();
+            file.getFiles(pathNAS, name);
+
+
         } catch (Exception e) {
             System.err.println("Error changing chromosome");
 
