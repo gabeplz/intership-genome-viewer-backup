@@ -139,7 +139,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 
 
         } catch (Exception e) {
-            System.err.println("Error changing chromosome");
+            System.err.println("Error changing organism");
 
         }
 
