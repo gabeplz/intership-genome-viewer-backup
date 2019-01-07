@@ -15,9 +15,8 @@ import javax.swing.JPanel;
 public class RulerPanel extends JPanel implements PropertyChangeListener{
 
 	Context conti;			//bevat de start stop and lengte van de sequentie waarop de ruler uitgelijnd word
-    int x;
-
-    int x2;
+    int x;                  //linkerkant selectie rechthoek
+    int x2;                 //rechterkant selectie rechthoek
 
 
 
@@ -30,9 +29,8 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
 
-
-		x = x2 = 0; //
-        MyMouseListener listener = new MyMouseListener();
+		x = x2 = 0; //selectie rechthoek
+        MyMouseListener listener = new MyMouseListener(); //luisteren naar de muis
         addMouseListener(listener);
         addMouseMotionListener(listener);
 
@@ -72,7 +70,7 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
         int alpha = 127; // 50% transparent
         Color myColour = new Color(255, 0, 0, alpha);
 		g.setColor(myColour);
-		g.fillRect(x,0,x2-x,getHeight());
+		g.fillRect(x,0,x2-x,getHeight());  //selectie rechthoek
 
 	}
 
@@ -124,16 +122,54 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 		
 	}
 
+    /**
+     * Start van selectie rechthoek instellen.
+     * @param x
+     */
     public void setStartPoint(int x) {
         this.x = x;
 
     }
 
+    /**
+     * stop van selectie rechthoek instellen.
+     * @param x
+     */
     public void setEndPoint(int x) {
         x2 = (x);
 
     }
 
+    /**
+     * functie die het zoomen doet op mouse release.
+     */
+    private void dragZoom() {
+
+	    int width = this.getWidth();
+
+	    int start = conti.getStart();
+	    int stop = conti.getStop();
+        double amount = stop-start;
+
+	    int newStart = (int) (((double)x / (double)width) * amount) + start;
+        int newStop =  (int) (((double)x2 / (double)width) * amount) + start;
+        x = x2 = 0;
+        conti.changeSize(newStart,newStop);
+
+    }
+
+    /**
+     * functie die repaint spamt tijdens het bewegen. //TODO bufferen.
+     */
+    private void dragPaint() {
+
+	    //buffer die image ooit
+	    repaint();
+    }
+
+    /**
+     * Hulper class MouseListener voor de selectie
+     */
     class MyMouseListener extends MouseAdapter {
 
         public void mousePressed(MouseEvent e) {
@@ -150,29 +186,6 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
             dragZoom();
 
         }
-    }
-
-    private void dragZoom() {
-
-	    int width = this.getWidth();
-
-	    int start = conti.getStart();
-	    int stop = conti.getStop();
-        double amount = stop-start;
-
-	    int newStart = (int) (((double)x / (double)width) * amount) + start;
-        int newStop =  (int) (((double)x2 / (double)width) * amount) + start;
-        x = x2 = 0;
-        conti.changeSize(newStart,newStop);
-
-
-
-    }
-
-    private void dragPaint() {
-
-	    //buffer die image ooit
-	    repaint();
     }
 
 }
