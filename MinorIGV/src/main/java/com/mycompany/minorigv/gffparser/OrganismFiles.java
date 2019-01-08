@@ -1,14 +1,17 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.gui.Context;
+
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 
 public class OrganismFiles {
 
     public String fnaFile, gffFile, gzFNA, gzGFF, pathNewFNA, pathNewGFF;
+    FastaFileReader fr;
 
-
-    public void getFiles(String pathNAS, String nameOrg) throws IOException {
+    public void getFiles(String pathNAS, String nameOrg) throws Exception {
         String pathDirectory = pathNAS + nameOrg + File.separator;
         File f = new File(pathDirectory);
         String[] directories = f.list(new FilenameFilter() {
@@ -29,13 +32,16 @@ public class OrganismFiles {
         pathNewFNA = pathDirectory + fnaFile.replace(".gz", "");
         gzGFF = pathDirectory + gffFile;
         pathNewGFF = pathDirectory + gffFile.replace(".gz", "");
+
         if(gzFNA.contains(".gz")){
             unzip(gzFNA, pathNewFNA);
         }if(gzGFF.contains(".gz")){
             unzip(gzGFF, pathNewGFF);
         }
 
-//        BufferedReader reader = new BufferedReader(new FileReader(pathNewGFF));
+        fr.getSequences(pathNewFNA);
+
+        //        BufferedReader reader = new BufferedReader(new FileReader(pathNewGFF));
 //        System.out.println(reader.readLine());
     }
 
@@ -90,6 +96,12 @@ public class OrganismFiles {
     }
 
 
+    public String getFNAPath(){
+        return pathNewFNA;
+    }
 
+    public String getGFFPath(){
+        return pathNewGFF;
+    }
 
 }

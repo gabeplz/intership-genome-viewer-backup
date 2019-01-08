@@ -145,7 +145,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @throws Exception
 	 */
 	public void addGFF(String path) throws Exception {
-
 		//als er nog geen organism object is.
 		if (organism == null){
 			this.setOrganism(new Organisms());

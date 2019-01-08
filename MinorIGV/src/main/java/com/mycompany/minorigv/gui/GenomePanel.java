@@ -136,8 +136,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 //            System.out.println(name);
             OrganismFiles file = new OrganismFiles();
             file.getFiles(pathNAS, name);
-
-
+            cont.addGFF(file.getGFFPath());
+            cont.addFasta(file.getFNAPath());
         } catch (Exception e) {
             System.err.println("Error changing organism");
 
