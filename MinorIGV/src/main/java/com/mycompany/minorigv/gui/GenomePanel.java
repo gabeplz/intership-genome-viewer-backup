@@ -72,9 +72,12 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * function creating the text area that will display the name of an organism who's dna sequence is shown on screen and the position of the DNA sequence the user is looking at
      */
     private void makeTextAreas() {
+        // Maakt de ComboBox voor de organismen.
         organism = new JComboBox();
+        // Het path waar de bestanden staan
         String pathNAS = "/NAS/filesPython/genomes/refseq/fungi/";
         File f = new File(pathNAS);
+        // Gecontroleerd of het path bestaat en of het een map is.
         if (f.exists() && f.isDirectory()) {
             String[] directories = f.list(new FilenameFilter() {
                 @Override
@@ -82,24 +85,25 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
                     return new File(dir, name).isDirectory();
                 }
             });
+            // Alfabetische volgorde organisme namen en toevoegen aan ComboBox
             Arrays.sort(directories);
             organism.setModel(new DefaultComboBoxModel(directories));
+            // Zorgen dat er geen organisme is geselecteerd in het begin.
+            organism.setSelectedIndex(-1);
+
         } else {
-            organism.addItem("Select fungi");
+            // Wanneer het path niet bestaat kan de gebruiker zelf nog files selecteren.
+            organism.addItem("klik op files");
         }
 
-        organism.setSelectedIndex(-1);
+        // Actionlistener om te kijken of er op een ander organisme wordt gedrukt.
         ActionListener organismListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 changeOrganism(pathNAS);
             }
         };
-
         organism.addActionListener(organismListener);
-
-
-
 
 
         chromosome = new JComboBox();
@@ -130,17 +134,19 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         }
 
     }
+
+
     private void changeOrganism(String pathNAS) {
         try {
+            // Kijkt welk organisme is gekozen.
             String name = (String) organism.getSelectedItem();
-//            System.out.println(name);
             OrganismFiles file = new OrganismFiles();
             file.getFiles(pathNAS, name);
-            cont.addGFF(file.getGFFPath());
+            // Leest het fasta bestand in en het gff bestand.
             cont.addFasta(file.getFNAPath());
+            cont.addGFF(file.getGFFPath());
         } catch (Exception e) {
             System.err.println("Error changing organism");
-
         }
 
     }

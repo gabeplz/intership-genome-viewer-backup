@@ -6,17 +6,28 @@ import com.mycompany.minorigv.gui.Context;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * Files ophalen en unzippen als het nodig is.
+ * @author Amber Janssen Groesbeek en Anne van Ewijk
+ */
 public class OrganismFiles {
 
-    public String fnaFile, gffFile, gzFNA, gzGFF, pathNewFNA, pathNewGFF;
-    FastaFileReader fr;
+    private String fnaFile, gffFile, gzFNA, gzGFF, pathNewFNA, pathNewGFF;
 
+    /**
+     * Het ophalen van de files die overeenkomen met het organismen dat de gebruiker gekozen heeft. Hieruit worden
+     * de .fna en .gff files opgehaald.
+     * @param pathNAS       Het pad naar de NAS toe waar alle bestanden van de organismen zijn opgeslagen.
+     * @param nameOrg       De naam van het gekozen organismen.
+     * @throws Exception
+     */
     public void getFiles(String pathNAS, String nameOrg) throws Exception {
         String pathDirectory = pathNAS + nameOrg + File.separator;
         File f = new File(pathDirectory);
         String[] directories = f.list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
+                // De correcte gff en fna files uit de directory ophalen.
                 if(!name.contains("from") && !name.contains(".txt")){
                     if(name.contains("fna")){
                         fnaFile = name;
@@ -28,61 +39,45 @@ public class OrganismFiles {
             }
         });
 
+        // Het pad naar het gezipte mapje waarin de fna file staat.
         gzFNA = pathDirectory + fnaFile;
+
+        // Unzipte pad waar het fna file staat .
         pathNewFNA = pathDirectory + fnaFile.replace(".gz", "");
+
+        // Gezipte pad naar het mapje waar het gff file staat
         gzGFF = pathDirectory + gffFile;
+
+        // Unzipte pad naar de gff file.
         pathNewGFF = pathDirectory + gffFile.replace(".gz", "");
 
+        // Controleren of het mapje nog unzipt moet worden.
         if(gzFNA.contains(".gz")){
             unzip(gzFNA, pathNewFNA);
         }if(gzGFF.contains(".gz")){
             unzip(gzGFF, pathNewGFF);
         }
-
-        fr.getSequences(pathNewFNA);
-
-        //        BufferedReader reader = new BufferedReader(new FileReader(pathNewGFF));
-//        System.out.println(reader.readLine());
     }
 
-
+    /**
+     * Het unzippen van de mappen.
+     * @param pathMap       Path naar de map die unzipt moet worden
+     * @param pathNewFile   Path naar het unzipte file
+     */
     private void unzip(String pathMap, String pathNewFile){
         try {
-            //
-            // Create a file input stream to read the source file.
-            //
             FileInputStream fis = new FileInputStream(pathMap);
-
-            //
-            // Create a gzip input stream to decompress the source
-            // file defined by the file input stream.
-            //
             GZIPInputStream gzis = new GZIPInputStream(fis);
 
-            //
-            // Create a buffer and temporary variable used during the
-            // file decompress process.
-            //
             byte[] buffer = new byte[1024];
             int length;
 
-            //
-            // Create file output stream where the decompress result
-            // will be stored.
-            //
             FileOutputStream fos = new FileOutputStream(pathNewFile);
 
-            //
-            // Read from the compressed source file and write the
-            // decompress file.
-            //
             while ((length = gzis.read(buffer)) > 0) {
                 fos.write(buffer, 0, length);
             }
 
-            //
-            // Close the resources.
-            //
             fos.close();
             gzis.close();
             fis.close();
@@ -90,16 +85,22 @@ public class OrganismFiles {
             e.printStackTrace();
         }
 
+        // Deleten van de gezipte mapjes.
         File deleteFile = new File(pathMap);
         deleteFile.delete();
 
     }
 
-
+    /**
+     * @return  Path naar de unzipte fna file
+     */
     public String getFNAPath(){
         return pathNewFNA;
     }
 
+    /**
+     * @return Path naar de unzipte gff file
+     */
     public String getGFFPath(){
         return pathNewGFF;
     }
