@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.fastqparser.FasqReader;
+import com.mycompany.minorigv.fastqparser.Read;
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
@@ -29,6 +31,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private String[] chromosomeNameArray;
 
 	private CodonTable currentCodonTable;
+
+    private ArrayList<Read> currentReads;
 
 	private Feature[] currentFeatureList;
 	private int featStart;
@@ -336,6 +340,20 @@ public class Context implements Serializable, PropertyChangeListener {
 		this.currentCodonTable = TranslationManager.getInstance().getCodonTable(key);
 		pcs.firePropertyChange("CodonTable", oldValue, currentCodonTable);
 	}
+
+	public ArrayList<Read> getCurrentReads() { return currentReads; }
+
+	public void setCurrentReads(String path){
+	    ArrayList<Read> oldValue = this.currentReads;
+        FasqReader reader = new FasqReader();
+        try {
+            this.currentReads = reader.parse(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        pcs.firePropertyChange("Reads", oldValue, currentReads);
+        System.out.println("seter afgerond");
+    }
 
 	/**
 	 * encapsulatie van de property change support

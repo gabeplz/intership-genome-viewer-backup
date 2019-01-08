@@ -31,7 +31,7 @@ public class IGVMenuBar extends JMenuBar {
 	JMenu files, tools, features;
 
 	// Defineer de menu items die zelf niet sub items zullen bevatten.
-	JMenuItem openRef, openData, saveORF, findORF, blast,genes, mRNA ,exon, region, CDS, featureList;
+	JMenuItem openRef, openData,openReads, saveORF, findORF, blast,genes, mRNA ,exon, region, CDS, featureList;
 
 
 	// Een lijst die de features bevat die de gebruiker op dat moment wil zien.
@@ -61,6 +61,7 @@ public class IGVMenuBar extends JMenuBar {
 	//Sub items voor Files
 		openRef = new JMenuItem("Load reference");
 		openData = new JMenuItem("Load GFF");
+		openReads = new JMenuItem("Load Reads");
 
 	//Action listeners voor de sub items van Files
 		openRef.addActionListener(new ActionListener() {
@@ -75,11 +76,17 @@ public class IGVMenuBar extends JMenuBar {
 				openDataAction();
 			}
 		});
-
+		openReads.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openReadsAction();
+			}
+		});
 
 	//Voeg de subitems toe aan  "File"
 		files.add(openRef);
 		files.add(openData);
+		files.add(openReads);
 
 	//Voeg Files toe aan de menubar.
 		add(files);
@@ -222,6 +229,16 @@ public class IGVMenuBar extends JMenuBar {
 
 		}catch (Exception e){}
 	}
+
+	private void openReadsAction() {
+        try{
+            FastaFileChooser fasta = new FastaFileChooser();
+            String path = fasta.fastafile();
+
+            cont.setCurrentReads(path);
+
+        }catch (Exception e){}
+    }
 
 	/**
 	 * Wanneer er op de button Save ORF wordt geklikt, komt er een pop-up die hier wordt aangemaakt.
