@@ -162,8 +162,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             int length = stop - start;
             if (length > 10) {
                 int scale = (int) Math.round(length * 0.1);
-                start = start + scale + 1;
-                stop = stop - scale + 1;
+                start = start + scale;
+                stop = stop - scale;
                 cont.getFullLenght();
                 cont.changeSize(start, stop);
             }
@@ -187,8 +187,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             int length = stop - start;
             // TODO: 11/12/2018
             int scale = (int) Math.round(length * 0.1);
-            start = start - scale +1;
-            stop = stop + scale +1;
+            start = start - scale;
+            stop = stop + scale;
             if (start <= 0) {
                 start = 0;
                 }
