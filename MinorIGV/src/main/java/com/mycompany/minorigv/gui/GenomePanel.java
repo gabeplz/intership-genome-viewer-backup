@@ -88,7 +88,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         chromosome = new JComboBox();
         locus = new JTextField(20);
         locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-        locus.setText("1-100");
+        locus.setText("1-101");
 
         ActionListener chromosomeListener = new ActionListener() {
             @Override
