@@ -353,10 +353,8 @@ public class Context implements Serializable, PropertyChangeListener {
             this.currentReads = reader.parse(path);
 			pcs.firePropertyChange("Reads", oldValue, currentReads);
         } catch (IOException e) {
-            e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "IOE error. something went wrong while reading the file. check if: the file isn't corrupted, your user account has access rigts, each contig in the file is sepperated by enters onto 4 lines.");
         } catch (InvalidFileTypeException e){
-			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "file extention does not end with \".txt\"");
 		}
 
