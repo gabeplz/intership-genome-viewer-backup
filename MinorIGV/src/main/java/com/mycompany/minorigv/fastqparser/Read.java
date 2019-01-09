@@ -11,9 +11,9 @@ public class Read {
 
     /**
      * Constructor voor Read
-     * @param description begint met een '@' karakter en word gevolgd door een sequentie identificator and een optionele omschrijving
-     * @param sequence
-     * @param qualitySequence
+     * @param description String begint met een '@' karakter en word gevolgd door een sequentie identificator and een optionele omschrijving
+     * @param sequence String nucleotide sequentie.
+     * @param qualitySequence String codeerd de kwaliteits waardes voor de sequence. moet hetzelfde aantal karakters bevatten als sequence.
      */
     public Read(String description, String sequence, String qualitySequence) {
         this.description = description;
