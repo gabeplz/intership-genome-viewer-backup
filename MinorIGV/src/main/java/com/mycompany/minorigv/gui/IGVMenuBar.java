@@ -222,28 +222,7 @@ public class IGVMenuBar extends JMenuBar {
 	 * Bij de RadioButton kan er gekozen worden of gezocht wordt over het hele sequentie of tussen een bepaalde start en stop.
 	 */
 	private void saveOrfAction() {
-		// Radio Button wordt aangemaakt.
-		buttonAll = new JRadioButton("All",true);
-		buttonBetween = new JRadioButton("Between");
-		ButtonGroup groupRadioButton = new ButtonGroup();
-		groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
-
-		// Label wordt aangemaakt.
-		final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
-
-		// Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
-		NumberFormat format = NumberFormat.getInstance();
-		NumberFormatter formatter = new NumberFormatter(format);
-		formatter.setValueClass(Integer.class);
-		formatter.setMinimum(0);
-		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
-		textField = new JFormattedTextField(formatter);
-		textField.setValue(100); // Strandaard lengte van het ORF.
-
-		// Panel voor Radio Button, Label en Textfield wordt aangemaakt
-		JPanel panel = new JPanel(new GridLayout(2,2));
-        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+        JPanel panel = popupWindow();
 
         // Save button wordt aangemaakt.
 		JButton saveButton = new JButton();
@@ -311,28 +290,7 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	private void blastAction() {
-        // Radio Button wordt aangemaakt.
-        buttonAll = new JRadioButton("All",true);
-        buttonBetween = new JRadioButton("Between");
-        ButtonGroup groupRadioButton = new ButtonGroup();
-        groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
-
-        // Label wordt aangemaakt.
-        final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
-
-        // Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
-        NumberFormat format = NumberFormat.getInstance();
-        NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(true);
-        textField = new JFormattedTextField(formatter);
-        textField.setValue(100); // Strandaard lengte van het ORF.
-
-        // Panel voor Radio Button, Label en Textfield wordt aangemaakt
-        JPanel panel = new JPanel(new GridLayout(2,2));
-        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+        JPanel panel = popupWindow();
 
         // Save button wordt aangemaakt.
         JButton blastButton = new JButton();
@@ -380,6 +338,32 @@ public class IGVMenuBar extends JMenuBar {
         }else{
             ArrayList<ORF> orfs = cont.getCurORFListBetween();
         }
+    }
+
+    private JPanel popupWindow(){
+        // Radio Button wordt aangemaakt.
+        buttonAll = new JRadioButton("All",true);
+        buttonBetween = new JRadioButton("Between");
+        ButtonGroup groupRadioButton = new ButtonGroup();
+        groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
+
+        // Label wordt aangemaakt.
+        final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
+
+        // Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(true);
+        textField = new JFormattedTextField(formatter);
+        textField.setValue(100); // Strandaard lengte van het ORF.
+
+        // Panel voor Radio Button, Label en Textfield wordt aangemaakt
+        JPanel panel = new JPanel(new GridLayout(2,2));
+        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+        return panel;
     }
 
 	private void featureListAction() {

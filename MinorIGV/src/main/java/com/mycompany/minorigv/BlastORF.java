@@ -44,7 +44,6 @@ public class BlastORF {
         props.setAlignmentOption(ENTREZ_QUERY, " fungi[Organism]");
 
         NCBIQBlastOutputProperties outputProps = new NCBIQBlastOutputProperties();
-        outputProps.setDescriptionNumber(10);
 
         String rid = null;
         FileWriter writer = null;
