@@ -9,6 +9,7 @@ import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.fastqparser.FasqReader;
+import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.fastqparser.Read;
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.Feature;
@@ -17,6 +18,8 @@ import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
+
+import javax.swing.*;
 
 /**
  * Het object dat de binding realiseert tussen de GUI en de onderliggende Data.
@@ -348,11 +351,15 @@ public class Context implements Serializable, PropertyChangeListener {
         FasqReader reader = new FasqReader();
         try {
             this.currentReads = reader.parse(path);
-        } catch (Exception e) {
+			pcs.firePropertyChange("Reads", oldValue, currentReads);
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        pcs.firePropertyChange("Reads", oldValue, currentReads);
-        System.out.println("seter afgerond");
+			JOptionPane.showMessageDialog(null, "IOE error. something went wrong while reading the file. check if: the file isn't corrupted, your user account has access rigts, each contig in the file is sepperated by enters onto 4 lines.");
+        } catch (InvalidFileTypeException e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "file extention does not end with \".txt\"");
+		}
+
     }
 
 	/**

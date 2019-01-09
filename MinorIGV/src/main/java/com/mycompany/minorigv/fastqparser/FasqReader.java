@@ -9,40 +9,36 @@ import java.util.zip.GZIPInputStream;
  */
 public class FasqReader {
     /**
-     *leest het bestand van een pathway in en geeft de data door aan de constructor van Read.
+     * leest het bestand van een pathway in en geeft de data door aan de constructor van Read.
      * de constructor geeft de reads trerug aan parse waar ze in een arraylist worden gezet
+     *
      * @param path
      * @return arraylist<Read>
-     * @throws Exception
+     * @throws IOException, InvalidFileTypeException
      */
-    public ArrayList parse(String path)throws Exception {
-        BufferedReader r;
-        if(path.endsWith(".gz"))            // gebruikt andere buffer voor gz files
-        {
-            r = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(path))));
-        }
-        else
-        {
-            r = new BufferedReader(new FileReader(path));
-        }
+    public ArrayList parse(String path) throws IOException, InvalidFileTypeException {
+        if(path.endsWith(".txt") == false) {                // check op het juiste bestandstype
+            throw new InvalidFileTypeException();
+        } else {
+            try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+                String line;
+                ArrayList readList = new ArrayList();       // lijst voor Read objecten
+                while ((line = br.readLine()) != null) {
+                    String description;
+                    String sequence;
+                    String qualitySequence;
+                                                           // elke contig in een FastaQ file bestaat uit 4 regels.
+                    description = line;
+                    sequence = br.readLine();
+                    br.readLine();                         //in regel 3 staat alleen een scheidings teken.
+                    qualitySequence = br.readLine();
 
-        String line;
-        ArrayList readList = new ArrayList();       // lijst voor Read objecten
-        while((line=r.readLine())!=null)
-        {
-            String description;
-            String sequence;
-            String qualitySequence;
-                                        // elke contig in een FastaQ file bestaat uit 4 regels.
-            description = line;
-            sequence = r.readLine();;
-            r.readLine();                       //in regel 3 staat alleen een scheidings teken.
-            qualitySequence = r.readLine();;
 
-            Read curRead = new Read(description, sequence, qualitySequence);
-            readList.add(curRead);
+                    Read curRead = new Read(description, sequence, qualitySequence);        //call naar Read constructor
+                    readList.add(curRead);
+                }
+                return readList;
+            }
         }
-        r.close();
-        return readList;
-   }
+    }
 }
