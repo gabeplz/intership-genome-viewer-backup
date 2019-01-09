@@ -1,9 +1,14 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
+import com.mycompany.minorigv.BlastORF;
+import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,13 +16,6 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import javax.swing.*;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.NumberFormatter;
 
 /**
  * Deze class maakt een menubar voor de applicatie die verschillende menus bevat zoals menus voor het laden van files tools etc.
@@ -243,13 +241,13 @@ public class IGVMenuBar extends JMenuBar {
 		textField = new JFormattedTextField(formatter);
 		textField.setValue(100); // Strandaard lengte van het ORF.
 
-		// Save button wordt aangemaakt.
-		JButton saveButton = new JButton();
-		saveButton.setText("Save");
-
 		// Panel voor Radio Button, Label en Textfield wordt aangemaakt
 		JPanel panel = new JPanel(new GridLayout(2,2));
         panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+
+        // Save button wordt aangemaakt.
+		JButton saveButton = new JButton();
+		saveButton.setText("Save");
 
 		// Panel voor de Button wordt aangemaakt.
         JPanel panelForButton = new JPanel();
@@ -313,9 +311,76 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	private void blastAction() {
+        // Radio Button wordt aangemaakt.
+        buttonAll = new JRadioButton("All",true);
+        buttonBetween = new JRadioButton("Between");
+        ButtonGroup groupRadioButton = new ButtonGroup();
+        groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
 
+        // Label wordt aangemaakt.
+        final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
+
+        // Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(true);
+        textField = new JFormattedTextField(formatter);
+        textField.setValue(100); // Strandaard lengte van het ORF.
+
+        // Panel voor Radio Button, Label en Textfield wordt aangemaakt
+        JPanel panel = new JPanel(new GridLayout(2,2));
+        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+
+        // Save button wordt aangemaakt.
+        JButton blastButton = new JButton();
+        blastButton.setText("Blast");
+
+        // Panel voor de Button wordt aangemaakt.
+        JPanel panelForButton = new JPanel();
+        panelForButton.add(blastButton);
+
+        // Er wordt een Padding ingesteld.
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Er wordt een frame aangemaakt.
+        JFrame f = new JFrame();
+        f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
+        f.getContentPane().add(panel);
+        f.getContentPane().add(panelForButton);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+
+        // ActionListener voor de Save Button
+        blastButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                blastButtonAction();
+                f.dispose();
+            }
+        });
 
 	}
+
+	private void blastButtonAction(){
+        // haalt de ingevoerde lengte op van het ORF.
+        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+        // Set de ORFs
+        cont.setCurORFListALL(lengthORFUser);
+
+        BlastORF blast = new BlastORF();
+
+        // Kijkt welke Radio Button is aangeklikt.
+        Boolean m = buttonAll.isSelected();
+        if(m == true){
+//            blast.blasten(cont.getCurORFListALL());
+        }else{
+            ArrayList<ORF> orfs = cont.getCurORFListBetween();
+        }
+    }
 
 	private void featureListAction() {
 		PopUpFrame popup = new PopUpFrame(cont);
