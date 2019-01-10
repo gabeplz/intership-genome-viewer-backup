@@ -10,7 +10,8 @@ import javax.print.DocFlavor;
 import javax.swing.JPanel;
 
 /**
- * bouwt en tekend de panel met de liniaal
+ * @author Stan Wehkamp, Kahuub
+ * bouwt en tekent het paneel met de liniaal.
  */
 public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
@@ -73,17 +74,12 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
             g.fillRect(x,0,x2-x,getHeight());  //selectie rechthoek
         }
         else{
-            g.fillRect(x2,0,x-x2,getHeight());
+            g.fillRect(x2,0,x-x2,getHeight()); //inverse rechthoek.
         }
-
-
-
 	}
 
-
-
 	/**
-	 * calculates the stepSize
+	 * Berekent de stapgrootte.
 	 * @param length int
 	 * @return stepSize int
 	 */
