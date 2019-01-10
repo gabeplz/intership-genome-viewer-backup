@@ -5,8 +5,7 @@ import com.mycompany.minorigv.sequence.Strand;
 
 import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,8 +19,6 @@ import java.util.Observer;
 public class GUI {
 
 	private JFrame frame;
-	private ReferencePanel referencePaneel;
-	private JScrollPane scrollPane;
 	private Context context;
 
 	/**
@@ -72,31 +69,31 @@ public class GUI {
 		gbcPanel.gridy = 0;
 		frame.getContentPane().add(igvMenuBar,gbcPanel );
 		
-		
-		GenomePanel organismPanel = new GenomePanel();
-		organismPanel.init();
-		
+
+		GenomePanel genomePanel = new GenomePanel();
+		genomePanel.init();
+
 		GridBagConstraints gbcGenome = new GridBagConstraints();
 		gbcGenome.fill = GridBagConstraints.HORIZONTAL;
 		gbcGenome.gridx = 0;
 		gbcGenome.gridy = 1;
-		organismPanel.setBackground(Color.BLACK);
-		frame.getContentPane().add(organismPanel,gbcGenome );
-		
-		
-		JScrollPane scrollPane1 = new JScrollPane();
-		GridBagConstraints gbcScrollPane1 = new GridBagConstraints();
-		gbcScrollPane1.weighty = 1.0;
-		gbcScrollPane1.fill = GridBagConstraints.BOTH;
-		gbcScrollPane1.gridx = 0;
-		gbcScrollPane1.gridy = 2;
-		frame.getContentPane().add(scrollPane1, gbcScrollPane1);
-		
+
+		frame.getContentPane().add(genomePanel,gbcGenome);
+
+        GridBagConstraints gbcOrganism = new GridBagConstraints();
+        //gbcPanel.insets = new Insets(0, 0, 0, 0);
+        gbcOrganism.fill = GridBagConstraints.BOTH;
+        gbcOrganism.gridx = 0;
+        gbcOrganism.gridy = 2;
+        gbcOrganism.weighty = 1.0;
+
 		OrganismPanel organism = new OrganismPanel();
-		scrollPane1.setViewportView(organism);
+
 		organism.init();
-		
-		
+
+		frame.getContentPane().add(organism,gbcOrganism);
+
+
 		RulerPanel ruler = new RulerPanel();
 		ruler.init();
 		organism.add(ruler);
@@ -125,15 +122,44 @@ public class GUI {
 		featuresReverse.init(false);
 		organism.add(featuresReverse);
 
+		ScrollBar scroller = new ScrollBar(JScrollBar.HORIZONTAL,0,100,0,100);
+		scroller.init();
+
+		JPanel scrollPanel = new JPanel();
+		scrollPanel.setLayout(new BoxLayout(scrollPanel,BoxLayout.PAGE_AXIS));
+        scrollPanel.setBackground(Color.pink);
+		scrollPanel.add(scroller);
+
+        GridBagConstraints gbcScrollPanel = new GridBagConstraints();
+        gbcScrollPanel.fill = GridBagConstraints.BOTH;
+        gbcScrollPanel.gridx = 0;
+        gbcScrollPanel.gridy = 3;
+
+        frame.getContentPane().add(scrollPanel, gbcScrollPanel);
+
+
+
 		context = new Context();
+
+		organism.setContext(context);
 		refPanel1.setContext(context);
 		forwardPanel.setContext(context);
 		reversePanel.setContext(context);
 		ruler.setContext(context);
-		organismPanel.setContext(context);
+		genomePanel.setContext(context);
 		igvMenuBar.setContext(context);
 		featuresForward.setContext(context);
 		featuresReverse.setContext(context);
+		scroller.setContext(context);
+
+		scroller.setListeners();
+		refPanel1.setListeners();
+		forwardPanel.setListeners();
+		reversePanel.setListeners();
+		ruler.setListeners();
+		genomePanel.setListeners();
+		featuresForward.setListeners();
+		featuresReverse.setListeners();
 
 	}
 }

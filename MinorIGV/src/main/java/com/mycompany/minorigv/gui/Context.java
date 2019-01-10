@@ -36,6 +36,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private int start;
 	private int stop;
+
 	private ArrayList<String> choiceUser;
 	private HashMap<String,String> fastaMap = new HashMap<>();
 
@@ -76,6 +77,9 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		else if(newStart < 0){
 			throw new IndexOutOfBoundsException("start onder nul");
+		}
+		else if(newStop-newStart < 10){
+
 		}
 		else {
 			this.setStart(newStart);

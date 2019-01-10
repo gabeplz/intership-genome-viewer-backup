@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 /**
  * bouwt en tekend de panel met de liniaal
  */
-public class RulerPanel extends JPanel implements PropertyChangeListener{
+public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
 	Context conti;			//bevat de start stop and lengte van de sequentie waarop de ruler uitgelijnd word
     int x;                  //linkerkant selectie rechthoek
@@ -63,14 +63,20 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 			g.drawLine(pos,40,pos,30);								// draws line on the ruler
 			g.drawString(String.valueOf(j + 1) + "bp", pos, 30);		// draws the nucleotide position(in sequence) above the line
 
-
 		}
-
 
         int alpha = 127; // 50% transparent
         Color myColour = new Color(255, 0, 0, alpha);
 		g.setColor(myColour);
-		g.fillRect(x,0,x2-x,getHeight());  //selectie rechthoek
+
+		if (x < x2){
+            g.fillRect(x,0,x2-x,getHeight());  //selectie rechthoek
+        }
+        else{
+            g.fillRect(x2,0,x-x2,getHeight());
+        }
+
+
 
 	}
 
@@ -106,21 +112,13 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 	 */
 	public void setContext(Context conti) {
 		this.conti = conti;
-		conti.addPropertyChangeListener("range", this); // luisterd of in context de functie firePropertyChange met als topic: "range", word uitgevoerd.
 	}
 
-	/**
-	 * overrides propery change
-	 * hertekend het paneel
-	 * word geactiveerd door de PropertyChangeListener in RulerPanel.setContext()
-	 * @param arg0
-	 */
-	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
-		this.invalidate();
-		this.repaint();
-		
-	}
+    @Override
+    public void setListeners() {
+        conti.addPropertyChangeListener("range", this); // luisterd of in context de functie firePropertyChange met als topic: "range", word uitgevoerd.
+
+    }
 
     /**
      * Start van selectie rechthoek instellen.
@@ -154,6 +152,14 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
 	    int newStart = (int) (((double)x / (double)width) * amount) + start;
         int newStop =  (int) (((double)x2 / (double)width) * amount) + start;
         x = x2 = 0;
+
+        int temp;
+        if (newStop < newStart){
+            temp = newStart;
+            newStart = newStop;
+            newStop = temp;
+        }
+
         conti.changeSize(newStart,newStop);
 
     }
@@ -184,6 +190,8 @@ public class RulerPanel extends JPanel implements PropertyChangeListener{
         public void mouseReleased(MouseEvent e) {
             setEndPoint(e.getX());
             dragZoom();
+            invalidate();
+            repaint();
 
         }
     }
