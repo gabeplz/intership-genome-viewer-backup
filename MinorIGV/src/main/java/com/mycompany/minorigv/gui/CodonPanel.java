@@ -365,7 +365,27 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
 
             double pixel = widthPanel/length;
             int positie = (int)Math.ceil(X/pixel) + start;
-            
+
+            System.out.println(Y);
+
+            ArrayList<ORF> listORF = cont.getCurORFListBetween();
+            if(listORF != null){
+                for(ORF o: listORF){
+                    if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
+                        if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){
+                            System.out.println(o);
+                        }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
+                            System.out.println(o);
+                        }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
+                            System.out.println(o);
+                        }
+                    }
+
+
+                }
+                System.out.println("hoi");
+            }
+
         }
     }
 
