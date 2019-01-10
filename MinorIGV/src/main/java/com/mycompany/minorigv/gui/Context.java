@@ -406,7 +406,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param lenghtORF		de lengte die het ORF minimaal mag hebben, ingevoerd door de gebruiker.
 	 */
 	public void setCurORFListALL(int lenghtORF){
-		curChromosome.setListORF(lenghtORF);
+
+			curChromosome.setListORF(lenghtORF);
 	}
 
 	/**
@@ -423,7 +424,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public void saveORFs(ArrayList<ORF> curORFList) throws FileNotFoundException, UnsupportedEncodingException {
+	public void saveORFs(ArrayList<ORF> curORFList) throws FileNotFoundException, UnsupportedEncodingException, NullPointerException {
 		PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
 
 		for(ORF o: curORFList){
