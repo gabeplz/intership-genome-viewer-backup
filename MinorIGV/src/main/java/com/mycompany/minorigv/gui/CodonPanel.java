@@ -354,22 +354,18 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
 
     class MyMouseListener extends MouseAdapter{
         public void mouseClicked(MouseEvent e){
-            System.out.println(e.getX() + " " + e.getY());
+            int X = e.getX();
+            int Y = e.getY();
 
             // Ophalen breedte van scherm
-            int widthPanel = (int) dim.getWidth();
+            double widthPanel = (double) dim.getWidth();
             // Ophalen aantal nucleotide
-            int length = cont.getLength();
+            double length = cont.getLength();
             int start = cont.getStart();
 
-            int pixel = widthPanel/length;
-            int positie = pixel + start;
-
-            System.out.println(length);
-            System.out.println(start);
-
-            System.out.println("pixel " + pixel);
-            System.out.println("positie " +positie);
+            double pixel = widthPanel/length;
+            int positie = (int)Math.ceil(X/pixel) + start;
+            
         }
     }
 
