@@ -24,6 +24,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
 
 	Context cont;
 	Strand strand;
+	Dimension dim;
 
 	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt. Letters weergeven.
 	private final int ZOOM_SIZE_2 = 14; //Hoeveelheid pixels waarna de aminozuur letters verdwijnen. (ORF (geel) + start (groen) + stop (rood))
@@ -50,6 +51,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
      */
 	@Override
 	public void paintComponent(Graphics g) {
+        dim = this.getSize();
 		super.paintComponent(g);
 
 		// Doet niks wanneer er geen sequentie aanwezig is.
@@ -355,8 +357,19 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
             System.out.println(e.getX() + " " + e.getY());
 
             // Ophalen breedte van scherm
-
+            int widthPanel = (int) dim.getWidth();
             // Ophalen aantal nucleotide
+            int length = cont.getLength();
+            int start = cont.getStart();
+
+            int pixel = widthPanel/length;
+            int positie = pixel + start;
+
+            System.out.println(length);
+            System.out.println(start);
+
+            System.out.println("pixel " + pixel);
+            System.out.println("positie " +positie);
         }
     }
 

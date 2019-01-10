@@ -328,7 +328,7 @@ public class IGVMenuBar extends JMenuBar {
         // Set de ORFs
         cont.setCurORFListALL(lengthORFUser);
 
-        BlastORF blast = new BlastORF();
+//        BlastORF blast = new BlastORF();
 
         // Kijkt welke Radio Button is aangeklikt.
         Boolean m = buttonAll.isSelected();
