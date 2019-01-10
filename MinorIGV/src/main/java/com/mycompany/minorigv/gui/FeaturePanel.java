@@ -15,8 +15,8 @@ import javax.swing.JPanel;
  * Date: 20/11/18
  *
  */
-public class FeaturePanel extends JPanel implements PropertyChangeListener {
-	Context cont;
+public class FeaturePanel extends IGVPanel implements PropertyChangeListener {
+
 	boolean forward;
 
 
@@ -125,19 +125,13 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
 	 */
 	public void setContext(Context context) {
 		this.cont = context;
-		context.addPropertyChangeListener("currentFeatureList",this);
-        cont.addPropertyChangeListener("chromosome",this);
 
 	}
 
+	@Override
+	public void setListeners() {
+		cont.addPropertyChangeListener("currentFeatureList",this);
+		cont.addPropertyChangeListener("chromosome",this);
+	}
 
-    /**
-     *
-     * @param evt
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        this.invalidate();
-        this.repaint();
-    }
 }
