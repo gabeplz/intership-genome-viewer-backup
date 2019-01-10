@@ -2,6 +2,7 @@ package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.gffparser.ORF;
+import com.mycompany.minorigv.sequence.BlastORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -11,7 +12,9 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -86,7 +89,14 @@ public class IGVMenuBar extends JMenuBar {
 	//Sub items voor menu item 2 "tools"
 		findORF = new JMenuItem("Find ORFs");
 		saveORF = new JMenuItem("Save ORFs");
-		blast = new JMenuItem("Blast");
+		blast = new JMenuItem("BlastORF");
+
+		File f = new File("/NAS/minor-g1/");
+		if(f.exists() && f.isDirectory()){
+			blast.setEnabled(true);
+		}else{
+			blast.setEnabled(false);
+		}
 
 	//Action listeners voor de sub item van tools
 		findORF.addActionListener(new ActionListener() {
@@ -273,9 +283,9 @@ public class IGVMenuBar extends JMenuBar {
 		// Kijkt welke Radio Button is aangeklikt.
 		Boolean m = buttonAll.isSelected();
 		if(m == true){
-			cont.saveORFs(cont.getCurORFListALL());
+			cont.saveORFs(cont.getCurORFListALL(), "saveORF");
 		}else{
-			cont.saveORFs(cont.getCurORFListBetween());
+			cont.saveORFs(cont.getCurORFListBetween(), "saveORF");
 		}
 	}
 
@@ -293,7 +303,7 @@ public class IGVMenuBar extends JMenuBar {
 
         // Save button wordt aangemaakt.
         JButton blastButton = new JButton();
-        blastButton.setText("Blast");
+        blastButton.setText("BlastORF");
 
         // Panel voor de Button wordt aangemaakt.
         JPanel panelForButton = new JPanel();
@@ -315,28 +325,37 @@ public class IGVMenuBar extends JMenuBar {
         blastButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                blastButtonAction();
+				try {
+					blastButtonAction();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 f.dispose();
             }
         });
 
 	}
 
-	private void blastButtonAction(){
+	private void blastButtonAction() throws IOException {
         // haalt de ingevoerde lengte op van het ORF.
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());
         // Set de ORFs
         cont.setCurORFListALL(lengthORFUser);
+		// Kijkt welke Radio Button is aangeklikt.
+		Boolean m = buttonAll.isSelected();
+		if(m == true){
+			cont.saveORFs(cont.getCurORFListALL(), "blastORF");
+		}else{
+			cont.saveORFs(cont.getCurORFListBetween(), "blastORF");
+		}
+		BlastORF blastORF = new BlastORF();
+		blastORF.run();
 
-//        BlastORF blast = new BlastORF();
 
-        // Kijkt welke Radio Button is aangeklikt.
-        Boolean m = buttonAll.isSelected();
-        if(m == true){
-          //  blast.blasten(cont.getCurORFListALL());
-        }else{
-            ArrayList<ORF> orfs = cont.getCurORFListBetween();
-        }
     }
 
     private JPanel popupWindow(){

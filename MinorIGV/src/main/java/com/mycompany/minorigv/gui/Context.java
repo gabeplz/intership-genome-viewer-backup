@@ -17,6 +17,7 @@ import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
+import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 /**
@@ -47,7 +48,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	private final int DEFAULT_STOP = 100;
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
+	Strand strand;
 	/**
 	 * Constructor voor testing purposes.
 	 * @param organism een Organisms object
@@ -411,17 +412,31 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public void saveORFs(ArrayList<ORF> curORFList) throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter("orf.fasta", "UTF-8");
+	public void saveORFs(ArrayList<ORF> curORFList, String buttonClick) throws FileNotFoundException, UnsupportedEncodingException {
+
+		PrintWriter writerSeq = new PrintWriter("orf.fasta", "UTF-8");
+		PrintWriter writerAA = new PrintWriter("/NAS/minor-g1/non_redundant/blast.fasta", "UTF-8");
 
 		for(ORF o: curORFList){
-			// Header
-			writer.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop() + "|strand: " + o.getStrand());
 			// Sequentie in nt.
 			String subSeq = curChromosome.getSeqTemp().substring(o.getStart(), o.getStop());
-			writer.println(subSeq);
+			if(buttonClick == "saveORF"){
+				writerSeq.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop() + "|strand: " + o.getStrand());
+				writerSeq.println(subSeq);
+			}
+			// Sequentie in aa.
+			else if(buttonClick == "blastORF"){
+				writerAA.println(">" + o.getIdORF() + "|RF: " + o.getReadingframe() + "|start: " + o.getStart() + "|stop: " + o.getStop() + "|strand: " + o.getStrand());
+				String aaSeq = TranslationManager.getInstance().getAminoAcids(o.getStrand(),subSeq,getCurrentCodonTable());
+				if(o.getStrand() == Strand.NEGATIVE){
+					System.out.println("hoi");
+					aaSeq = new StringBuilder(aaSeq).reverse().toString();
+				}
+				writerAA.println(aaSeq);
+			}
 		}
-		writer.close();
+		writerSeq.close();
+		writerAA.close();
 	}
 
 }

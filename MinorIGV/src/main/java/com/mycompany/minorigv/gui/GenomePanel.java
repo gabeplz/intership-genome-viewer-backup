@@ -33,6 +33,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     private int start;
     private int stop;
 
+    private static String pathNAS = "/NAS/minor-g1/filesPython/genomes/refseq/fungi/";
+
     /**
      * function building the Genomepanel in the application
      */
@@ -75,7 +77,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         // Maakt de ComboBox voor de organismen.
         organism = new JComboBox();
         // Het path waar de bestanden staan
-        String pathNAS = "/NAS/filesPython/genomes/refseq/fungi/";
+
         File f = new File(pathNAS);
         // Gecontroleerd of het path bestaat en of het een map is.
         if (f.exists() && f.isDirectory()) {
@@ -135,7 +137,10 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 
     }
 
-
+    /**
+     * Kijken of het gekozen organisme is veranderd.
+     * @param pathNAS
+     */
     private void changeOrganism(String pathNAS) {
         try {
             // Kijkt welk organisme is gekozen.
