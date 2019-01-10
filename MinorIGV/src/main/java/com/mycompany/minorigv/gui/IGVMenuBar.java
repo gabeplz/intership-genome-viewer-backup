@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.BlastORF;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
@@ -334,7 +333,7 @@ public class IGVMenuBar extends JMenuBar {
         // Kijkt welke Radio Button is aangeklikt.
         Boolean m = buttonAll.isSelected();
         if(m == true){
-//            blast.blasten(cont.getCurORFListALL());
+          //  blast.blasten(cont.getCurORFListALL());
         }else{
             ArrayList<ORF> orfs = cont.getCurORFListBetween();
         }

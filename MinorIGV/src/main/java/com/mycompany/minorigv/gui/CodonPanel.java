@@ -1,16 +1,17 @@
 package com.mycompany.minorigv.gui;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 
 
@@ -19,7 +20,7 @@ import com.mycompany.minorigv.sequence.TranslationManager;
  * @author Huub en Anne
  * Date: 20/11/18
  */
-public class CodonPanel extends JPanel implements PropertyChangeListener{
+public class CodonPanel extends JPanel implements PropertyChangeListener {
 
 	Context cont;
 	Strand strand;
@@ -37,6 +38,10 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
+
+		MyMouseListener listener = new MyMouseListener();
+		addMouseListener(listener);
+
 	}
 
     /**
@@ -84,6 +89,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
                 drawZoomedOut(g, seq);
             }
 		}
+
 	}
 
     /**
@@ -343,4 +349,15 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
         }
 
     }
+
+    class MyMouseListener extends MouseAdapter{
+        public void mouseClicked(MouseEvent e){
+            System.out.println(e.getX() + " " + e.getY());
+
+            // Ophalen breedte van scherm
+
+            // Ophalen aantal nucleotide
+        }
+    }
+
 }
