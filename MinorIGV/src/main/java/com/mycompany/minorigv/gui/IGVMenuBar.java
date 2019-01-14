@@ -1,14 +1,14 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.gffparser.ORF;
-import com.mycompany.minorigv.sequence.BlastORF;
+import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
+import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -333,14 +333,19 @@ public class IGVMenuBar extends JMenuBar {
 					e1.printStackTrace();
 				} catch (IOException e1) {
                     e1.printStackTrace();
-                }
-                f.dispose();
+                } catch (JAXBException e1) {
+					e1.printStackTrace();
+				}
+				f.dispose();
             }
         });
 
 	}
 
-	private void blastButtonAction() throws IOException {
+	private void blastButtonAction() throws IOException, JAXBException {
+		String fasta = "/NAS/minor-g1/non_redundant/blast.fasta";
+		String out = "/NAS/minor-g1/non_redundant/";
+		String blastDB = "/NAS/minor-g1/non_redundant/nr"; // roep nr dan aan
         // haalt de ingevoerde lengte op van het ORF.
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());
         // Set de ORFs
@@ -349,11 +354,18 @@ public class IGVMenuBar extends JMenuBar {
 		Boolean m = buttonAll.isSelected();
 		if(m == true){
 			cont.saveORFs(cont.getCurORFListALL(), "blastORF");
+			BlastORF blastORF = new BlastORF();
+			String output = out + cont.getOrganism().getId() + "_A_" + lengthORFUser+ ".xml";
+			blastORF.runBLAST(fasta, output, blastDB);
+			blastORF.getValuesORF(cont.getCurORFListALL());
 		}else{
 			cont.saveORFs(cont.getCurORFListBetween(), "blastORF");
+			BlastORF blastORF = new BlastORF();
+			String output = out + cont.getOrganism().getId() + "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
+			blastORF.runBLAST(fasta, output, blastDB);
+			blastORF.getValuesORF(cont.getCurORFListBetween());
 		}
-		BlastORF blastORF = new BlastORF();
-		blastORF.run();
+
 
 
     }

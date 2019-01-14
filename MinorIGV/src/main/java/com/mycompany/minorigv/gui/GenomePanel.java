@@ -268,4 +268,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 			syncSize();
 		}	
 	}
+
+	public String getOrganismBox(){
+        return organism.getSelectedItem().toString();
+    }
 }
