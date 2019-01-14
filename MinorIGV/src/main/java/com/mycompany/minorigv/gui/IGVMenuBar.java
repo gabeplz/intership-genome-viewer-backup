@@ -29,10 +29,10 @@ public class IGVMenuBar extends JMenuBar {
 
     private Context cont;
     // Defineer de menu items die zelf sub items zullen bevatten.
-    JMenu files, tools, features;
+    JMenu files, tools, features, reads;
 
     // Defineer de menu items die zelf niet sub items zullen bevatten.
-    JMenuItem openRef, openData, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList;
+    JMenuItem openRef, openData, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads ;
 
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
@@ -50,6 +50,7 @@ public class IGVMenuBar extends JMenuBar {
         menus();
         featureMenu();
         condonTableMenu();
+        readMenu();
     }
 
     /**
@@ -207,6 +208,42 @@ public class IGVMenuBar extends JMenuBar {
 
     }
 
+    /**
+     * Het aan maken van het 3de menu  "features".
+     */
+    public void readMenu() {
+        // Aanmaken van een feature reads voor op de menu bar
+        reads = new JMenu("Reads");
+
+        //Sub items voor Files
+        load_reads = new JMenuItem("Load reads");
+        blast_reads = new JMenuItem("Blast reads");
+
+
+        load_reads.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadReadsAction();
+            }
+        });
+
+        // Voeg action listeners toe aan de check boxes.
+        blast_reads.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                blasReadsAction();
+            }
+        });
+
+        // Voeg de checkboxes toe aan features menu
+        reads.add(load_reads);
+        reads.add(blast_reads);
+
+        // Voeg het features menu aan de menu bar
+        add(reads);
+
+    }
+
     // Action performed voor files en tools.
     private void loadReferenceAction() {
         try {
@@ -243,72 +280,6 @@ public class IGVMenuBar extends JMenuBar {
         orf.setContext(cont);
         orf.saveOrfAction();
     }
-//        // Radio Button wordt aangemaakt.
-//        buttonAll = new JRadioButton("All", true);
-//        buttonBetween = new JRadioButton("Between");
-//        ButtonGroup groupRadioButton = new ButtonGroup();
-//        groupRadioButton.add(buttonAll);
-//        groupRadioButton.add(buttonBetween);
-//
-//        // Label wordt aangemaakt.
-//        final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
-//
-//        // Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
-//        NumberFormat format = NumberFormat.getInstance();
-//        NumberFormatter formatter = new NumberFormatter(format);
-//        formatter.setValueClass(Integer.class);
-//        formatter.setMinimum(0);
-//        formatter.setMaximum(Integer.MAX_VALUE);
-//        formatter.setAllowsInvalid(true);
-//        textField = new JFormattedTextField(formatter);
-//        textField.setValue(100); // Strandaard lengte van het ORF.
-//
-//        // Save button wordt aangemaakt.
-//        JButton saveButton = new JButton();
-//        saveButton.setText("Save");
-//
-//        // Panel voor Radio Button, Label en Textfield wordt aangemaakt
-//        JPanel panel = new JPanel(new GridLayout(2, 2));
-//        panel.add(buttonAll);
-//        panel.add(buttonBetween);
-//        panel.add(labelLengthORFUser);
-//        panel.add(textField);
-//
-//        // Panel voor de Button wordt aangemaakt.
-//        JPanel panelForButton = new JPanel();
-//        panelForButton.add(saveButton);
-//
-//        // Er wordt een Padding ingesteld.
-//        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-//
-//        // Er wordt een frame aangemaakt.
-//        JFrame f = new JFrame();
-//        f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
-//        f.getContentPane().add(panel);
-//        f.getContentPane().add(panelForButton);
-//        f.pack();
-//        f.setLocationRelativeTo(null);
-//        f.setVisible(true);
-//
-//        // ActionListener voor de Save Button
-//        saveButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    saveButtonAction();
-//                    f.dispose();
-//                } catch (FileNotFoundException e1) {
-//                    e1.printStackTrace();
-//                } catch (UnsupportedEncodingException e1) {
-//                    e1.printStackTrace();
-//                } catch (NullPointerException el) {
-//                    final JFrame frame = new JFrame();
-//                    JOptionPane.showMessageDialog(frame, "Er is geen ORF om op te slaan ");
-//                    frame.dispose();
-//                }
-//            }
-//        });
-//    }
 
     /**
      * Wanneer er op de Save Button in het panel wordt geklikt, worden de gegevens opgehaald die op dat moment zijn ingevoerd.
@@ -317,19 +288,19 @@ public class IGVMenuBar extends JMenuBar {
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */
-    private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException, NullPointerException {
-        // haalt de ingevoerde lengte op van het ORF.
-        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
-        // Set de ORFs
-        cont.setCurORFListALL(lengthORFUser);
-        // Kijkt welke Radio Button is aangeklikt.
-        Boolean m = buttonAll.isSelected();
-        if (m == true) {
-            cont.saveORFs(cont.getCurORFListALL());
-        } else {
-            cont.saveORFs(cont.getCurORFListBetween());
-        }
-    }
+//    private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException, NullPointerException {
+//        // haalt de ingevoerde lengte op van het ORF.
+//        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+//        // Set de ORFs
+//        cont.setCurORFListALL(lengthORFUser);
+//        // Kijkt welke Radio Button is aangeklikt.
+//        Boolean m = buttonAll.isSelected();
+//        if (m == true) {
+//            cont.saveORFs(cont.getCurORFListALL());
+//        } else {
+//            cont.saveORFs(cont.getCurORFListBetween());
+//        }
+//    }
 
     /**
      * Wanneer er op de button Find ORF gedrukt wordt, komt er een pop-up waarin de lengte van het ORF ingevuld kan worden (nt).
@@ -402,6 +373,14 @@ public class IGVMenuBar extends JMenuBar {
         }
 
         tellContext();
+    }
+
+    private void loadReadsAction() {
+
+    }
+
+    private void blasReadsAction() {
+
     }
 
     /**
