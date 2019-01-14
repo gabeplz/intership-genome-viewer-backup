@@ -209,10 +209,13 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      */
     public void setContext(Context cont) {
         this.cont = cont;
+
+    }
+
+
+    public void setListeners() {
         cont.addPropertyChangeListener("chromosomeNameArray", this);
         cont.addPropertyChangeListener("range",this);
-        
-
     }
 
     /**

@@ -14,7 +14,7 @@ import com.mycompany.minorigv.sequence.MakeCompStrand;
  * @author Huub Goltstein
  * ReferencePanel tekent de nucleotiden van de referentie sequentie.
  */
-public class ReferencePanel extends JPanel implements PropertyChangeListener {
+public class ReferencePanel extends IGVPanel implements PropertyChangeListener {
 
 	Context cont;
 	public static final int HEIGHT = 20;
@@ -181,16 +181,15 @@ public class ReferencePanel extends JPanel implements PropertyChangeListener {
      */
 	public void setContext(Context cont) {
 		this.cont = cont;
-		cont.addPropertyChangeListener("range", this);
-		cont.addPropertyChangeListener("chromosome",this);
+
 		
 	}
 
+    @Override
+    public void setListeners() {
+        cont.addPropertyChangeListener("range", this);
+        cont.addPropertyChangeListener("chromosome",this);
+    }
 
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {  //als range/chromosome veranderen updaten.
-		this.invalidate();
-		this.repaint();
-		
-	}
+
 }

@@ -19,9 +19,9 @@ import com.mycompany.minorigv.sequence.TranslationManager;
  * @author Huub en Anne
  * Date: 20/11/18
  */
-public class CodonPanel extends JPanel implements PropertyChangeListener{
+public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
-	Context cont;
+
 	Strand strand;
 
 	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt. Letters weergeven.
@@ -183,24 +183,11 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
         }
     }
 
-
-    /**
-     * instellen context
-     * @param cont de huidige context
-     */
-	public void setContext(Context cont) {
-		this.cont = cont;
-		cont.addPropertyChangeListener("range", this);
-		cont.addPropertyChangeListener("chromosome",this);
-		cont.addPropertyChangeListener("CodonTable", this);
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		this.revalidate();
-		this.repaint();
-
-	}
+	public void setListeners(){
+        cont.addPropertyChangeListener("range", this);
+        cont.addPropertyChangeListener("chromosome",this);
+        cont.addPropertyChangeListener("CodonTable", this);
+    }
 
     /**
      * @param strandORFs  een ArrayList met van 1 frame op 1 strand alle ORFs tussen de start en stop van de gebruiker
@@ -315,7 +302,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
     private void drawZoomedOut(Graphics g, String seq){
 
         int start = cont.getStart(); 					//start van het beeld.
-        int stop = cont.getStop(); 					//stop van het beeld.
+        int stop = cont.getStop(); 					    //stop van het beeld.
         int length = cont.getLength();					//lengte subsequentie.
         int panelWidth = (int) getSize().getWidth(); 	//breedte paneel
 
@@ -343,4 +330,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener{
         }
 
     }
+
+
+
 }
