@@ -9,6 +9,7 @@ import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.gffparser.*;
+import com.mycompany.minorigv.motif.PositionScoreMatrix;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -27,6 +28,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private CodonTable currentCodonTable;
 
 	private String regexPattern;
+
+	private ArrayList<HashMap<String, Double>> scoreMatrix;
 
 	private TreeMap currentMotifMapForward;
 	private TreeMap currentMotifMapReverse;
@@ -402,10 +405,11 @@ public class Context implements Serializable, PropertyChangeListener {
 			System.out.println("setMotive klaar");
 			pcs.firePropertyChange("motif", oldValue, currentMotifMapForward);
         } else { }
-
-
 	}
 
+	public void setScoreMatrix(String inputString){
+	    this.scoreMatrix = PositionScoreMatrix.buildMatrix(inputString);
+    }
 	/**
 	 * encapsulatie van de property change support
 	 * @param listener het element dat geinformeerd wil worden

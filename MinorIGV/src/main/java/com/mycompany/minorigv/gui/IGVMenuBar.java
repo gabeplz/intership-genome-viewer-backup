@@ -3,6 +3,8 @@ package com.mycompany.minorigv.gui;
 import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.FastaFileReader;
 import com.mycompany.minorigv.gffparser.MotifFinder;
+import com.mycompany.minorigv.motif.PositionScoreMatrix;
+import com.mycompany.minorigv.motif.TextAreaExample;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -45,6 +47,7 @@ public class IGVMenuBar extends JMenuBar {
 		featureMenu();
         condonTableMenu();
         motifSearchMenu();
+        motifSearchMenu2();
 	}
 
 	/**
@@ -334,4 +337,46 @@ public class IGVMenuBar extends JMenuBar {
         motifSearchMenu.add(searchbar);
 	    add(motifSearchMenu);
     }
+
+
+    public void motifSearchMenu2() {
+        JMenu motifSearchMenu = new JMenu("True motif search");
+        JMenuItem matrixFrame = new JMenuItem("input sequences");
+        matrixFrame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            TextAreaExample x = new TextAreaExample();
+            x.setContext(cont);
+        }
+    });
+        motifSearchMenu.add(matrixFrame);
+        add(motifSearchMenu);
+	}
+        /**
+        JTextArea motifArea = new JTextArea();
+        JLabel helpLabel = new JLabel();
+        String myString = new String("enter your motifs to generate a score matrix\nif you need more lines just go to the last line\nhit enter a few times and press the motif\nbutton 2 times\naaa\ntta\natg");
+        helpLabel.setText("<html>" + myString.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
+
+        JButton matrix = new JButton("build matrix");
+        JButton search = new JButton("search matrix");
+        matrix.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+             //   cont.setRegexPattern(motifArea.getText());
+           //     cont.setMotifMap(cont.getRegexPattern(), cont.getSubSequentie());
+                PositionScoreMatrix.buildMatrix(motifArea.getText());
+                JFrame frame = new JFrame();
+                Object result = JOptionPane.showInputDialog(frame, "Enter printer name:");
+
+            }
+        });
+        motifSearchMenu.add(helpLabel);
+        motifSearchMenu.add(motifArea);
+
+        motifSearchMenu.add(matrix);
+        motifSearchMenu.add(search);
+
+        add(motifSearchMenu);
+    } **/
 }
