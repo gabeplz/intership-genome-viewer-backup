@@ -261,7 +261,7 @@ public class IGVMenuBar extends JMenuBar {
             cont.addFasta(path);
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

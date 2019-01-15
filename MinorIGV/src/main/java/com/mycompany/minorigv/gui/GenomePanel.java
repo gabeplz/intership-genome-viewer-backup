@@ -88,7 +88,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         chromosome = new JComboBox();
         locus = new JTextField(20);
         locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-        locus.setText("1-100");
+        locus.setText("1-101");
 
         ActionListener chromosomeListener = new ActionListener() {
             @Override
@@ -222,7 +222,12 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * set the correct start "-" stop for Locus
      */
     private void syncSize() {
-    	this.locus.setText((cont.getStart()+1)+"-"+(cont.getStop()+1));
+
+        if(cont == null || cont.getCurChromosome() == null || cont.getSequentie() == null){
+            locus.setText("1-101");
+        } else {
+            this.locus.setText((cont.getStart() + 1) + "-" + (cont.getStop() + 1));
+        }
     }
 
     /**

@@ -85,8 +85,8 @@ public class Context implements Serializable, PropertyChangeListener {
 		else if(newStart < 0){
 			throw new IndexOutOfBoundsException("start onder nul");
 		}
-		else if(newStop-newStart < 10){
-
+        else if(newStop-newStart < 10){
+			return;
 		}
 		else {
 			this.setStart(newStart);
