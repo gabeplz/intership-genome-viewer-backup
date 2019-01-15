@@ -342,6 +342,11 @@ public class IGVMenuBar extends JMenuBar {
 
 	}
 
+	/**
+	 * Kijk of er op de All of Between knop is geklikt. En roept de CallBlastORF vervolgens aan.
+	 * @throws IOException
+	 * @throws JAXBException
+	 */
 	private void blastButtonAction() throws IOException, JAXBException {
 		CallBlastORF blastORF = new CallBlastORF(cont);
         // haalt de ingevoerde lengte op van het ORF.
