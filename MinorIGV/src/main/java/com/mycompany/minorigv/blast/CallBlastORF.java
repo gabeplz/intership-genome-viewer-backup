@@ -2,7 +2,10 @@ package com.mycompany.minorigv.blast;
 
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.gui.Context;
+import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -29,12 +32,14 @@ public class CallBlastORF {
      * @param partOutputName    Stuk naam voor output bestand.
      * @throws IOException
      */
-    public void callBlast(ArrayList<ORF> orfList, String partOutputName) throws IOException {
+    public void callBlast(ArrayList<ORF> orfList, String partOutputName) throws IOException, JAXBException, ParserConfigurationException, SAXException {
         cont.saveORFs(orfList, "blastORF");
         BLAST BLAST = new BLAST();
         String output = out + cont.getOrganism().getId() + partOutputName;
         BLAST.runBLAST(input, output, "blastp");
-//        BLAST.getValuesORF(cont.getCurORFListALL());
+
+        BlastORF b = new BlastORF();
+        b.getValuesORF(orfList, output);
     }
 
 

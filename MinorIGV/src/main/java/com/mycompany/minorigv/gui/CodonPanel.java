@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 
 /**
@@ -124,12 +124,12 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
                 xPosLeft = xPosRight; //oude links -> rechts.
                 xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq+1.5); //nieuwe xPos bepalen.
                 int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
-                selectColor(strandORFs, g, indexRef, letter, letterWidth);
+                selectColor(strandORFs, g, indexRef, letter, letterWidth, frame);
 
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 				g.setColor(Color.BLACK);
 
@@ -177,7 +177,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 
                 g.setColor(Color.BLACK);
@@ -216,22 +216,41 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
      * @param letter      de letter van het aminozuur.
      * @param width
      */
-    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
-
+    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width, int frame){
         ColorORFs colList = new ColorORFs();
         if(!colList.getHeaderColor().isEmpty()){
+            HashMap<String, Color> headerColor = colList.getHeaderColor();
+            for(String header: headerColor.keySet()){
+                String[] informationHeader = header.split("\\|");
+                int RF = Integer.parseInt(informationHeader[1].split(":")[1]);
+                int startORF = Integer.parseInt(informationHeader[2].split(":")[1]);
+                int stopORF = Integer.parseInt(informationHeader[3].split(":")[1]);
+                String strandORF = informationHeader[4].split(":")[1];
+                Strand strandORFenum = null;
+                if(strandORF.equals("POSITIVE")){
+                    strandORFenum = Strand.POSITIVE;
+                }else if(strandORF.equals("NEGATIVE")){
+                    strandORFenum = Strand.NEGATIVE;
+                }
+                if(strandORFenum.equals(strand) && frame == RF){
+                    if (indexRef < stopORF && indexRef > startORF) {
+                        colorFrames(g, indexRef, letter, "BLAST",width, headerColor.get(header));
+                        return;
+                    }
+                }
+            }
         }
         if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
                 if (indexRef < stopORF && indexRef > startORF) {
-                    colorFrames(g, indexRef, letter, "ORF",width);
+                    colorFrames(g, indexRef, letter, "ORF",width, null);
                     return;
                 }
             }
         }
-        colorFrames(g, indexRef, letter, "-", width);
+        colorFrames(g, indexRef, letter, "-", width, null);
     }
 
     /**
@@ -241,13 +260,15 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
      * @param sign bevestigings String.
      * @param letterWidth breedte van de letter
      */
-	public void colorFrames(Graphics g, int indexRef, char letter, String sign, double letterWidth){
+	public void colorFrames(Graphics g, int indexRef, char letter, String sign, double letterWidth, Color colBlast){
 	    if('M' == letter){
             g.setColor(new Color(0, 153, 0));
 		}else if('*' == letter){
             g.setColor(new Color(250, 0, 0));
         }else if(sign.equals("ORF")){
             g.setColor(new Color(255, 255, 0));
+        }else if(sign.equals("BLAST")){
+            g.setColor(colBlast);
         }else if(indexRef%2 > 0 || letterWidth < ZOOM_SIZE_1 ) {  //als te smalle vakjes voor 2 kleuren blauw.
             g.setColor(new Color(127, 191, 226));
         }else{

@@ -138,4 +138,5 @@ public class FeaturePanel extends JPanel implements PropertyChangeListener {
         this.invalidate();
         this.repaint();
     }
+
 }

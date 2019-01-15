@@ -4,11 +4,13 @@ import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.blast.CallBlastORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -335,6 +337,10 @@ public class IGVMenuBar extends JMenuBar {
                     e1.printStackTrace();
                 } catch (JAXBException e1) {
 					e1.printStackTrace();
+				} catch (SAXException e1) {
+					e1.printStackTrace();
+				} catch (ParserConfigurationException e1) {
+					e1.printStackTrace();
 				}
 				f.dispose();
             }
@@ -347,7 +353,7 @@ public class IGVMenuBar extends JMenuBar {
 	 * @throws IOException
 	 * @throws JAXBException
 	 */
-	private void blastButtonAction() throws IOException, JAXBException {
+	private void blastButtonAction() throws IOException, JAXBException, ParserConfigurationException, SAXException {
 		CallBlastORF blastORF = new CallBlastORF(cont);
         // haalt de ingevoerde lengte op van het ORF.
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());

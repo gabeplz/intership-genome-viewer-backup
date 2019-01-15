@@ -8,12 +8,13 @@ import java.util.*;
 import java.util.List;
 
 public class ColorORFs {
+    public static  HashMap<String, Color> headerColor = new HashMap<>();
 
     public ColorORFs(){
 
     }
 
-    public HashMap<String, Color> headerColor = new HashMap<>();
+
 
     //TODO verander naam functie
     public void evalue(HashMap<String, Double> headerEvalue, ArrayList<String> headerORFsNoHits){
