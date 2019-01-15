@@ -8,6 +8,9 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.fastqparser.FastqReader;
+import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
+import com.mycompany.minorigv.fastqparser.Read;
 import com.mycompany.minorigv.gffparser.Chromosome;
 import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
@@ -15,6 +18,8 @@ import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
+
+import javax.swing.*;
 
 /**
  * Het object dat de binding realiseert tussen de GUI en de onderliggende Data.
@@ -29,6 +34,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private String[] chromosomeNameArray;
 
 	private CodonTable currentCodonTable;
+
+    private ArrayList<Read> currentReads;
 
 	private Feature[] currentFeatureList;
 	private int featStart;
@@ -340,6 +347,22 @@ public class Context implements Serializable, PropertyChangeListener {
 		this.currentCodonTable = TranslationManager.getInstance().getCodonTable(key);
 		pcs.firePropertyChange("CodonTable", oldValue, currentCodonTable);
 	}
+
+	public ArrayList<Read> getCurrentReads() { return currentReads; }
+
+	public void setCurrentReads(String path){
+	    ArrayList<Read> oldValue = this.currentReads;
+        FastqReader reader = new FastqReader();
+        try {
+            this.currentReads = reader.parse(path);
+			pcs.firePropertyChange("Reads", oldValue, currentReads);
+        } catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "IOE error. something went wrong while reading the file. check if: the file isn't corrupted, your user account has access rigts, each contig in the file is sepperated by enters onto 4 lines.");
+        } catch (InvalidFileTypeException e){
+			JOptionPane.showMessageDialog(null, "file extention does not end with \".txt\"");
+		}
+
+    }
 
 	/**
 	 * encapsulatie van de property change support
