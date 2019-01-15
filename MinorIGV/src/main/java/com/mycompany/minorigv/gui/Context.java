@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.fastqparser.FasqReader;
+import com.mycompany.minorigv.fastqparser.FastqReader;
 import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.fastqparser.Read;
 import com.mycompany.minorigv.gffparser.Chromosome;
@@ -348,7 +348,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public void setCurrentReads(String path){
 	    ArrayList<Read> oldValue = this.currentReads;
-        FasqReader reader = new FasqReader();
+        FastqReader reader = new FastqReader();
         try {
             this.currentReads = reader.parse(path);
 			pcs.firePropertyChange("Reads", oldValue, currentReads);

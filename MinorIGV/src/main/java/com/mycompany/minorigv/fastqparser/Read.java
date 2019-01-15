@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.fastqparser;
 
 /**
+ * @author Stan Wehkamp
  * deze class representeerd een contig read
  * bevat de constructor voor Read
  */
@@ -28,6 +29,7 @@ public class Read {
        public String getDescription(){
         return this.description;
     }
+
     /**
      * getter
      * @return String sequence
@@ -35,6 +37,7 @@ public class Read {
     public String getReadSequence(){
         return this.sequence;
     }
+
     /**
      * getter
      * @return String QualitySequence
