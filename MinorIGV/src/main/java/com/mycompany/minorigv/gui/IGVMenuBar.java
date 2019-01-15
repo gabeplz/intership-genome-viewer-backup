@@ -1,7 +1,7 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.blast.BlastORF;
+import com.mycompany.minorigv.blast.CallBlastORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -89,7 +89,7 @@ public class IGVMenuBar extends JMenuBar {
 	//Sub items voor menu item 2 "tools"
 		findORF = new JMenuItem("Find ORFs");
 		saveORF = new JMenuItem("Save ORFs");
-		blast = new JMenuItem("BlastORF");
+		blast = new JMenuItem("BLAST");
 
 		File f = new File("/NAS/minor-g1/");
 		if(f.exists() && f.isDirectory()){
@@ -303,7 +303,7 @@ public class IGVMenuBar extends JMenuBar {
 
         // Save button wordt aangemaakt.
         JButton blastButton = new JButton();
-        blastButton.setText("BlastORF");
+        blastButton.setText("BLAST");
 
         // Panel voor de Button wordt aangemaakt.
         JPanel panelForButton = new JPanel();
@@ -343,9 +343,7 @@ public class IGVMenuBar extends JMenuBar {
 	}
 
 	private void blastButtonAction() throws IOException, JAXBException {
-		String fasta = "/NAS/minor-g1/non_redundant/blast.fasta";
-		String out = "/NAS/minor-g1/non_redundant/";
-		String blastDB = "/NAS/minor-g1/non_redundant/nr"; // roep nr dan aan
+		CallBlastORF blastORF = new CallBlastORF(cont);
         // haalt de ingevoerde lengte op van het ORF.
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());
         // Set de ORFs
@@ -353,17 +351,11 @@ public class IGVMenuBar extends JMenuBar {
 		// Kijkt welke Radio Button is aangeklikt.
 		Boolean m = buttonAll.isSelected();
 		if(m == true){
-			cont.saveORFs(cont.getCurORFListALL(), "blastORF");
-			BlastORF blastORF = new BlastORF();
-			String output = out + cont.getOrganism().getId() + "_A_" + lengthORFUser+ ".xml";
-			blastORF.runBLAST(fasta, output, blastDB);
-			blastORF.getValuesORF(cont.getCurORFListALL());
+			String partOutputName = "_A_" + lengthORFUser+ ".xml";
+			blastORF.callBlast(cont.getCurORFListALL(), partOutputName);
 		}else{
-			cont.saveORFs(cont.getCurORFListBetween(), "blastORF");
-			BlastORF blastORF = new BlastORF();
-			String output = out + cont.getOrganism().getId() + "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
-			blastORF.runBLAST(fasta, output, blastDB);
-			blastORF.getValuesORF(cont.getCurORFListBetween());
+			String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
+			blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
 		}
 
 

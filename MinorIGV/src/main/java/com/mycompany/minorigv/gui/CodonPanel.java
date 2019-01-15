@@ -1,5 +1,6 @@
 package com.mycompany.minorigv.gui;
 
+import com.mycompany.minorigv.blast.ColorORFs;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
@@ -53,7 +54,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
 	public void paintComponent(Graphics g) {
         dim = this.getSize();
 		super.paintComponent(g);
-
 		// Doet niks wanneer er geen sequentie aanwezig is.
 		String seq;
 		try {
@@ -101,7 +101,6 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
      * @param letterWidth
      */
 	private void drawPositive(Graphics g, String seq, double letterWidth) {
-
 		int start = cont.getStart(); 					//start van het beeld.
 		int stop = cont.getStop(); 						//stop van het beeld.
 		int length = cont.getLength();					//lengte subsequentie.
@@ -218,6 +217,10 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
      * @param width
      */
     public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
+
+        ColorORFs colList = new ColorORFs();
+        if(!colList.getHeaderColor().isEmpty()){
+        }
         if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
