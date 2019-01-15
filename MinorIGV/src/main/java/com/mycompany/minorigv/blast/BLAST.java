@@ -17,20 +17,26 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 
+/**
+ * @author Huub
+ */
 public class BLAST {
 
     SAXSource source;
     Unmarshaller u;
-    HashMap<String, Iteration> headerIteration = new HashMap<>();
     private String blastDB = "/NAS/minor-g1/non_redundant/nr"; // roep nr dan aan
 
+    /**
+     *
+     * @param input         Path waar de input file staat
+     * @param output        Path naar de output file.
+     * @param soortBlast    Welke blast er uitgevoerd moet worden (blastp, blastn, etc.)
+     * @throws IOException
+     */
     public void runBLAST(String input, String output, String soortBlast) throws IOException{
-       // File fasta=File.createTempFile("blast", ".fa");
-        File blast=File.createTempFile("blast", ".xml");
-
         try
         {
-
+            // command line argument voor het uitvoeren van blast.
             ProcessBuilder pb = new ProcessBuilder(
                     soortBlast,
                     "-db",blastDB,
@@ -42,12 +48,11 @@ public class BLAST {
                     "-out",output
             );
 
+            // Checken of de huidige instellingen al een keer gebruikt zijn, zo niet: blasten.
             if(new File(output).exists() == false){
-                Process proc = pb.start();
+                Process proc = pb.start();      // Starten van de blast
                 if(proc.waitFor()!=0) throw new RuntimeException("error occured");
-            }else{
             }
-
 
             parseXML(output);
 
@@ -60,12 +65,18 @@ public class BLAST {
         }
         finally
         {
-            //blast.delete();
-            //fasta.delete();
         }
     }
 
-
+    /**
+     * Parsen van de output file (XML) van de blast.
+     * @param output        Het path naar de gegenereerde output (XML) file.
+     * @return
+     * @throws JAXBException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @throws FileNotFoundException
+     */
     public BlastOutput parseXML(String output) throws JAXBException, SAXException, ParserConfigurationException, FileNotFoundException {
         JAXBContext jc = JAXBContext.newInstance("com.mycompany.minorigv.blast");
 
@@ -82,45 +93,6 @@ public class BLAST {
         return (BlastOutput) u.unmarshal(source);
     }
 
-
-//    public void getValuesORF(ArrayList<ORF> curORFList) throws JAXBException {
-//        /** read the result */
-//
-//        BlastOutput bo = parseXML();
-//        HashMap<String, Double> headerEvalue = new HashMap<>();
-//        ArrayList<String> headerORFsNoHits = new ArrayList<>();
-//
-//
-//        for(int i = 0; i < curORFList.size(); i++){
-//            String header = bo.getBlastOutputIterations().getIteration().get(i).getIterationQueryDef();
-//            headerIteration.put(header, bo.getBlastOutputIterations().getIteration().get(i));
-//
-//            if(!bo.getBlastOutputIterations().getIteration().get(i).getIterationHits().getHit().isEmpty()){
-//                String evalue = bo.getBlastOutputIterations().getIteration().get(i).getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue();
-//
-//                headerEvalue.put(header, Double.parseDouble(evalue));
-//            }else{
-//                headerORFsNoHits.add(header);
-//                System.out.println("GEEN HITS");
-//            }
-//        }
-//
-//        ColorORFs col = new ColorORFs();
-//        col.evalue(headerEvalue, headerORFsNoHits);
-//
-//    }
-//
-//
-//
-//    public HashMap<String, Iteration> getHeaderIteration(){
-//        return headerIteration;
-//    }
-//
-//
-//    public void splitHeader(ArrayList<String> header){
-//
-//
-//    }
 
 
 }
