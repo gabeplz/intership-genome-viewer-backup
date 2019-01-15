@@ -3,9 +3,7 @@ package com.mycompany.minorigv.blast;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.gui.Context;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class CallBlastORF {
@@ -21,9 +19,9 @@ public class CallBlastORF {
 
     public void callBlast(ArrayList<ORF> orfList, String partOutputName) throws IOException {
         cont.saveORFs(orfList, "blastORF");
-        BLAST BLAST = new BLAST();
+        BLAST blast = new BLAST();
         String output = out + cont.getOrganism().getId() + partOutputName;
-        BLAST.runBLAST(fasta, output, "blastp");
+        blast.runBLAST(fasta, output, "blastp", BLAST.blastDB);
 //        BLAST.getValuesORF(cont.getCurORFListALL());
     }
 

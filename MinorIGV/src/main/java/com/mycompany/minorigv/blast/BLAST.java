@@ -1,14 +1,8 @@
 package com.mycompany.minorigv.blast;
 
-import com.mycompany.minorigv.gffparser.ORF;
-import org.xml.sax.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -16,24 +10,24 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
+/**
+ * Class voor het aanroepen van BLAST via de commandline.
+ */
 public class BLAST {
 
-    SAXSource source;
-    Unmarshaller u;
-    HashMap<String, Iteration> headerIteration = new HashMap<>();
-    private String blastDB = "/NAS/minor-g1/non_redundant/nr"; // roep nr dan aan
+    public static final String blastDB = "/NAS/minor-g1/non_redundant/nr"; // roep nr dan aan
 
-    public void runBLAST(String input, String output, String soortBlast) throws IOException{
-       // File fasta=File.createTempFile("blast", ".fa");
-        File blast=File.createTempFile("blast", ".xml");
+    public void runBLAST(String input, String output, String soortBlast, String database){
 
         try
         {
-
             ProcessBuilder pb = new ProcessBuilder(
                     soortBlast,
-                    "-db",blastDB,
+                    "-db",database,
                     "-num_threads","8",
                     "-query",input,
                     "-evalue", "1e-5",
@@ -48,9 +42,7 @@ public class BLAST {
             }else{
             }
 
-
             parseXML(output);
-
 
         }
         catch(Exception err)
@@ -60,13 +52,15 @@ public class BLAST {
         }
         finally
         {
-            //blast.delete();
-            //fasta.delete();
+
         }
     }
 
 
     public BlastOutput parseXML(String output) throws JAXBException, SAXException, ParserConfigurationException, FileNotFoundException {
+
+        SAXSource source;
+        Unmarshaller u;
         JAXBContext jc = JAXBContext.newInstance("com.mycompany.minorigv.blast");
 
         SAXParserFactory spf = SAXParserFactory.newInstance();
