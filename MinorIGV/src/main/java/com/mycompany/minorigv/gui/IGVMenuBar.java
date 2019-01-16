@@ -1,24 +1,25 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
+import com.mycompany.minorigv.blast.CallBlastORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
+import org.xml.sax.SAXException;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import javax.swing.*;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.NumberFormatter;
 
 /**
  * Deze class maakt een menubar voor de applicatie die verschillende menus bevat zoals menus voor het laden van files tools etc.
@@ -40,6 +41,12 @@ public class IGVMenuBar extends JMenuBar {
 
     private JRadioButton buttonAll, buttonBetween;
     private JFormattedTextField textField;
+
+    public IGVMenuBar(Context context) {
+        super();
+        setContext(context);
+        init();
+    }
 
     /**
      * Initializeer de verschillende menus.
@@ -96,6 +103,17 @@ public class IGVMenuBar extends JMenuBar {
         //Tweede menu item "tools"
         tools = new JMenu("ORF");
 
+	//Sub items voor menu item 2 "tools"
+		findORF = new JMenuItem("Find ORFs");
+		saveORF = new JMenuItem("Save ORFs");
+		blast = new JMenuItem("BLAST");
+
+		File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
+		if(f.exists() && f.isDirectory()){
+			blast.setEnabled(true);
+		}else{
+			blast.setEnabled(false);
+		}
         //Sub items voor menu item 2 "tools"
         findORF = new JMenuItem("Find ORFs");
         saveORF = new JMenuItem("Save ORFs");
@@ -286,38 +304,71 @@ public class IGVMenuBar extends JMenuBar {
         }catch (Exception e){}
     }
 
-    /**
-     * Wanneer er op de button Save ORF wordt geklikt, komt er een pop-up die hier wordt aangemaakt.
-     * Deze pop-up bevat twee Radio Buttons (All en Between), een Label, een Textfield en een button (Save).
-     * In het Textfield kan de lengte ingevoerd worden die het ORF minimaal moet hebben in nucleotide.
-     * Bij de RadioButton kan er gekozen worden of gezocht wordt over het hele sequentie of tussen een bepaalde start en stop.
-     */
-    private void saveOrfAction() {
-        SaveOrf orf = new SaveOrf();
-        orf.setContext(cont);
-        orf.saveOrfAction();
-    }
+	/**
+	 * Wanneer er op de button Save ORF wordt geklikt, komt er een pop-up die hier wordt aangemaakt.
+	 * Deze pop-up bevat twee Radio Buttons (All en Between), een Label, een Textfield en een button (Save).
+	 * In het Textfield kan de lengte ingevoerd worden die het ORF minimaal moet hebben in nucleotide.
+	 * Bij de RadioButton kan er gekozen worden of gezocht wordt over het hele sequentie of tussen een bepaalde start en stop.
+	 */
+	private void saveOrfAction() {
+        JPanel panel = popupWindow();
 
-    /**
-     * Wanneer er op de Save Button in het panel wordt geklikt, worden de gegevens opgehaald die op dat moment zijn ingevoerd.
-     * En wordt de functie saveORFs aangeroepen, om de ORFs in een file op te slaan.
-     *
-     * @throws FileNotFoundException
-     * @throws UnsupportedEncodingException
-     */
-//    private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException, NullPointerException {
-//        // haalt de ingevoerde lengte op van het ORF.
-//        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
-//        // Set de ORFs
-//        cont.setCurORFListALL(lengthORFUser);
-//        // Kijkt welke Radio Button is aangeklikt.
-//        Boolean m = buttonAll.isSelected();
-//        if (m == true) {
-//            cont.saveORFs(cont.getCurORFListALL());
-//        } else {
-//            cont.saveORFs(cont.getCurORFListBetween());
-//        }
-//    }
+        // Save button wordt aangemaakt.
+		JButton saveButton = new JButton();
+		saveButton.setText("Save");
+
+		// Panel voor de Button wordt aangemaakt.
+        JPanel panelForButton = new JPanel();
+        panelForButton.add(saveButton);
+
+		// Er wordt een Padding ingesteld.
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Er wordt een frame aangemaakt.
+		JFrame f = new JFrame();
+		f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
+		f.getContentPane().add(panel);
+		f.getContentPane().add(panelForButton);
+		f.pack();
+		f.setLocationRelativeTo(null);
+		f.setVisible(true);
+
+		// ActionListener voor de Save Button
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					saveButtonAction();
+					f.dispose();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+
+
+	/**
+	 * Wanneer er op de Save Button in het panel wordt geklikt, worden de gegevens opgehaald die op dat moment zijn ingevoerd.
+	 * En wordt de functie saveORFs aangeroepen, om de ORFs in een file op te slaan.
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException {
+		// haalt de ingevoerde lengte op van het ORF.
+		int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+		// Set de ORFs
+		cont.setCurORFListALL(lengthORFUser);
+		// Kijkt welke Radio Button is aangeklikt.
+		Boolean m = buttonAll.isSelected();
+		if(m == true){
+			cont.saveORFs(cont.getCurORFListALL(), "saveORF" );
+		}else{
+			cont.saveORFs(cont.getCurORFListBetween(), "saveORF" );
+		}
+	}
 
     /**
      * Wanneer er op de button Find ORF gedrukt wordt, komt er een pop-up waarin de lengte van het ORF ingevuld kan worden (nt).
@@ -329,8 +380,104 @@ public class IGVMenuBar extends JMenuBar {
     }
 
     private void blastAction() {
+        JPanel panel = popupWindow();
+
+        // Save button wordt aangemaakt.
+        JButton blastButton = new JButton();
+        blastButton.setText("BLAST");
+
+        // Panel voor de Button wordt aangemaakt.
+        JPanel panelForButton = new JPanel();
+        panelForButton.add(blastButton);
+
+        // Er wordt een Padding ingesteld.
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Er wordt een frame aangemaakt.
+        JFrame f = new JFrame();
+        f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
+        f.getContentPane().add(panel);
+        f.getContentPane().add(panelForButton);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
 
 
+        // ActionListener voor de Save Button
+        blastButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+				try {
+					blastButtonAction();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (JAXBException e1) {
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					e1.printStackTrace();
+				} catch (ParserConfigurationException e1) {
+					e1.printStackTrace();
+				}
+				f.dispose();
+            }
+        });
+
+	}
+
+	/**
+	 * Kijk of er op de All of Between knop is geklikt. En roept de CallBlastORF vervolgens aan.
+	 * @throws IOException
+	 * @throws JAXBException
+	 */
+	private void blastButtonAction() throws IOException, JAXBException, ParserConfigurationException, SAXException {
+		CallBlastORF blastORF = new CallBlastORF(cont);
+        // haalt de ingevoerde lengte op van het ORF.
+        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+        // Set de ORFs
+        cont.setCurORFListALL(lengthORFUser);
+		// Kijkt welke Radio Button is aangeklikt.
+		Boolean m = buttonAll.isSelected();
+		if(m == true){
+			String partOutputName = "_A_" + lengthORFUser+ ".xml";
+			blastORF.callBlast(cont.getCurORFListALL(), partOutputName);
+		}else{
+			String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
+			blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
+		}
+
+
+
+
+    }
+
+    private JPanel popupWindow(){
+        // Radio Button wordt aangemaakt.
+        buttonAll = new JRadioButton("All",true);
+        buttonBetween = new JRadioButton("Between");
+        ButtonGroup groupRadioButton = new ButtonGroup();
+        groupRadioButton.add(buttonAll); groupRadioButton.add(buttonBetween);
+
+        // Label wordt aangemaakt.
+        final JLabel labelLengthORFUser = new JLabel("Length ORF (nt): ", JLabel.LEFT);
+
+        // Er kunnen geen letters ingevoerd worden, wanneer dit wel gebeurd wordt het vorige cijfer gebruikt.
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(true);
+        textField = new JFormattedTextField(formatter);
+        textField.setValue(100); // Strandaard lengte van het ORF.
+
+        // Panel voor Radio Button, Label en Textfield wordt aangemaakt
+        JPanel panel = new JPanel(new GridLayout(2,2));
+        panel.add(buttonAll);panel.add(buttonBetween);panel.add(labelLengthORFUser);panel.add(textField);
+        return panel;
     }
 
     private void featureListAction() {

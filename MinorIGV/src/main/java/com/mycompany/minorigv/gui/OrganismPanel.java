@@ -17,9 +17,15 @@ public class OrganismPanel extends JPanel implements PropertyChangeListener{
 
     Context cont;
 
+    public OrganismPanel(Context context) {
+        super();
+        this.setContext(context);
+        this.setListeners();
+        this.init();
+    }
 
 
-	public void init() {
+    public void init() {
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setBackground(Color.GREEN);
@@ -29,8 +35,11 @@ public class OrganismPanel extends JPanel implements PropertyChangeListener{
 
     public void setContext(Context conti){
 	    cont = conti;
-	    cont.addPropertyChangeListener("range",this);
 
+    }
+
+    public void setListeners(){
+        cont.addPropertyChangeListener("range",this);
     }
 
     @Override
@@ -38,23 +47,5 @@ public class OrganismPanel extends JPanel implements PropertyChangeListener{
 
     }
 
-
-    protected double calculateWidth(){
-
-        if(cont == null || cont.getCurChromosome() == null || cont.getSequentie() == null){
-            System.out.println("hoi");
-            return getParent().getParent().getWidth();
-        }
-
-        int length = cont.getLength();
-
-        int width = this.getParent().getParent().getWidth();
-        System.out.println("yeet:"+width);
-
-        double prefWidth = width * (double) cont.getFullLenght() / (double) cont.getLength();
-
-        return prefWidth;
-
-    }
 
 }

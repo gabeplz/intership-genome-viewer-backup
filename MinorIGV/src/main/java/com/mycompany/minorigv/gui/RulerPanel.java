@@ -15,13 +15,19 @@ import javax.swing.JPanel;
  */
 public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
-	Context conti;			//bevat de start stop and lengte van de sequentie waarop de ruler uitgelijnd word
-    int x;                  //linkerkant selectie rechthoek
-    int x2;                 //rechterkant selectie rechthoek
+    private int x;                  //linkerkant selectie rechthoek
+    private int x2;                 //rechterkant selectie rechthoek
 
 
+    public RulerPanel(Context context) {
+        super();
+        setContext(context);
+        setListeners();
+        init();
+    }
 
-	/**
+
+    /**
 	 * initializes the panel
 	 */
 	public void init() {
@@ -46,9 +52,9 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		int length = conti.getLength();
-		int start = conti.getStart();
-		int stop = conti.getStop();
+		int length = cont.getLength();
+		int start = cont.getStart();
+		int stop = cont.getStop();
 
 		g.drawString(String.valueOf(length)+"bp",(int)(this.getSize().getWidth()/2),15); // tekend de lengte in baseparen in het midden van de panel
 		g.fillRect(5,40,(int)(this.getSize().getWidth()-10),5);
@@ -107,12 +113,12 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 	 * @param conti
 	 */
 	public void setContext(Context conti) {
-		this.conti = conti;
+		this.cont = conti;
 	}
 
     @Override
     public void setListeners() {
-        conti.addPropertyChangeListener("range", this); // luisterd of in context de functie firePropertyChange met als topic: "range", word uitgevoerd.
+        cont.addPropertyChangeListener("range", this); // luisterd of in context de functie firePropertyChange met als topic: "range", word uitgevoerd.
 
     }
 
@@ -141,8 +147,8 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
 	    int width = this.getWidth();
 
-	    int start = conti.getStart();
-	    int stop = conti.getStop();
+	    int start = cont.getStart();
+	    int stop = cont.getStop();
         double amount = stop-start;
 
 	    int newStart = (int) (((double)x / (double)width) * amount) + start;
@@ -156,7 +162,7 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
             newStop = temp;
         }
 
-        conti.changeSize(newStart,newStop);
+        cont.changeSize(newStart,newStop);
 
     }
 

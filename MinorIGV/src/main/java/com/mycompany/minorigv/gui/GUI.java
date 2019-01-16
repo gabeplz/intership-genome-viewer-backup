@@ -1,14 +1,9 @@
 package com.mycompany.minorigv.gui;
 
-import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.sequence.Strand;
 
-import java.awt.*;
-
 import javax.swing.*;
-
-import java.util.Observable;
-import java.util.Observer;
+import java.awt.*;
 
 
 /**
@@ -51,7 +46,13 @@ public class GUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 760, 710);
 		frame.setMinimumSize(new Dimension(760,710));
+		frame.setBounds(100, 100, 760, 480);
+		frame.setMinimumSize(new Dimension(760,480));
+
+        context = new Context();
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0};
@@ -59,8 +60,7 @@ public class GUI {
 		gridBagLayout.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
 
-		IGVMenuBar igvMenuBar = new IGVMenuBar();
-		igvMenuBar.init();
+		IGVMenuBar igvMenuBar = new IGVMenuBar(context);
 
 		GridBagConstraints gbcPanel = new GridBagConstraints();
 		//gbcPanel.insets = new Insets(0, 0, 0, 0);
@@ -68,11 +68,9 @@ public class GUI {
 		gbcPanel.gridx = 0;
 		gbcPanel.gridy = 0;
 		frame.getContentPane().add(igvMenuBar,gbcPanel );
+
+		GenomePanel genomePanel = new GenomePanel(context);
 		
-
-		GenomePanel genomePanel = new GenomePanel();
-		genomePanel.init();
-
 		GridBagConstraints gbcGenome = new GridBagConstraints();
 		gbcGenome.fill = GridBagConstraints.HORIZONTAL;
 		gbcGenome.gridx = 0;
@@ -87,43 +85,32 @@ public class GUI {
         gbcOrganism.gridy = 2;
         gbcOrganism.weighty = 1.0;
 
-		OrganismPanel organism = new OrganismPanel();
+		OrganismPanel organism = new OrganismPanel(context);
 
 		organism.init();
 
 		frame.getContentPane().add(organism,gbcOrganism);
 
-
-		RulerPanel ruler = new RulerPanel();
-		ruler.init();
+		RulerPanel ruler = new RulerPanel(context);
 		organism.add(ruler);
 
-		FeaturePanel featuresForward = new FeaturePanel();
-		featuresForward.init(true);
+		FeaturePanel featuresForward = new FeaturePanel(context,true);
 		organism.add(featuresForward);
 
-		CodonPanel forwardPanel = new CodonPanel();
-
-		forwardPanel.init(Strand.POSITIVE);
+		CodonPanel forwardPanel = new CodonPanel(context,Strand.POSITIVE);
 
 		organism.add(forwardPanel);
 
-		ReferencePanel refPanel1 = new ReferencePanel();
-		refPanel1.init();
+		ReferencePanel refPanel1 = new ReferencePanel(context);
 		organism.add(refPanel1);
 
-		CodonPanel reversePanel = new CodonPanel();
-
-		reversePanel.init(Strand.NEGATIVE);
-
+		CodonPanel reversePanel = new CodonPanel(context,Strand.NEGATIVE);
 		organism.add(reversePanel);
 
-		FeaturePanel featuresReverse = new FeaturePanel();
-		featuresReverse.init(false);
+		FeaturePanel featuresReverse = new FeaturePanel(context,false);
 		organism.add(featuresReverse);
 
 		ScrollBar scroller = new ScrollBar(JScrollBar.HORIZONTAL,0,100,0,100);
-		scroller.init();
 
 		JPanel scrollPanel = new JPanel();
 		scrollPanel.setLayout(new BoxLayout(scrollPanel,BoxLayout.PAGE_AXIS));
@@ -137,29 +124,9 @@ public class GUI {
 
         frame.getContentPane().add(scrollPanel, gbcScrollPanel);
 
-
-
-		context = new Context();
-
-		organism.setContext(context);
-		refPanel1.setContext(context);
-		forwardPanel.setContext(context);
-		reversePanel.setContext(context);
-		ruler.setContext(context);
-		genomePanel.setContext(context);
-		igvMenuBar.setContext(context);
-		featuresForward.setContext(context);
-		featuresReverse.setContext(context);
 		scroller.setContext(context);
-
 		scroller.setListeners();
-		refPanel1.setListeners();
-		forwardPanel.setListeners();
-		reversePanel.setListeners();
-		ruler.setListeners();
-		genomePanel.setListeners();
-		featuresForward.setListeners();
-		featuresReverse.setListeners();
+		scroller.init();
 
-	}
+    }
 }

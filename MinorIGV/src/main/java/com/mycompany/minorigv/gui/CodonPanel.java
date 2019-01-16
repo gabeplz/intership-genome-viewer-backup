@@ -1,17 +1,20 @@
 package com.mycompany.minorigv.gui;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-
+import com.mycompany.minorigv.blast.BlastORF;
+import com.mycompany.minorigv.blast.ColorORFs;
+import com.mycompany.minorigv.blast.Iteration;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -23,10 +26,19 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
 
 	Strand strand;
+	Dimension dim;
 
 	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt. Letters weergeven.
 	private final int ZOOM_SIZE_2 = 14; //Hoeveelheid pixels waarna de aminozuur letters verdwijnen. (ORF (geel) + start (groen) + stop (rood))
 	private final int ZOOM_SIZE_3 = 3;  //Hoeveelheid pixels waarna alleen de ORFs (geel) worden weergegeven. Geen letters weergeven. Geen letters weergegeven.
+
+    public CodonPanel(Context cont,Strand strand){
+        super();
+        this.setContext(cont);
+        this.setListeners();
+        this.init(strand);
+
+    }
 
     /**
      * Initaliseerd
@@ -37,6 +49,10 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 		setPreferredSize(new Dimension(500,75));
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
+
+		MyMouseListener listener = new MyMouseListener();
+		addMouseListener(listener);
+
 	}
 
     /**
@@ -45,8 +61,8 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      */
 	@Override
 	public void paintComponent(Graphics g) {
+        dim = this.getSize();
 		super.paintComponent(g);
-
 		// Doet niks wanneer er geen sequentie aanwezig is.
 		String seq;
 		try {
@@ -84,6 +100,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 drawZoomedOut(g, seq);
             }
 		}
+
 	}
 
     /**
@@ -93,7 +110,6 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      * @param letterWidth
      */
 	private void drawPositive(Graphics g, String seq, double letterWidth) {
-
 		int start = cont.getStart(); 					//start van het beeld.
 		int stop = cont.getStop(); 						//stop van het beeld.
 		int length = cont.getLength();					//lengte subsequentie.
@@ -117,12 +133,12 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 xPosLeft = xPosRight; //oude links -> rechts.
                 xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq+1.5); //nieuwe xPos bepalen.
                 int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
-                selectColor(strandORFs, g, indexRef, letter, letterWidth);
+                selectColor(strandORFs, g, indexRef, letter, letterWidth, frame);
 
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 				g.setColor(Color.BLACK);
 
@@ -170,7 +186,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 
                 g.setColor(Color.BLACK);
@@ -196,18 +212,41 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      * @param letter      de letter van het aminozuur.
      * @param width
      */
-    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
+    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width, int frame){
+        ColorORFs colList = new ColorORFs();
+        if(!colList.getHeaderColor().isEmpty()){
+            HashMap<String, Color> headerColor = colList.getHeaderColor();
+            for(String header: headerColor.keySet()){
+                String[] informationHeader = header.split("\\|");
+                int RF = Integer.parseInt(informationHeader[1].split(":")[1]);
+                int startORF = Integer.parseInt(informationHeader[2].split(":")[1]);
+                int stopORF = Integer.parseInt(informationHeader[3].split(":")[1]);
+                String strandORF = informationHeader[4].split(":")[1];
+                Strand strandORFenum = null;
+                if(strandORF.equals("POSITIVE")){
+                    strandORFenum = Strand.POSITIVE;
+                }else if(strandORF.equals("NEGATIVE")){
+                    strandORFenum = Strand.NEGATIVE;
+                }
+                if(strandORFenum.equals(strand) && frame == RF){
+                    if (indexRef < stopORF && indexRef > startORF) {
+                        colorFrames(g, indexRef, letter, "BLAST",width, headerColor.get(header));
+                        return;
+                    }
+                }
+            }
+        }
         if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
                 if (indexRef < stopORF && indexRef > startORF) {
-                    colorFrames(g, indexRef, letter, "ORF",width);
+                    colorFrames(g, indexRef, letter, "ORF",width, null);
                     return;
                 }
             }
         }
-        colorFrames(g, indexRef, letter, "-", width);
+        colorFrames(g, indexRef, letter, "-", width, null);
     }
 
     /**
@@ -217,13 +256,15 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      * @param sign bevestigings String.
      * @param letterWidth breedte van de letter
      */
-	public void colorFrames(Graphics g, int indexRef, char letter, String sign, double letterWidth){
+	public void colorFrames(Graphics g, int indexRef, char letter, String sign, double letterWidth, Color colBlast){
 	    if('M' == letter){
             g.setColor(new Color(0, 153, 0));
 		}else if('*' == letter){
             g.setColor(new Color(250, 0, 0));
         }else if(sign.equals("ORF")){
             g.setColor(new Color(255, 255, 0));
+        }else if(sign.equals("BLAST")){
+            g.setColor(colBlast);
         }else if(indexRef%2 > 0 || letterWidth < ZOOM_SIZE_1 ) {  //als te smalle vakjes voor 2 kleuren blauw.
             g.setColor(new Color(127, 191, 226));
         }else{
@@ -331,6 +372,74 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
     }
 
+    class MyMouseListener extends MouseAdapter{
 
+
+
+
+        public void mouseClicked(MouseEvent e){
+            int X = e.getX();
+            int Y = e.getY();
+
+            // Ophalen breedte van scherm
+            double widthPanel = (double) dim.getWidth();
+            // Ophalen aantal nucleotide
+            double length = cont.getLength();
+            int start = cont.getStart();
+
+            double pixel = widthPanel/length;
+            int positie = (int)Math.ceil(X/pixel) + start;
+
+            ArrayList<ORF> listORF = cont.getCurORFListBetween();
+            if(listORF != null){
+                for(ORF o: listORF){
+                    if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
+                        if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){
+                            getInformationORF(o.getIdORF());
+                            popUp(o);
+                        }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
+                            popUp(o);
+                        }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
+                            popUp(o);
+                        }
+                    }
+
+
+                }
+            }
+
+        }
+        public void popUp(ORF clickedORF){
+
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Kut anne.");
+        }
+
+
+        public void getInformationORF(String idORF){
+            BlastORF blastInfo = new BlastORF();
+            HashMap<String, Iteration> infoKey = blastInfo.getHeaderIteration();
+            Iteration info = infoKey.get(idORF);
+            //.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue()
+            String hitID = info.getIterationHits().getHit().get(0).getHitId();
+            String hitDef = info.getIterationHits().getHit().get(0).getHitDef();
+            String hitAcc = info.getIterationHits().getHit().get(0).getHitAccession();
+            String bitScore = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspBitScore();
+            String score = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspScore();
+            String evalue = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue();
+            String identity = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspIdentity();
+
+            String message = "Hit id: " + hitID + "\n" +
+                    "Hit def: " + hitDef + "\n" +
+                    "Hit acc: " + hitAcc + "\n" +
+                    "Bit score: " + bitScore + "\n" +
+                    "Score: " + score + "\n" +
+                    "E-value: " + evalue + "\n" +
+                    "Identity: " + identity + "\n";
+
+
+        }
+
+    }
 
 }

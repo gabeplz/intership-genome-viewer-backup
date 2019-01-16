@@ -16,7 +16,7 @@ import com.mycompany.minorigv.sequence.MakeCompStrand;
  */
 public class ReferencePanel extends IGVPanel implements PropertyChangeListener {
 
-	Context cont;
+
 	public static final int HEIGHT = 20;
 
 	public static Color thymineColor = new Color(128,0,255);
@@ -24,6 +24,13 @@ public class ReferencePanel extends IGVPanel implements PropertyChangeListener {
 	public static Color cytosineColor = new Color(123, 215,0);
 	public static Color guanineColor = new Color(0, 215, 215);
 
+
+	public ReferencePanel(Context cont){
+		super();
+		setContext(cont);
+		setListeners();
+		init();
+	}
 
 	@Override
 	public void paintComponent(Graphics g) {
@@ -172,17 +179,6 @@ public class ReferencePanel extends IGVPanel implements PropertyChangeListener {
 		setMaximumSize(new Dimension(2000,40));
 		setMinimumSize(new Dimension(100,30));
 		setBackground(Color.WHITE);
-	}
-
-	// TODO: 11/12/2018
-    /**
-     * Context instellen.
-     * @param cont context object.
-     */
-	public void setContext(Context cont) {
-		this.cont = cont;
-
-		
 	}
 
     @Override

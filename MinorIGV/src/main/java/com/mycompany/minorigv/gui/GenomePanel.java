@@ -1,10 +1,15 @@
 package com.mycompany.minorigv.gui;
 
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
+import com.mycompany.minorigv.gffparser.OrganismFiles;
 
 import javax.swing.*;
 
@@ -19,14 +24,21 @@ import javax.swing.*;
 
 public class GenomePanel extends JPanel implements PropertyChangeListener {
     private Context cont;
-    private JTextArea organism;
-    private JComboBox chromosome;
+//  private JTextArea organism;
+    private JComboBox chromosome, organism;
     private JTextField locus;
     private JButton zoomIn;
     private JButton zoomOut;
     private JButton search;
     private int start;
     private int stop;
+
+    public GenomePanel(Context context) {
+        super();
+        this.setContext(context);
+        this.setListeners();
+        this.init();
+    }
 
     /**
      * function building the Genomepanel in the application
@@ -82,9 +94,41 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * function creating the text area that will display the name of an organism who's dna sequence is shown on screen and the position of the DNA sequence the user is looking at
      */
     private void makeTextAreas() {
-        organism = new JTextArea(1, 20);
-        organism.setEditable(false);
-        organism.setText("Organism");
+        // Maakt de ComboBox voor de organismen.
+        organism = new JComboBox();
+        // Het path waar de bestanden staan
+        String pathNAS = cont.getPath(Paths.GENOMES);
+
+        File f = new File(pathNAS);
+        // Gecontroleerd of het path bestaat en of het een map is.
+        if (f.exists() && f.isDirectory()) {
+            String[] directories = f.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return new File(dir, name).isDirectory();
+                }
+            });
+            // Alfabetische volgorde organisme namen en toevoegen aan ComboBox
+            Arrays.sort(directories);
+            organism.setModel(new DefaultComboBoxModel(directories));
+            // Zorgen dat er geen organisme is geselecteerd in het begin.
+            organism.setSelectedIndex(-1);
+
+        } else {
+            // Wanneer het path niet bestaat kan de gebruiker zelf nog files selecteren.
+            organism.addItem("klik op files");
+        }
+
+        // Actionlistener om te kijken of er op een ander organisme wordt gedrukt.
+        ActionListener organismListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeOrganism(pathNAS);
+            }
+        };
+        organism.addActionListener(organismListener);
+
+
         chromosome = new JComboBox();
         locus = new JTextField(20);
         locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -111,6 +155,26 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             System.err.println("Error changing chromosome");
 
         }
+    }
+
+    /**
+     * Kijken of het gekozen organisme is veranderd.
+     * @param pathNAS
+     */
+    private void changeOrganism(String pathNAS) {
+        try {
+            // Kijkt welk organisme is gekozen.
+            String name = (String) organism.getSelectedItem();
+            OrganismFiles file = new OrganismFiles();
+            file.getFiles(pathNAS, name);
+            // Leest het fasta bestand in en het gff bestand.
+            cont.addFasta(file.getFNAPath());
+            cont.addGFF(file.getGFFPath());
+        } catch (Exception e) {
+            System.err.println("Error changing organism");
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -250,4 +314,8 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
 			syncSize();
 		}	
 	}
+
+	public String getOrganismBox(){
+        return organism.getSelectedItem().toString();
+    }
 }

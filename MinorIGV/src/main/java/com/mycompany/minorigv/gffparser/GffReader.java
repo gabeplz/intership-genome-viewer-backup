@@ -21,9 +21,9 @@ public class GffReader {
      * @throws IOException           Als er een input of output exception plaatsvindt.
      */
     public static Organisms readData(Organisms org, String path) throws FileNotFoundException, IOException, Exception {
-        if (!(path.endsWith(".gff") || path.endsWith(".gtf") || path.endsWith(".gff3") || path.endsWith(".txt"))) {
-            throw new IOException("Niet ondersteund file type");
-        }
+//        if (!(path.endsWith(".gff") || path.endsWith(".gtf") || path.endsWith(".gff3") || path.endsWith(".txt"))) {
+//            throw new IOException("Niet ondersteund file type");
+//        }
         BufferedReader reader = new BufferedReader(new FileReader(path));
         ArrayList<String> allContigs = new ArrayList<String>();
 

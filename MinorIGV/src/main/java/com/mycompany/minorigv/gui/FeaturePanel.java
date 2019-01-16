@@ -19,8 +19,15 @@ public class FeaturePanel extends IGVPanel implements PropertyChangeListener {
 
 	boolean forward;
 
+    public FeaturePanel(Context context, boolean forward) {
+        super();
+        setContext(context);
+        setListeners();
+        init(forward);
+    }
 
-	/**
+
+    /**
 	 * Alle features binnen een gewenst start-stop positie ophalen en deze weergeven in de GUI.
 	 *
 	 * @param g		Graphics waarin getekend wordt.
