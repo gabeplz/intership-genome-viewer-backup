@@ -24,7 +24,7 @@ import javax.swing.*;
 
 public class GenomePanel extends JPanel implements PropertyChangeListener {
     private Context cont;
-//    private JTextArea organism;
+//  private JTextArea organism;
     private JComboBox chromosome, organism;
     private JTextField locus;
     private JButton zoomIn;
@@ -32,8 +32,6 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     private JButton search;
     private int start;
     private int stop;
-
-    private static String pathNAS = "/NAS/minor-g1/filesPython/genomes/refseq/fungi/";
 
     /**
      * function building the Genomepanel in the application
@@ -77,6 +75,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         // Maakt de ComboBox voor de organismen.
         organism = new JComboBox();
         // Het path waar de bestanden staan
+        String pathNAS = cont.getPath(Paths.GENOMES);
 
         File f = new File(pathNAS);
         // Gecontroleerd of het path bestaat en of het een map is.
@@ -152,6 +151,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
             cont.addGFF(file.getGFFPath());
         } catch (Exception e) {
             System.err.println("Error changing organism");
+            e.printStackTrace();
         }
 
     }

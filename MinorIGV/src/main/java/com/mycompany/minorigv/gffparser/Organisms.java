@@ -72,7 +72,7 @@ public class Organisms {
      * @return         het chromosoom dat voldoet aan het chromosoom id.
      * @throws Exception
      */
-    public Chromosome getChromosome(String id) throws Exception{
+    public Chromosome getChromosome(String id) {
         return chromosomes.get(id);
     }
 

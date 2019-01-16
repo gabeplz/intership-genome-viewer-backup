@@ -1,6 +1,8 @@
 package com.mycompany.minorigv.gui;
 
+import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.blast.ColorORFs;
+import com.mycompany.minorigv.blast.Iteration;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
@@ -377,6 +379,10 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
     }
 
     class MyMouseListener extends MouseAdapter{
+
+
+
+
         public void mouseClicked(MouseEvent e){
             int X = e.getX();
             int Y = e.getY();
@@ -395,6 +401,7 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
                 for(ORF o: listORF){
                     if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
                         if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){
+                            getInformationORF(o.getIdORF());
                             popUp(o);
                         }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
                             popUp(o);
@@ -409,9 +416,36 @@ public class CodonPanel extends JPanel implements PropertyChangeListener {
 
         }
         public void popUp(ORF clickedORF){
+
             JPanel panel = new JPanel();
             JOptionPane.showMessageDialog(panel, "Kut anne.");
         }
+
+
+        public void getInformationORF(String idORF){
+            BlastORF blastInfo = new BlastORF();
+            HashMap<String, Iteration> infoKey = blastInfo.getHeaderIteration();
+            Iteration info = infoKey.get(idORF);
+            //.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue()
+            String hitID = info.getIterationHits().getHit().get(0).getHitId();
+            String hitDef = info.getIterationHits().getHit().get(0).getHitDef();
+            String hitAcc = info.getIterationHits().getHit().get(0).getHitAccession();
+            String bitScore = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspBitScore();
+            String score = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspScore();
+            String evalue = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue();
+            String identity = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspIdentity();
+
+            String message = "Hit id: " + hitID + "\n" +
+                    "Hit def: " + hitDef + "\n" +
+                    "Hit acc: " + hitAcc + "\n" +
+                    "Bit score: " + bitScore + "\n" +
+                    "Score: " + score + "\n" +
+                    "E-value: " + evalue + "\n" +
+                    "Identity: " + identity + "\n";
+
+
+        }
+
     }
 
 }

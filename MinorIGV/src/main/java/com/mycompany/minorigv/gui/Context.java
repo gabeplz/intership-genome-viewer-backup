@@ -4,10 +4,7 @@ package com.mycompany.minorigv.gui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
@@ -17,6 +14,7 @@ import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
+import com.mycompany.minorigv.sequence.MakeCompStrand;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
@@ -26,6 +24,8 @@ import com.mycompany.minorigv.sequence.TranslationManager;
  *
  */
 public class Context implements Serializable, PropertyChangeListener {
+
+	private Properties applicationProps;
 
 	private Organisms organism;
 	private Chromosome curChromosome;
@@ -42,13 +42,66 @@ public class Context implements Serializable, PropertyChangeListener {
 	private int stop;
 	private ArrayList<String> choiceUser;
 	private HashMap<String,String> fastaMap = new HashMap<>();
-
+	private String nameFasta;
 
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
 
+
+
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-	Strand strand;
+
+	/**
+	 * constructor voor Context ten behoeve van uitbreidbaarheid.
+	 */
+	public Context(){
+		this.addPropertyChangeListener(this);
+		this.choiceUser = new ArrayList<String>();
+		this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
+
+		try {
+			parseProperties();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void parseProperties() throws IOException {
+
+		ClassLoader classLoader = getClass().getClassLoader();
+		String defaultProperties = java.net.URLDecoder.decode(classLoader.getResource("defaultProperties.txt").getFile(),"UTF-8");
+		String appProperties = java.net.URLDecoder.decode(classLoader.getResource("appProperties.txt").getFile(),"UTF-8");
+
+
+		// create and load default properties
+		Properties defaultProps = new Properties();
+		FileInputStream in = new FileInputStream(defaultProperties);
+		defaultProps.load(in);
+		in.close();
+
+		// create application properties with default
+		applicationProps = new Properties(defaultProps);
+
+		// now load properties
+		// from last invocation
+		in = new FileInputStream(appProperties);
+		applicationProps.load(in);
+		in.close();
+
+		//applicationProps.setProperty("homeDirectory","/home/hoi/yo");
+
+		FileOutputStream outStream  = new FileOutputStream(appProperties);
+		applicationProps.store(outStream, "---No Comment---");
+		outStream.close();
+
+		System.out.println(getPath(Paths.NR));
+
+	}
+
+	public String getPath(Paths pathEnum){
+		return this.applicationProps.getProperty(pathEnum.toString());
+	}
+
 	/**
 	 * Constructor voor testing purposes.
 	 * @param organism een Organisms object
@@ -60,6 +113,8 @@ public class Context implements Serializable, PropertyChangeListener {
 		start = 0;
 		stop = 100;
 	}
+
+
 
 	/**
 	 * Wrapper functie voor het aanpassen van de scope op het chromosoom.
@@ -89,14 +144,6 @@ public class Context implements Serializable, PropertyChangeListener {
 		pcs.firePropertyChange("range", null, null); //Fire the range change event
 	}
 
-	/**
-	 * constructor voor Context ten behoeve van uitbreidbaarheid.
-	 */
-	public Context(){
-        this.addPropertyChangeListener(this);
-        this.choiceUser = new ArrayList<String>();
-        this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
-	}
 
 
 	public void addFasta(String path) throws Exception{
@@ -124,10 +171,14 @@ public class Context implements Serializable, PropertyChangeListener {
 
 		fastaMap = FastaFileReader.getSequences(path);
 
+		File f = new File(path);
+		System.out.println(f.getName());
+
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
 			organism.addSequence(id,fastaMap.get(id));
 		}
+
 
 		setChromosomeNames(); //update chromosoom namen
 		this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
@@ -156,7 +207,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		//er is al een gff ingelezen & niet een fasta.
 		else if (curChromosome.getFeatures().size() > 0 && curChromosome.getSeqTemp() == null) {
-		    this.setOrganism(new Organisms());
+			this.setOrganism(new Organisms());
 		}
 		//er is geen gff ingelezen maar wel al een fasta.
 		else if (curChromosome.getFeatures().size() == 0 && curChromosome.getSeqTemp() != null) {
@@ -195,9 +246,9 @@ public class Context implements Serializable, PropertyChangeListener {
 
 
 	private void updateCurrentFeatureList() {
-	    this.featStart = start;
-	    this.featStop = stop;
-	    ArrayList<Feature> featList = Chromosome.filterFeatures(curChromosome.getFeaturesBetween(featStart,featStop),this.choiceUser);
+		this.featStart = start;
+		this.featStop = stop;
+		ArrayList<Feature> featList = Chromosome.filterFeatures(curChromosome.getFeaturesBetween(featStart,featStop),this.choiceUser);
 		this.currentFeatureList = featList.toArray(new Feature[featList.size()]);
 
 		pcs.firePropertyChange("currentFeatureList",null,null);
@@ -263,11 +314,11 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public Feature[] getCurrentFeatureList() {
 
-        if (currentFeatureList == null || featStart != start || featStop != stop) {
-            updateCurrentFeatureList();
-        }
-        return this.currentFeatureList;
-    }
+		if (currentFeatureList == null || featStart != start || featStop != stop) {
+			updateCurrentFeatureList();
+		}
+		return this.currentFeatureList;
+	}
 
 	/**
 	 * Functie voor het krijgen van alle Features van het huidige chromosoom.
@@ -370,11 +421,11 @@ public class Context implements Serializable, PropertyChangeListener {
 		if(name.equals("fasta") ||
 				name.equals("gff") ||
 				name.equals("organism")
-				)
+		)
 		{this.setChromosomeNames();}
 		if(name.equals("range")){
-		    this.updateCurrentFeatureList();
-        }
+			this.updateCurrentFeatureList();
+		}
 
 	}
 
@@ -386,8 +437,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	 *
 	 * @return een ArrayList met ORFs tussen een bepaalde start en stop.
 	 */
-    public ArrayList<ORF> getCurORFListBetween() {
-        return curChromosome.getORFsBetween(start, stop);
+	public ArrayList<ORF> getCurORFListBetween() {
+		return curChromosome.getORFsBetween(start, stop);
 	}
 
 	/**
@@ -413,21 +464,26 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @throws UnsupportedEncodingException
 	 */
 	public void saveORFs(ArrayList<ORF> curORFList, String buttonClick) throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writerSeq = new PrintWriter("orf.fasta", "UTF-8");
-		PrintWriter writerAA = new PrintWriter("/NAS/minor-g1/non_redundant/blast.fasta", "UTF-8");
+		PrintWriter writerSeq = new PrintWriter(getPath(Paths.SAVE_ORF) +"saveORF.fasta", "UTF-8");
+		PrintWriter writerAA = new PrintWriter(getPath(Paths.SAVE_BLAST_ORF) +"blastORF.fasta", "UTF-8");
 		for(ORF o: curORFList){
 			// Sequentie in nt.
-			String subSeq = curChromosome.getSeqTemp().substring(o.getStart(), o.getStop());
+			String subSeq = this.getOrganism().getChromosome(o.getChromosomeID()).getSeqTemp().substring(o.getStart(), o.getStop());
+			if (o.getStrand() == Strand.NEGATIVE) {
+				subSeq = MakeCompStrand.getReverseComplement(subSeq);
+			}
 			if(buttonClick == "saveORF"){
-				writerSeq.println(">" + o.getIdORF() + "|RF:" + o.getReadingframe() + "|start:" + o.getStart() + "|stop:" + o.getStop() + "|strand:" + o.getStrand());
+
+				writerSeq.println(">" + o.getIdORF() + "|RF:" + o.getReadingframe() + "|start:" + o.getStart() + "|stop:" + o.getStop() + "|strand:" + o.getStrand() + "|chromosome:"+o.getChromosomeID());
+
 				writerSeq.println(subSeq);
 			}
 			// Sequentie in aa.
 			else if(buttonClick == "blastORF"){
-				writerAA.println(">" + o.getIdORF() + "|RF:" + o.getReadingframe() + "|start:" + o.getStart() + "|stop:" + o.getStop() + "|strand:" + o.getStrand());
+				writerAA.println(">" + o.getIdORF() + "|RF:" + o.getReadingframe() + "|start:" + o.getStart() + "|stop:" + o.getStop() + "|strand:" + o.getStrand() + "|chromosome:"+o.getChromosomeID());
 				String aaSeq = TranslationManager.getInstance().getAminoAcids(o.getStrand(),subSeq,getCurrentCodonTable());
 				if(o.getStrand() == Strand.NEGATIVE){
-					aaSeq = new StringBuilder(aaSeq).reverse().toString();
+					//aaSeq = new StringBuilder(aaSeq).reverse().toString();
 				}
 				writerAA.println(aaSeq);
 			}

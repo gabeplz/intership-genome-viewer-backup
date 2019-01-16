@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.List;
 
 public class ColorORFs {
-    public static  HashMap<String, Color> headerColor = new HashMap<>();
+    private static  HashMap<String, Color> headerColor = new HashMap<>();
 
     public ColorORFs(){
 
@@ -23,7 +23,7 @@ public class ColorORFs {
 
         Collections.sort(evalues);
 
-        int rangeGreenCol = 215/evalues.size();
+        int rangeGreenCol = (int) Math.ceil(215/evalues.size());
         int count = 0;
 
         for (Double p : evalues) {

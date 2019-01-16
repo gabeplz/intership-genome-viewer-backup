@@ -13,24 +13,27 @@ public class ORF implements MappableFeature{
     private String idORF;
     private Strand strand;
     private int lengthORF;
+    private String chromosomeID;
+
 
     /**
-     *
      * Het opslaan van alle informatie van een ORF in een object.
-     *
      * @param start             Start positie van de eerste nucleotide van het startcodon
      * @param stop              Stop positie van de eerste nucleotide van het stopcodon
      * @param readingframe      In welk readingframe én strand (-/+) het ORF is gevonden.
      * @param idORF             Het ID dat wordt meegegeven aan het ORF om ORFs te kunnen onderscheiden
-     * //@param DNA_ORF           De DNA sequentie van het gevonden ORF
+     * @param strand            De strand van het gevonden ORF.
+     * @param lengthORF         De lengte van het ORF (stop-start)
+     * @param chromosomeID      Het ID van het chromosoom waarop dit ORF gevonden is.
      */
-    public ORF(int start, int stop, int readingframe, String idORF, Strand strand, int lengthORF) {
+    public ORF(int start, int stop, int readingframe, String idORF, Strand strand, int lengthORF, String chromosomeID) {
         this.start = start;
         this.stop = stop;
         this.readingframe = readingframe;
         this.idORF = idORF;
         this.strand = strand;
         this.lengthORF = lengthORF;
+        this.chromosomeID = chromosomeID;
     }
 
     /**
@@ -122,6 +125,14 @@ public class ORF implements MappableFeature{
 
     public void setLengthORF(int lengthORF) {
         this.lengthORF = lengthORF;
+    }
+
+    public String getChromosomeID() {
+        return chromosomeID;
+    }
+
+    public void setChromosomeID(String chromosomeID) {
+        this.chromosomeID = chromosomeID;
     }
 
     /**

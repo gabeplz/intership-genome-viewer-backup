@@ -1,14 +1,8 @@
 package com.mycompany.minorigv.blast;
 
-import com.mycompany.minorigv.gffparser.ORF;
-import org.xml.sax.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -16,30 +10,31 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * @author Huub
+ * Class voor het aanroepen van BLAST via de commandline.
  */
 public class BLAST {
-
-    SAXSource source;
-    Unmarshaller u;
-    private String blastDB = "/NAS/minor-g1/non_redundant/nr"; // roep nr dan aan
-
     /**
      *
      * @param input         Path waar de input file staat
      * @param output        Path naar de output file.
      * @param soortBlast    Welke blast er uitgevoerd moet worden (blastp, blastn, etc.)
+     * @param database      De database waartegen geblast moet worden.
      * @throws IOException
      */
-    public void runBLAST(String input, String output, String soortBlast) throws IOException{
+    public void runBLAST(String input, String output, String soortBlast, String database) throws IOException {
         try
         {
             // command line argument voor het uitvoeren van blast.
             ProcessBuilder pb = new ProcessBuilder(
                     soortBlast,
-                    "-db",blastDB,
+                    "-db",database,
                     "-num_threads","8",
                     "-query",input,
                     "-evalue", "1e-5",
@@ -56,15 +51,16 @@ public class BLAST {
 
             parseXML(output);
 
-
         }
         catch(Exception err)
         {
+            new File(output).delete();
             err.printStackTrace();
             throw new RuntimeException(err);
         }
         finally
         {
+
         }
     }
 
@@ -78,6 +74,9 @@ public class BLAST {
      * @throws FileNotFoundException
      */
     public BlastOutput parseXML(String output) throws JAXBException, SAXException, ParserConfigurationException, FileNotFoundException {
+
+        SAXSource source;
+        Unmarshaller u;
         JAXBContext jc = JAXBContext.newInstance("com.mycompany.minorigv.blast");
 
         SAXParserFactory spf = SAXParserFactory.newInstance();

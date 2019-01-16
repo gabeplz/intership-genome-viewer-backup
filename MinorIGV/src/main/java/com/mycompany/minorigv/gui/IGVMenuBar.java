@@ -93,7 +93,7 @@ public class IGVMenuBar extends JMenuBar {
 		saveORF = new JMenuItem("Save ORFs");
 		blast = new JMenuItem("BLAST");
 
-		File f = new File("/NAS/minor-g1/");
+		File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
 		if(f.exists() && f.isDirectory()){
 			blast.setEnabled(true);
 		}else{
@@ -285,9 +285,9 @@ public class IGVMenuBar extends JMenuBar {
 		// Kijkt welke Radio Button is aangeklikt.
 		Boolean m = buttonAll.isSelected();
 		if(m == true){
-			cont.saveORFs(cont.getCurORFListALL(), "saveORF");
+			cont.saveORFs(cont.getCurORFListALL(), "saveORF" );
 		}else{
-			cont.saveORFs(cont.getCurORFListBetween(), "saveORF");
+			cont.saveORFs(cont.getCurORFListBetween(), "saveORF" );
 		}
 	}
 
@@ -368,6 +368,7 @@ public class IGVMenuBar extends JMenuBar {
 			String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
 			blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
 		}
+
 
 
 

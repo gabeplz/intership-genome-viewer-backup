@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gffparser;
 
 import com.mycompany.minorigv.sequence.FindORF;
-import com.mycompany.minorigv.sequence.MakeCompStrand;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,15 +118,10 @@ public class Chromosome {
      * Het genereerd de ArrayList met daarin de ORFs
      */
     public void setListORF(int lenghtORF)  {
-        // ORFs zoeken in de template en complementaire strand.
-        String seqComp = MakeCompStrand.getReverseComplement(getSeqTemp());
 
-        // ORFs zoeken in de template strand
-        listORF = FindORF.searchORF(getId(), getSeqTemp(), 0, getSeqTemp().length(), lenghtORF);
+        // ORFs zoeken in de template strand en complementaire streng.
+        listORF = FindORF.searchORF(getId(), getSeqTemp(), lenghtORF);
 
-        // ORFs zoeken in de complement strand
-        ArrayList orfs_comp = FindORF.searchORF(getId(), seqComp, "comp", 0, getSeqTemp().length(), lenghtORF);
-        listORF.addAll(orfs_comp);
     }
 
     /**

@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BlastORF {
-    HashMap<String, Iteration> headerIteration = new HashMap<>();
+    private static HashMap<String, Iteration> headerIteration = new HashMap<>();
+
     public void getValuesORF(ArrayList<ORF> curORFList, String output) throws JAXBException, FileNotFoundException, SAXException, ParserConfigurationException {
         /** read the result */
         BLAST b = new BLAST();
@@ -21,7 +22,8 @@ public class BlastORF {
 
         for(int i = 0; i < curORFList.size(); i++){
             String header = bo.getBlastOutputIterations().getIteration().get(i).getIterationQueryDef();
-            headerIteration.put(header, bo.getBlastOutputIterations().getIteration().get(i));
+            String idORF = header.split("\\|")[0];
+            headerIteration.put(idORF, bo.getBlastOutputIterations().getIteration().get(i));
 
             if(!bo.getBlastOutputIterations().getIteration().get(i).getIterationHits().getHit().isEmpty()){
                 String evalue = bo.getBlastOutputIterations().getIteration().get(i).getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue();
