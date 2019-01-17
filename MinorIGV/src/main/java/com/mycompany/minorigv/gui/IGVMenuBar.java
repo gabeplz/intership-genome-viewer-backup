@@ -541,6 +541,11 @@ public class IGVMenuBar extends JMenuBar {
 
     private void loadReadsAction() {
 
+	    FastaFileChooser ffc = new FastaFileChooser();
+	    String readFile = ffc.fastafile();
+
+	    cont.setCurrentReads(readFile);
+
     }
 
     private void blasReadsAction() {
