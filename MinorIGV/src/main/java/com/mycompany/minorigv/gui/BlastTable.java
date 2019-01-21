@@ -1,6 +1,9 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.blast.*;
+import com.mycompany.minorigv.gffparser.BlastedORF;
+import com.mycompany.minorigv.gffparser.Chromosome;
+import com.mycompany.minorigv.gffparser.ORF;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -19,15 +22,15 @@ import java.util.ArrayList;
  */
 public class BlastTable extends JFrame {
 
-    BlastOutput blastOutput;
+    Context cont;
 
     /**
      * Constructor voor de Table
-     * @param blastOutput een blastoutput die gevisualiseerd moet worden.
+     * @param cont een blastoutput die gevisualiseerd moet worden.
      */
-    public BlastTable(BlastOutput blastOutput) {
+    public BlastTable(Context cont) {
         super("blast tabel");
-        this.blastOutput = blastOutput;
+        this.cont = cont;
         setMinimumSize(new Dimension(500, 500));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(new JScrollPane(makeTable()));
@@ -52,15 +55,19 @@ public class BlastTable extends JFrame {
         JTable table = new JTable(model);
 
         String[] Columns = {
-                "queryDef",
-                "queryLen",
+                "hitDef",
                 "hitAccession",
-                "hitLength",
-                "hspEvalue",
                 "hspScore",
-                "hspBitScore",
+                "hspEvalue",
+                "hspIdentity",
                 "hspPositives",
-                "hspIdentity"
+                "hpsGaps",
+                "start ORF",
+                "stop ORF",
+                "RF ORF",
+                "strand ORF",
+                "chromosoom ORF"
+
         };
 
         for (String colHeader : Columns) {
@@ -68,33 +75,57 @@ public class BlastTable extends JFrame {
         }
 
 
-        for (Iteration iter : blastOutput.getBlastOutputIterations().getIteration()) {
-            ArrayList<String> row = new ArrayList<String>();
+        for (Chromosome chrom : cont.getOrganism().getChromosomes().values()){
 
-            row.add(iter.getIterationQueryDef());
-            row.add(iter.getIterationQueryLen());
 
-            if (!iter.getIterationHits().getHit().isEmpty()){
+            for (ORF o : chrom.getListORF()){
+                ArrayList<String> row = new ArrayList<String>();
+                if(o instanceof BlastedORF){
 
-                Hit hit = iter.getIterationHits().getHit().get(0);
-                row.add(hit.getHitAccession());
-                row.add(hit.getHitLen());
+                    if(((BlastedORF) o).hasHit()) {
 
-                Hsp hsp = hit.getHitHsps().getHsp().get(0);
-                row.add(hsp.getHspEvalue());
-                row.add(hsp.getHspScore());
-                row.add(hsp.getHspBitScore());
-                row.add(hsp.getHspPositive());
-                row.add(hsp.getHspIdentity());
+                        row.add(((BlastedORF) o).getBestHit().getHitDef());
+                        row.add(((BlastedORF) o).getBestHit().getHitAccession());
 
+                        String scoreString = ((BlastedORF) o).getBestHsp().getHspBitScore() + " bits(" + ((BlastedORF) o).getBestHsp().getHspScore() + ")";
+                        row.add(scoreString);
+
+                        row.add(((BlastedORF) o).getBestHsp().getHspEvalue());
+
+                        int length = Integer.parseInt(((BlastedORF) o).getBestHsp().getHspAlignLen());
+                        int identity = Integer.parseInt(((BlastedORF) o).getBestHsp().getHspIdentity());
+                        int positives = Integer.parseInt(((BlastedORF) o).getBestHsp().getHspPositive());
+                        int gaps = Integer.parseInt(((BlastedORF) o).getBestHsp().getHspGaps());
+
+                        String identityString = identity + "/" + length + "(" + identity * 100 / length + "%)";
+                        String positivesString = positives + "/" + length + "(" + positives * 100 / length + "%)";
+                        String gapsString = gaps + "/" + length + "(" + gaps * 100 / length + "%)";
+
+                        row.add(identityString);
+                        row.add(positivesString);
+                        row.add(gapsString);
+
+                    }
+                    else {
+                        for(int i = 0;i < 7; i++){
+                            row.add("");
+                        }
+
+                    }
+                    row.add(String.valueOf(o.getStart()));
+                    row.add(String.valueOf(o.getStop()));
+                    row.add(String.valueOf(o.getReadingframe()));
+                    row.add(String.valueOf(o.getStrand()));
+                    row.add(String.valueOf(o.getChromosomeID()));
+                    model.addRow(row.toArray());
+
+                }
             }
-
-            else{
-
-            }
-
-            model.addRow(row.toArray());
         }
+
+
+
+
 
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
@@ -129,9 +160,6 @@ public class BlastTable extends JFrame {
         iterationFrame.add(table);
 
 
-
-        System.out.println(blastOutput.getBlastOutputIterations().getIteration().get(index));
-
     }
 
 
@@ -145,7 +173,7 @@ public class BlastTable extends JFrame {
 
         BlastOutput bo = null;
         try {
-            bo = blast.parseXML("/home/kahuub/Documents/github-minor/app/hoi.xml");
+            bo = blast.parseXML("/NAS/minor-g1/application/output/ORF/GCF_000300575.1_B_2_0-100.xml");
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -156,7 +184,7 @@ public class BlastTable extends JFrame {
             e.printStackTrace();
         }
 
-        BlastTable tabel = new BlastTable(bo);
+
     }
 
 }

@@ -67,9 +67,15 @@ public class BlastORF {
             ArrayList<ORF> orfList = new ArrayList<>(0);
 
             for (Iteration iter : bo.getBlastOutputIterations().getIteration()){
-                orfList.add(makeORF(iter));
+
+                String chromName = iter.getIterationQueryDef().split("\\|")[5].split(":")[1];
+                if(chromName.equals(chrom.getId())){
+                    ORF orf = makeORF(iter);
+                    orfList.add(orf);
+                }
 
             }
+
             chrom.setListORF(orfList);
         }
     }

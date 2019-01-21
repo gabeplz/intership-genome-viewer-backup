@@ -36,7 +36,7 @@ public class IGVMenuBar extends JMenuBar {
     JMenu files, tools, features, reads;
 
     // Defineer de menu items die zelf niet sub items zullen bevatten.
-    JMenuItem openRef, openData, openReads, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton ;
+    JMenuItem openRef, openData, openReads, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton,showTabelButton ;
 
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
@@ -115,6 +115,8 @@ public class IGVMenuBar extends JMenuBar {
 		blast = new JMenuItem("BLAST");
 		showLegendButton = new JMenuItem("Show legend");
         showLegendButton.setEnabled(false);
+        showTabelButton = new JMenuItem("Show Table");
+        showTabelButton.setEnabled(false);
 
 		File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
 		if(f.exists() && f.isDirectory()){
@@ -162,13 +164,26 @@ public class IGVMenuBar extends JMenuBar {
             }
         });
 
+        showTabelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showTableAction();
+            }
+        });
+
+
         //Voeg de sub items toe aan "tools"
         tools.add(findORF);
         tools.add(saveORF);
         tools.add(blast);
         tools.add(showLegendButton);
+        tools.add(showTabelButton);
         //Voeg tools toe aan de menu bar.
         add(tools);
+    }
+
+    private void showTableAction() {
+        BlastTable blastTable = new BlastTable(cont);
     }
 
     /**
@@ -508,6 +523,13 @@ public class IGVMenuBar extends JMenuBar {
             blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
 		}
 
+        blastIsParsedAction();
+
+    }
+
+    private void blastIsParsedAction() {
+	    this.showTabelButton.setEnabled(true);
+	    this.showLegendButton.setEnabled(true);
     }
 
     private void showLegendAction(){
