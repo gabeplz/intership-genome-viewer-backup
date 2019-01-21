@@ -3,6 +3,7 @@ package com.mycompany.minorigv.gui;
 import com.mycompany.minorigv.FastaFileChooser;
 import com.mycompany.minorigv.blast.BLAST;
 import com.mycompany.minorigv.blast.BlastORF;
+import com.mycompany.minorigv.blast.Choices;
 import com.mycompany.minorigv.blast.ColorORFs;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
@@ -43,6 +44,7 @@ public class IGVMenuBar extends JMenuBar {
 
     ColorORFs colorORFs;
 
+    private ButtonGroup group;
     private JRadioButton buttonAll, buttonBetween, buttonIdentity, buttonBitScore, buttonScore, buttonEvalue;
     private JFormattedTextField textField;
 
@@ -408,7 +410,7 @@ public class IGVMenuBar extends JMenuBar {
 
         JPanel panelForColor = new JPanel();
 
-        ButtonGroup group = new ButtonGroup();
+        group = new ButtonGroup();
         buttonIdentity = new JRadioButton("Identity");
         buttonIdentity.setSelected(true);
         buttonBitScore = new JRadioButton("Bit score");
@@ -480,6 +482,18 @@ public class IGVMenuBar extends JMenuBar {
         cont.setCurORFListALL(lengthORFUser);
 		// Kijkt welke Radio Button is aangeklikt.
 		Boolean m = buttonAll.isSelected();
+
+		//buttonIdentity, buttonBitScore, buttonScore, buttonEvalue;
+        if(buttonIdentity.isSelected()){
+            ColorORFs.setColorSetting(Choices.IDENTITY);
+        }else if(buttonBitScore.isSelected()){
+            ColorORFs.setColorSetting(Choices.BITSCORE);
+        }else if(buttonScore.isSelected()){
+            ColorORFs.setColorSetting(Choices.SCORE);
+        }else if(buttonEvalue.isSelected()){
+            ColorORFs.setColorSetting(Choices.EVALUE);
+        }
+
 
 		BlastORF blastOrf = new BlastORF(cont);
 

@@ -1,8 +1,6 @@
 package com.mycompany.minorigv.gui;
 
-import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.blast.ColorORFs;
-import com.mycompany.minorigv.blast.Iteration;
 import com.mycompany.minorigv.gffparser.BlastedORF;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
@@ -15,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -136,12 +133,12 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 xPosLeft = xPosRight; //oude links -> rechts.
                 xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq+1.5); //nieuwe xPos bepalen.
                 int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
-                selectColor(strandORFs, g, indexRef, letter, letterWidth, frame);
+                selectColor(strandORFs, g, indexRef, letter, letterWidth);
 
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 				g.setColor(Color.BLACK);
 
@@ -189,7 +186,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 
                 g.setColor(Color.BLACK);
@@ -215,21 +212,34 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      * @param letter      de letter van het aminozuur.
      * @param width
      */
-    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width, int frame){
+    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
+
+        ArrayList<ORF> overlappende = new ArrayList<>();
 
         if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 System.out.println(o);
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
-                if (indexRef < stopORF && indexRef > startORF) {
+                if (indexRef <= stopORF && indexRef > startORF) {
                     colorFrames(g, indexRef, letter, "ORF",width, null);
-                    if(o instanceof BlastedORF){
-                        g.setColor(colorPicker.getColor(o));
+                    overlappende.add(o);
+
+                }
+            }
+            if (!overlappende.isEmpty()) {
+                ORF temp = overlappende.get(0);
+                for (ORF o : overlappende) {
+                    if (temp.getLengthORF() > o.getLengthORF()) {
+                        temp = o;
                     }
+                }
+                if(temp instanceof BlastedORF){
+                    g.setColor(colorPicker.getColor(temp));
                     return;
                 }
             }
+
         }
         colorFrames(g, indexRef, letter, "-", width, null);
     }
@@ -400,6 +410,10 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         }
 
         public String getInformationORF(BlastedORF orf){
+
+            if(!orf.hasHit()){
+                return "Jammeeerrrr.";
+            }
 
             String hitID = orf.getBestHit().getHitId();
             String hitDef = orf.getBestHit().getHitDef();

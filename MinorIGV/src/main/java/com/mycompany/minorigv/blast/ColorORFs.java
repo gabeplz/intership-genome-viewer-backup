@@ -18,13 +18,9 @@ import java.util.List;
 
 public class ColorORFs extends JPanel {
 
-    enum Choices{
 
-        IDENTITY, EVALUE, SCORE, BITSCORE
 
-    }
-
-    Choices colorSetting;
+    public static Choices colorSetting = Choices.IDENTITY;
 
     public ColorORFs() {
 
@@ -34,15 +30,14 @@ public class ColorORFs extends JPanel {
         super();
         cont = context;
         init();
-        colorSetting = Choices.EVALUE;
     }
 
     public Choices getColorSetting() {
         return colorSetting;
     }
 
-    public void setColorSetting(Choices colorSetting) {
-        this.colorSetting = colorSetting;
+    public static void setColorSetting(Choices colorSetting) {
+        colorSetting = colorSetting;
     }
 
     Context cont;
