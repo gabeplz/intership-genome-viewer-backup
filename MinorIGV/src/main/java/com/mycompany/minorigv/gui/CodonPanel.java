@@ -3,6 +3,7 @@ package com.mycompany.minorigv.gui;
 import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.blast.ColorORFs;
 import com.mycompany.minorigv.blast.Iteration;
+import com.mycompany.minorigv.gffparser.BlastedORF;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
@@ -27,6 +28,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
 	Strand strand;
 	Dimension dim;
+	ColorORFs colorPicker;
 
 	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt. Letters weergeven.
 	private final int ZOOM_SIZE_2 = 14; //Hoeveelheid pixels waarna de aminozuur letters verdwijnen. (ORF (geel) + start (groen) + stop (rood))
@@ -37,6 +39,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         this.setContext(cont);
         this.setListeners();
         this.init(strand);
+        colorPicker = new ColorORFs(cont);
 
     }
 
@@ -213,35 +216,17 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      * @param width
      */
     public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width, int frame){
-        ColorORFs colList = new ColorORFs();
-        if(!colList.getHeaderColor().isEmpty()){
-            HashMap<String, Color> headerColor = colList.getHeaderColor();
-            for(String header: headerColor.keySet()){
-                String[] informationHeader = header.split("\\|");
-                int RF = Integer.parseInt(informationHeader[1].split(":")[1]);
-                int startORF = Integer.parseInt(informationHeader[2].split(":")[1]);
-                int stopORF = Integer.parseInt(informationHeader[3].split(":")[1]);
-                String strandORF = informationHeader[4].split(":")[1];
-                Strand strandORFenum = null;
-                if(strandORF.equals("POSITIVE")){
-                    strandORFenum = Strand.POSITIVE;
-                }else if(strandORF.equals("NEGATIVE")){
-                    strandORFenum = Strand.NEGATIVE;
-                }
-                if(strandORFenum.equals(strand) && frame == RF){
-                    if (indexRef < stopORF && indexRef > startORF) {
-                        colorFrames(g, indexRef, letter, "BLAST",width, headerColor.get(header));
-                        return;
-                    }
-                }
-            }
-        }
+
         if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
+                System.out.println(o);
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
                 if (indexRef < stopORF && indexRef > startORF) {
                     colorFrames(g, indexRef, letter, "ORF",width, null);
+                    if(o instanceof BlastedORF){
+                        g.setColor(colorPicker.getColor(o));
+                    }
                     return;
                 }
             }
@@ -263,8 +248,6 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             g.setColor(new Color(250, 0, 0));
         }else if(sign.equals("ORF")){
             g.setColor(new Color(255, 255, 0));
-        }else if(sign.equals("BLAST")){
-            g.setColor(colBlast);
         }else if(indexRef%2 > 0 || letterWidth < ZOOM_SIZE_1 ) {  //als te smalle vakjes voor 2 kleuren blauw.
             g.setColor(new Color(127, 191, 226));
         }else{
@@ -356,15 +339,17 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         // Tekent het grote blauwe blok
         g.fillRect(xPosLeft,10,xPosRight-xPosLeft,3*20);
 
-	    ArrayList<ORF> listORF = getORFs(strand);
-	    if(listORF != null){
+
+        ArrayList<ORF> listORF = getORFs(strand);
+
+        if(listORF != null){
             for(ORF o : listORF){
                 // Linker positie in pixel van het ORF (geel)
                 xPosLeft = (int) DrawingTools.calculateLetterPosition(panelWidth, length,o.getStart()-start);
                 // Rechter positie in pixel van het ORF (geel).
                 xPosRight = (int) DrawingTools.calculateLetterPosition(panelWidth, length, o.getStop()-start);
                 int height = calcHeight(strand, o.getReadingframe());
-                g.setColor(new Color(255, 255, 0));
+                g.setColor(colorPicker.getColor(o));
                 g.fillRect(xPosLeft, height, xPosRight-xPosLeft, 20);
                 g.setColor(Color.BLACK);
             }
@@ -373,9 +358,6 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
     }
 
     class MyMouseListener extends MouseAdapter{
-
-
-
 
         public void mouseClicked(MouseEvent e){
             int X = e.getX();
@@ -395,12 +377,14 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 for(ORF o: listORF){
                     if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
                         if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){
-                            getInformationORF(o.getIdORF());
-                            popUp(o);
+                            String message = getInformationORF((BlastedORF) o);
+                            popUp(message);
                         }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
-                            popUp(o);
+                            String message = getInformationORF((BlastedORF) o);
+                            popUp(message);
                         }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
-                            popUp(o);
+                            String message = getInformationORF((BlastedORF) o);
+                            popUp(message);
                         }
                     }
 
@@ -409,25 +393,21 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             }
 
         }
-        public void popUp(ORF clickedORF){
+        public void popUp(String message){
 
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Kut anne.");
+            JOptionPane.showMessageDialog(panel, message);
         }
 
+        public String getInformationORF(BlastedORF orf){
 
-        public void getInformationORF(String idORF){
-            BlastORF blastInfo = new BlastORF();
-            HashMap<String, Iteration> infoKey = blastInfo.getHeaderIteration();
-            Iteration info = infoKey.get(idORF);
-            //.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue()
-            String hitID = info.getIterationHits().getHit().get(0).getHitId();
-            String hitDef = info.getIterationHits().getHit().get(0).getHitDef();
-            String hitAcc = info.getIterationHits().getHit().get(0).getHitAccession();
-            String bitScore = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspBitScore();
-            String score = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspScore();
-            String evalue = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue();
-            String identity = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspIdentity();
+            String hitID = orf.getBestHit().getHitId();
+            String hitDef = orf.getBestHit().getHitDef();
+            String hitAcc = orf.getBestHit().getHitAccession();
+            String bitScore = orf.getBestHsp().getHspBitScore();
+            String score = orf.getBestHsp().getHspScore();
+            String evalue = orf.getBestHsp().getHspEvalue();
+            String identity = orf.getBestHsp().getHspIdentity();
 
             String message = "Hit id: " + hitID + "\n" +
                     "Hit def: " + hitDef + "\n" +
@@ -437,7 +417,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                     "E-value: " + evalue + "\n" +
                     "Identity: " + identity + "\n";
 
-
+            return message;
         }
 
     }

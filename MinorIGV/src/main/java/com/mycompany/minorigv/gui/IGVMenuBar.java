@@ -1,7 +1,9 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.blast.CallBlastORF;
+import com.mycompany.minorigv.blast.BLAST;
+import com.mycompany.minorigv.blast.BlastORF;
+import com.mycompany.minorigv.blast.ColorORFs;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 import org.xml.sax.SAXException;
@@ -33,13 +35,15 @@ public class IGVMenuBar extends JMenuBar {
     JMenu files, tools, features, reads;
 
     // Defineer de menu items die zelf niet sub items zullen bevatten.
-    JMenuItem openRef, openData, openReads, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads ;
+    JMenuItem openRef, openData, openReads, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton ;
 
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
 
-    private JRadioButton buttonAll, buttonBetween;
+    ColorORFs colorORFs;
+
+    private JRadioButton buttonAll, buttonBetween, buttonIdentity, buttonBitScore, buttonScore, buttonEvalue;
     private JFormattedTextField textField;
 
     public IGVMenuBar(Context context) {
@@ -103,21 +107,24 @@ public class IGVMenuBar extends JMenuBar {
         //Tweede menu item "tools"
         tools = new JMenu("ORF");
 
-	//Sub items voor menu item 2 "tools"
+	    //Sub items voor menu item 2 "tools"
 		findORF = new JMenuItem("Find ORFs");
 		saveORF = new JMenuItem("Save ORFs");
 		blast = new JMenuItem("BLAST");
+		showLegendButton = new JMenuItem("Show legend");
+        showLegendButton.setEnabled(false);
 
 		File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
 		if(f.exists() && f.isDirectory()){
 			blast.setEnabled(true);
+//			if(!cont.getCurHeaderColor().isEmpty()){
+//			    showLegendButton.setEnabled(true);
+//            }else{
+//			    showLegendButton.setEnabled(false);
+//            }
 		}else{
 			blast.setEnabled(false);
 		}
-        //Sub items voor menu item 2 "tools"
-        findORF = new JMenuItem("Find ORFs");
-        saveORF = new JMenuItem("Save ORFs");
-        blast = new JMenuItem("Blast");
 
         //Action listeners voor de sub item van tools
         findORF.addActionListener(new ActionListener() {
@@ -146,12 +153,18 @@ public class IGVMenuBar extends JMenuBar {
             }
         });
 
+        showLegendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showLegendAction();
+            }
+        });
 
         //Voeg de sub items toe aan "tools"
         tools.add(findORF);
         tools.add(saveORF);
         tools.add(blast);
-
+        tools.add(showLegendButton);
         //Voeg tools toe aan de menu bar.
         add(tools);
     }
@@ -393,10 +406,34 @@ public class IGVMenuBar extends JMenuBar {
         // Er wordt een Padding ingesteld.
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        JPanel panelForColor = new JPanel();
+
+        ButtonGroup group = new ButtonGroup();
+        buttonIdentity = new JRadioButton("Identity");
+        buttonIdentity.setSelected(true);
+        buttonBitScore = new JRadioButton("Bit score");
+        buttonScore = new JRadioButton("Score");
+        buttonEvalue = new JRadioButton("E-value");
+
+        group.add(buttonIdentity);
+        group.add(buttonBitScore);
+        group.add(buttonScore);
+        group.add(buttonEvalue);
+
+        panelForColor.add(buttonIdentity);
+        panelForColor.add(buttonBitScore);
+        panelForColor.add(buttonScore);
+        panelForColor.add(buttonEvalue);
+
+        panelForColor.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Color"));
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "ORF Settings"));
+
+
         // Er wordt een frame aangemaakt.
         JFrame f = new JFrame();
         f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
         f.getContentPane().add(panel);
+        f.getContentPane().add(panelForColor);
         f.getContentPane().add(panelForButton);
         f.pack();
         f.setLocationRelativeTo(null);
@@ -434,25 +471,39 @@ public class IGVMenuBar extends JMenuBar {
 	 * @throws JAXBException
 	 */
 	private void blastButtonAction() throws IOException, JAXBException, ParserConfigurationException, SAXException {
-		CallBlastORF blastORF = new CallBlastORF(cont);
+
+
+		BlastORF blastORF = new BlastORF(cont);
         // haalt de ingevoerde lengte op van het ORF.
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());
-        // Set de ORFs
+        // Zoeken van de ORFs
         cont.setCurORFListALL(lengthORFUser);
 		// Kijkt welke Radio Button is aangeklikt.
 		Boolean m = buttonAll.isSelected();
-		if(m == true){
+
+		BlastORF blastOrf = new BlastORF(cont);
+
+        if(m){
 			String partOutputName = "_A_" + lengthORFUser+ ".xml";
-			blastORF.callBlast(cont.getCurORFListALL(), partOutputName);
+			String blastXMLFile = blastORF.callBlast(cont.getCurORFListALL(), partOutputName);
+            blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+
 		}else{
 			String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
-			blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
+            String blastXMLFile = blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
+            blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
 		}
 
-
-
-
     }
+
+    private void showLegendAction(){
+	    JFrame window = new JFrame();
+	    window.add(new ColorORFs(cont));
+	    window.pack();
+	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    window.setVisible(true);
+    }
+
 
     private JPanel popupWindow(){
         // Radio Button wordt aangemaakt.

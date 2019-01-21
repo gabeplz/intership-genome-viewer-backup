@@ -1,7 +1,10 @@
 package com.mycompany.minorigv.gffparser;
 
+import com.mycompany.minorigv.blast.BlastORF;
+import com.mycompany.minorigv.blast.ColorORFs;
 import com.mycompany.minorigv.sequence.FindORF;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +20,7 @@ public class Chromosome {
     private String seqTemp;
     private ArrayList<ORF> listORF;
     private HashMap<String, Object> readingframe;
+    private HashMap<String, Color> headerColor;
 
     /**
      * De constructor.
@@ -114,10 +118,16 @@ public class Chromosome {
         return listORF;
     }
 
+
+
+    public void setListORF(ArrayList<ORF> newListOrf){
+        this.listORF = newListOrf;
+    }
+
     /**
      * Het genereerd de ArrayList met daarin de ORFs
      */
-    public void setListORF(int lenghtORF)  {
+    public void createListOrf(int lenghtORF)  {
 
         // ORFs zoeken in de template strand en complementaire streng.
         listORF = FindORF.searchORF(getId(), getSeqTemp(), lenghtORF);
@@ -207,8 +217,6 @@ public class Chromosome {
         }
 
     }
-
-
 
     @Override
     public String toString() {

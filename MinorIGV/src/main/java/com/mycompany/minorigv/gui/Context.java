@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gui;
 
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -8,6 +9,7 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.blast.BlastOutput;
 import com.mycompany.minorigv.fastqparser.FastqReader;
 import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.fastqparser.Read;
@@ -50,10 +52,12 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private ArrayList<String> choiceUser;
 	private HashMap<String,String> fastaMap = new HashMap<>();
-	private String nameFasta;
+	private String nameFastaFile;
 
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
+
+	private BlastOutput blastOutput;
 
 
 
@@ -157,9 +161,9 @@ public class Context implements Serializable, PropertyChangeListener {
 
 
 
-	public void addFasta(String path) throws Exception{
+	public void addFasta(String pathFasta) throws Exception{
 
-	    File file = new File(path);
+	    File file = new File(pathFasta);
         if (!file.exists()){
             return;
         }
@@ -185,10 +189,11 @@ public class Context implements Serializable, PropertyChangeListener {
 			//voor volledigheid
 		}
 
-		fastaMap = FastaFileReader.getSequences(path);
+		fastaMap = FastaFileReader.getSequences(pathFasta);
 
-		File f = new File(path);
+		File f = new File(pathFasta);
 		System.out.println(f.getName());
+		setFastFileName(f.getName());
 
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
@@ -488,7 +493,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param lenghtORF		de lengte die het ORF minimaal mag hebben, ingevoerd door de gebruiker.
 	 */
 	public void setCurORFListALL(int lenghtORF){
-		curChromosome.setListORF(lenghtORF);
+		curChromosome.createListOrf(lenghtORF);
 	}
 
 	/**
@@ -498,6 +503,26 @@ public class Context implements Serializable, PropertyChangeListener {
 	public ArrayList<ORF> getCurORFListALL(){
 		return curChromosome.getListORF();
 	}
+
+
+	public void setFastFileName(String nameFastaFile){
+		this.nameFastaFile = nameFastaFile;
+	}
+
+	public String getNameFasta(){
+		return nameFastaFile;
+	}
+
+	public BlastOutput getBlastOutput() {
+		return blastOutput;
+	}
+
+	public void setBlastOutput(BlastOutput blastOutput) {
+		this.blastOutput = blastOutput;
+	}
+
+
+
 
 	/**
 	 * Wegschrijven ORFs in fasta bestand.

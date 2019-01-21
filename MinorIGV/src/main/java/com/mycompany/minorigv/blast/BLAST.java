@@ -28,7 +28,7 @@ public class BLAST {
      * @param database      De database waartegen geblast moet worden.
      * @throws IOException
      */
-    public void runBLAST(String input, String output, String soortBlast, String database) throws IOException {
+    public static void runBLAST(String input, String output, String soortBlast, String database) throws IOException {
         try
         {
             // command line argument voor het uitvoeren van blast.
@@ -73,7 +73,7 @@ public class BLAST {
      * @throws ParserConfigurationException
      * @throws FileNotFoundException
      */
-    public BlastOutput parseXML(String output) throws JAXBException, SAXException, ParserConfigurationException, FileNotFoundException {
+    public static BlastOutput parseXML(String output) throws JAXBException, SAXException, ParserConfigurationException, FileNotFoundException {
 
         SAXSource source;
         Unmarshaller u;
@@ -89,7 +89,8 @@ public class BLAST {
         source = new SAXSource(xmlReader, inputSource);
 
         u = jc.createUnmarshaller();
-        return (BlastOutput) u.unmarshal(source);
+        BlastOutput bo = (BlastOutput) u.unmarshal(source);
+        return bo;
     }
 
 
