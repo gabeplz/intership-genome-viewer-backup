@@ -1,22 +1,16 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.FastaFileReader;
-import com.mycompany.minorigv.gffparser.MotifFinder;
 import com.mycompany.minorigv.motif.PositionScoreMatrix;
-import com.mycompany.minorigv.motif.TextAreaExample;
+import com.mycompany.minorigv.motif.MotifFrame;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.*;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -345,10 +339,11 @@ public class IGVMenuBar extends JMenuBar {
         matrixFrame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            TextAreaExample x = new TextAreaExample();
-            x.setContext(cont);
-        }
-    });
+                ArrayList<PositionScoreMatrix> startUpMatrixList = cont.getMatrixes();
+                MotifFrame x = new MotifFrame(startUpMatrixList);
+                x.setContext(cont);
+            }
+        });
         motifSearchMenu.add(matrixFrame);
         add(motifSearchMenu);
 	}

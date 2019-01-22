@@ -44,6 +44,10 @@ public class Context implements Serializable, PropertyChangeListener {
 	private ArrayList<String> keuze_gebruiker;
 
 
+	private ArrayList<PositionScoreMatrix> matrixes = new ArrayList<PositionScoreMatrix>();
+	private ArrayList<PositionScoreMatrix> matrixesForSearch = new ArrayList<PositionScoreMatrix>();
+
+
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
 
@@ -407,9 +411,39 @@ public class Context implements Serializable, PropertyChangeListener {
         } else { }
 	}
 
-	public void setScoreMatrix(String inputString){
-	    this.scoreMatrix = PositionScoreMatrix.buildMatrix(inputString);
+    //update matrixes on add and remove
+    // update matrixesForSearch; on search
+  //  private ArrayList matrixes;
+    //private ArrayList matrixesForSearch;
+
+    public void addMatrix(PositionScoreMatrix x){
+
+        System.out.println("before add");
+	    this.matrixes.add(x);
     }
+
+    public void removeMatrix(int x){
+	    this.matrixes.remove(x);
+    }
+
+    public ArrayList getMatrixes(){
+	    return this.matrixes;
+    }
+
+
+    public void addMatrixForSearch(PositionScoreMatrix x){
+        System.out.println("before add search");
+        this.matrixesForSearch.add(x);
+    }
+
+    public void removeMatrixForSearch(int x){
+        this.matrixesForSearch.remove(x);
+    }
+
+    public ArrayList getMatrixesforSearch(){
+        return this.matrixesForSearch;
+    }
+
 	/**
 	 * encapsulatie van de property change support
 	 * @param listener het element dat geinformeerd wil worden
