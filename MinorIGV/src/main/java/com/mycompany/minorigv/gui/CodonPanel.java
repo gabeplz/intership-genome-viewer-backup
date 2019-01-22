@@ -394,23 +394,45 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             int positie = (int)Math.ceil(X/pixel) + start;
 
             ArrayList<ORF> listORF = cont.getCurORFListBetween();
+            String bigMessage = ""; // Wanneer er meerdere ORFs zijn (op de geklikte plek) wordt de informatie van deze ORFs onder elkaar geplakt.
             if(listORF != null){
                 for(ORF o: listORF){
                     if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
-                        if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){         // Reading frame bepalen
-                            String message = getInformationORF((BlastedORF) o);
-                            popUp(message);
-                        }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
-                            String message = getInformationORF((BlastedORF) o);
-                            popUp(message);
-                        }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
-                            String message = getInformationORF((BlastedORF) o);
-                            popUp(message);
+                        if(strand.equals(Strand.POSITIVE)){
+                            if(Y >= 10 && Y <= 29 && o.getReadingframe() == 2){         // Reading frame bepalen
+                                String message = getInformationORF((BlastedORF) o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
+                                String message = getInformationORF((BlastedORF) o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 0){
+                                String message = getInformationORF((BlastedORF) o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }
+                        }else if(strand.equals(Strand.NEGATIVE)){
+                            if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){         // Reading frame bepalen
+                                String message = getInformationORF((BlastedORF) o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
+                                String message = getInformationORF((BlastedORF) o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
+                                String message = getInformationORF((BlastedORF) o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }
                         }
                     }
-
-
                 }
+                if(!bigMessage.equals("")){
+                    popUp(bigMessage);                    // Kan men uitzetten wanneer men per ORF een pop-up wilt.
+                }
+
             }
 
         }
@@ -422,7 +444,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         public void popUp(String message){
 
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, message);
+            JOptionPane.showMessageDialog(panel, message, "Hits BLAST ORF(s)", JOptionPane.INFORMATION_MESSAGE);
         }
 
         /**
@@ -433,7 +455,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         public String getInformationORF(BlastedORF orf){
 
             if(!orf.hasHit()){
-                return "No hits.";
+                return "No BLAST-hits.";
             }
 
             String hitID = orf.getBestHit().getHitId();
@@ -443,14 +465,21 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             String score = orf.getBestHsp().getHspScore();
             String evalue = orf.getBestHsp().getHspEvalue();
             String identity = orf.getBestHsp().getHspIdentity();
+            int startORF = orf.getStart();
+            int stopORF = orf.getStop();
+            int rfORF = orf.getReadingframe();
 
-            String message = "Hit id: " + hitID + "\n" +
-                    "Hit def: " + hitDef + "\n" +
-                    "Hit acc: " + hitAcc + "\n" +
-                    "Bit score: " + bitScore + "\n" +
-                    "Score: " + score + "\n" +
-                    "E-value: " + evalue + "\n" +
-                    "Identity: " + identity + "\n";
+            String message =
+                    "Hit id:    " + hitID + "\n" +
+                    "Hit def:    " + hitDef + "\n" +
+                    "Hit acc:    " + hitAcc + "\n" +
+                    "Bit score:    " + bitScore + "\n" +
+                    "Score:    " + score + "\n" +
+                    "E-value:    " + evalue + "\n" +
+                    "Identity:    " + identity + "\n"+
+                    "Start ORF:    " + startORF + "\n"+
+                    "Stop ORF:    " + stopORF + "\n"+
+                    "RF ORF:    " + rfORF + "\n";
 
             return message;
         }
