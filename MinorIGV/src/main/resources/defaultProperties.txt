@@ -5,3 +5,4 @@ saveORF=/NAS/minor-g1/application/output/ORF/
 saveBlastORF=/NAS/minor-g1/application/output/ORF/
 outputORF=/NAS/minor-g1/application/output/ORF/
 outputReads=/NAS/minor-g1/application/output/Reads/
+diamondDB=/NAS/minor-g3/diamond/nr.dmnd

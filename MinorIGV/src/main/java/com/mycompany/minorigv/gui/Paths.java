@@ -8,11 +8,13 @@ public enum Paths {
     SAVE_ORF("saveORF"),
     SAVE_BLAST_ORF("saveBlastORF"),
     OUTPUT_ORF("outputORF"),
-    OUTPUT_READS("outputReads");
+    OUTPUT_READS("outputReads"),
+    DIAMOND_DB("diamondDB");
 
     private final String text;
 
     /**
+     * Constructor.
      * @param text de tekst.
      */
     Paths(final String text) {

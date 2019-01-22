@@ -55,6 +55,14 @@ public class FindORF {
         return listORF;
     }
 
+    /**
+     * Genereren van de Stop voor de positieve en negatieve strand.
+     * @param sequenceLength        int: lengte van de sequentie
+     * @param stopCodonPosition     int: lengte van het gematchte deel.
+     * @param matchStart            int: positie van het startcodon
+     * @param strand                Strand: de strand (negatief of positief)
+     * @return
+     */
     public static int generateStop(int sequenceLength,int stopCodonPosition, int matchStart, Strand strand){
         // -1 : index laatste letter.   - 1: tot ipv t/m
         if (strand == Strand.NEGATIVE){
@@ -66,6 +74,14 @@ public class FindORF {
 
     }
 
+    /**
+     * Genereren van de Stop voor de positieve en negatieve strand.
+     * @param stop                  int: positie van het stopcodon.
+     * @param stopCodonPosition     int: lengte van het gematchte deel.
+     * @param matchStart            int: positie van het startcodon
+     * @param strand                Strand: de strand (negatief of positief)
+     * @return
+     */
     public static int generateStart(int stop, int stopCodonPosition,int matchStart, Strand strand){
         if (strand == Strand.NEGATIVE){
             return stop - stopCodonPosition;

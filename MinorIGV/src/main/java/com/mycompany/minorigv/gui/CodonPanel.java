@@ -206,6 +206,8 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
     }
 
     /**
+     * Selecteren van de kleur die meegeven moet worden aan het ORF op de visualisatie.
+     * 
      * @param strandORFs  een ArrayList met van 1 frame op 1 strand alle ORFs tussen de start en stop van de gebruiker
      * @param g           graphics object g.
      * @param indexRef    de index gemapt naar de referentie.
@@ -214,22 +216,22 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
      */
     public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
 
-        ArrayList<ORF> overlappende = new ArrayList<>();
+        ArrayList<ORF> overlappingBlastedORFs = new ArrayList<>();
 
         if(strandORFs != null){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
-                System.out.println(o);
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
                 if (indexRef <= stopORF && indexRef > startORF) {
                     colorFrames(g, indexRef, letter, "ORF",width, null);
-                    overlappende.add(o);
+                    overlappingBlastedORFs.add(o);
 
                 }
             }
-            if (!overlappende.isEmpty()) {
-                ORF temp = overlappende.get(0);
-                for (ORF o : overlappende) {
+            // Als er ORFs overlappen wordt de kleur van het kortste ORF gevisualiseerd.
+            if (!overlappingBlastedORFs.isEmpty()) {
+                ORF temp = overlappingBlastedORFs.get(0);
+                for (ORF o : overlappingBlastedORFs) {
                     if (temp.getLengthORF() > o.getLengthORF()) {
                         temp = o;
                     }
@@ -367,8 +369,17 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
     }
 
+    /**
+     * Checken op welk geblaste ORF de gebruiker klikt: visualiseren van de informatie van dat (geblaste)ORF.
+     *
+     * @author Anne van Ewijk en Amber Janssen Groesbeek
+     */
     class MyMouseListener extends MouseAdapter{
 
+        /**
+         * Bepalen waar de gebruiker klikt: welk reading frame en welk ORF.
+         * @param e
+         */
         public void mouseClicked(MouseEvent e){
             int X = e.getX();
             int Y = e.getY();
@@ -386,7 +397,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             if(listORF != null){
                 for(ORF o: listORF){
                     if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
-                        if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){
+                        if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){         // Reading frame bepalen
                             String message = getInformationORF((BlastedORF) o);
                             popUp(message);
                         }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
@@ -403,16 +414,26 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             }
 
         }
+
+        /**
+         * Maken van een popup window
+         * @param message   De tekst die gevisualiseerd moet worden in het window.
+         */
         public void popUp(String message){
 
             JPanel panel = new JPanel();
             JOptionPane.showMessageDialog(panel, message);
         }
 
+        /**
+         * Ophalen van de informatie van het geblaste ORF.
+         * @param orf   Object ORF die geselecteerd is door de gebruiker.
+         * @return      String die gevisualiseerd moet worden.
+         */
         public String getInformationORF(BlastedORF orf){
 
             if(!orf.hasHit()){
-                return "Jammeeerrrr.";
+                return "No hits.";
             }
 
             String hitID = orf.getBestHit().getHitId();

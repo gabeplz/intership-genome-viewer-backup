@@ -44,8 +44,8 @@ public class IGVMenuBar extends JMenuBar {
 
     ColorORFs colorORFs;
 
-    private ButtonGroup group;
-    private JRadioButton buttonAll, buttonBetween, buttonIdentity, buttonBitScore, buttonScore, buttonEvalue;
+    private ButtonGroup group, groupBlast;
+    private JRadioButton buttonAll, buttonBetween, buttonIdentity, buttonBitScore, buttonScore, buttonEvalue, buttonNCBI, buttonDiamond;
     private JFormattedTextField textField;
 
     public IGVMenuBar(Context context) {
@@ -121,11 +121,6 @@ public class IGVMenuBar extends JMenuBar {
 		File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
 		if(f.exists() && f.isDirectory()){
 			blast.setEnabled(true);
-//			if(!cont.getCurHeaderColor().isEmpty()){
-//			    showLegendButton.setEnabled(true);
-//            }else{
-//			    showLegendButton.setEnabled(false);
-//            }
 		}else{
 			blast.setEnabled(false);
 		}
@@ -409,6 +404,11 @@ public class IGVMenuBar extends JMenuBar {
         cont.setCurORFListALL(lenghtORF);
     }
 
+    /**
+     * Het maken van een pop-up window zodra BLAST wordt geselecteerd. Hierin heeft de gebruiker de optie om alle ORFs van het chromosoom/contig
+     * te blasten of tussen bepaalde posities de ORFs te blasten. Daarnaast kan de gebruiker aangeven op welke eigenschappen de geblaste ORFs
+     * worden gekleurd (Identity, E-value, Bit score en Score).
+     */
     private void blastAction() {
         JPanel panel = popupWindow();
 
@@ -425,6 +425,9 @@ public class IGVMenuBar extends JMenuBar {
 
         JPanel panelForColor = new JPanel();
 
+        JPanel panelForBlast = new JPanel();
+
+        // Opties voor de kleuring van de geblaste ORFs.
         group = new ButtonGroup();
         buttonIdentity = new JRadioButton("Identity");
         buttonIdentity.setSelected(true);
@@ -442,13 +445,25 @@ public class IGVMenuBar extends JMenuBar {
         panelForColor.add(buttonScore);
         panelForColor.add(buttonEvalue);
 
+        groupBlast = new ButtonGroup();
+        buttonNCBI = new JRadioButton("NCBI BLAST");
+        buttonNCBI.setSelected(true);
+        buttonDiamond = new JRadioButton("Diamond BLAST");
+
+        groupBlast.add(buttonNCBI);
+        groupBlast.add(buttonDiamond);
+
+        panelForBlast.add(buttonNCBI);
+        panelForBlast.add(buttonDiamond);
+
         panelForColor.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Color"));
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "ORF Settings"));
-
+        panelForBlast.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "BLAST"));
 
         // Er wordt een frame aangemaakt.
         JFrame f = new JFrame();
         f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
+        f.getContentPane().add(panelForBlast);
         f.getContentPane().add(panel);
         f.getContentPane().add(panelForColor);
         f.getContentPane().add(panelForButton);
@@ -495,8 +510,6 @@ public class IGVMenuBar extends JMenuBar {
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());
         // Zoeken van de ORFs
         cont.setCurORFListALL(lengthORFUser);
-		// Kijkt welke Radio Button is aangeklikt.
-		Boolean m = buttonAll.isSelected();
 
 		//buttonIdentity, buttonBitScore, buttonScore, buttonEvalue;
         if(buttonIdentity.isSelected()){
@@ -511,27 +524,43 @@ public class IGVMenuBar extends JMenuBar {
 
 
 		BlastORF blastOrf = new BlastORF(cont);
-
-        if(m){
+        // Als de optie All is geselecteerd.
+        if(buttonAll.isSelected()){
 			String partOutputName = "_A_" + lengthORFUser+ ".xml";
-			String blastXMLFile = blastORF.callBlast(cont.getCurORFListALL(), partOutputName);
-            blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
-
+			if(buttonNCBI.isSelected()){
+                String blastXMLFile = blastORF.callBlastNCBI(cont.getCurORFListALL(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }else{
+                String blastXMLFile = blastORF.callBlastDiamond(cont.getCurORFListALL(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }
 		}else{
 			String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
-            String blastXMLFile = blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
-            blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+			if(buttonNCBI.isSelected()){
+                String blastXMLFile = blastORF.callBlastNCBI(cont.getCurORFListBetween(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }else{
+                String blastXMLFile = blastORF.callBlastDiamond(cont.getCurORFListBetween(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }
+
 		}
 
         blastIsParsedAction();
 
     }
 
+    /**
+     * Als er Blast resultaten zijn worden de legenda en tabel opties in het menu enabled.
+     */
     private void blastIsParsedAction() {
 	    this.showTabelButton.setEnabled(true);
 	    this.showLegendButton.setEnabled(true);
     }
 
+    /**
+     * Pop-up window zodra er op de show legend optie wordt geklikt.
+     */
     private void showLegendAction(){
 	    JFrame window = new JFrame();
 	    window.add(new ColorORFs(cont));
@@ -540,7 +569,10 @@ public class IGVMenuBar extends JMenuBar {
 	    window.setVisible(true);
     }
 
-
+    /**
+     * Maken van de pop-up window voor de BLAST en save ORF.
+     * @return
+     */
     private JPanel popupWindow(){
         // Radio Button wordt aangemaakt.
         buttonAll = new JRadioButton("All",true);
@@ -571,8 +603,10 @@ public class IGVMenuBar extends JMenuBar {
         PopUpFrame popup = new PopUpFrame(cont);
     }
 
-    // Action performed voor het choose Feature menu
-    // Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
+    /**
+     * Action performed voor het choose Feature menu
+     * Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
+     */
     private void genesAction() {
         Boolean m = genes.isSelected();
         if (m == true) {

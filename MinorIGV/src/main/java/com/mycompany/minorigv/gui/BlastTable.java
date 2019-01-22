@@ -32,7 +32,6 @@ public class BlastTable extends JFrame {
         super("blast tabel");
         this.cont = cont;
         setMinimumSize(new Dimension(500, 500));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(new JScrollPane(makeTable()));
         this.pack();
         this.setVisible(true);
@@ -158,32 +157,6 @@ public class BlastTable extends JFrame {
         JTable table = new JTable(model);
 
         iterationFrame.add(table);
-
-
-    }
-
-
-    /**
-     * Loze main voor testing
-     * @param args args
-     */
-    public static void main(String[] args) {
-
-        BLAST blast = new BLAST();
-
-        BlastOutput bo = null;
-        try {
-            bo = blast.parseXML("/NAS/minor-g1/application/output/ORF/GCF_000300575.1_B_2_0-100.xml");
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
     }
 

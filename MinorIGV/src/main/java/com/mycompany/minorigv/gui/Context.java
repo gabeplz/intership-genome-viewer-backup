@@ -481,7 +481,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 	/**
-	 *
 	 * @return een ArrayList met ORFs tussen een bepaalde start en stop.
 	 */
 	public ArrayList<ORF> getCurORFListBetween() {
@@ -504,11 +503,17 @@ public class Context implements Serializable, PropertyChangeListener {
 		return curChromosome.getListORF();
 	}
 
-
+	/**
+	 * Naam van het fasta file setten (input .fna file)
+	 * @param nameFastaFile
+	 */
 	public void setFastFileName(String nameFastaFile){
 		this.nameFastaFile = nameFastaFile;
 	}
 
+	/**
+	 * @return Naam van het .fna (input) file.
+	 */
 	public String getNameFasta(){
 		return nameFastaFile;
 	}
@@ -520,9 +525,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	public void setBlastOutput(BlastOutput blastOutput) {
 		this.blastOutput = blastOutput;
 	}
-
-
-
 
 	/**
 	 * Wegschrijven ORFs in fasta bestand.
