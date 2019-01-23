@@ -5,6 +5,11 @@ import com.mycompany.minorigv.blast.Hsp;
 import com.mycompany.minorigv.blast.Iteration;
 import com.mycompany.minorigv.sequence.Strand;
 
+/**
+ * Maken van het BlastedORF object.
+ *
+ * @author Anne van Ewijk en kahuub
+ */
 public class BlastedORF extends ORF {
 
     private Iteration iter;
@@ -26,16 +31,29 @@ public class BlastedORF extends ORF {
         this.iter = iter;
     }
 
+    /**
+     * Constructor
+     * @param o     ORF object
+     * @param iter  Iteration object
+     */
     public BlastedORF(ORF o, Iteration iter){
         super(o.getStart(),o.getStop(),o.getReadingframe(),o.getIdORF(),o.getStrand(),o.getLengthORF(),o.getChromosomeID());
         this.iter = iter;
 
     }
 
+    /**
+     * True als er hits zijn van het ORF
+     * @return  boolean.
+     */
     public boolean hasHit(){
         return iter.getIterationHits().getHit().size() > 0;
     }
 
+    /**
+     * Ophalen van de beste hit van een ORF
+     * @return  Object Hit
+     */
     public Hit getBestHit(){
         if(hasHit()) {
             return iter.getIterationHits().getHit().get(0);
@@ -43,6 +61,10 @@ public class BlastedORF extends ORF {
         return null;
     }
 
+    /**
+     * Ophalen van de beste Hsps van de beste hit.
+     * @return  Object Hsp
+     */
     public Hsp getBestHsp(){
         if (hasHit()){
             return getBestHit().getHitHsps().getHsp().get(0);
