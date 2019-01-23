@@ -5,6 +5,7 @@ import com.mycompany.minorigv.blast.BLAST;
 import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.blast.Choices;
 import com.mycompany.minorigv.blast.ColorORFs;
+import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 import org.xml.sax.SAXException;
@@ -271,8 +272,8 @@ public class IGVMenuBar extends JMenuBar {
         reads = new JMenu("Reads");
 
         //Sub items voor Files
-        load_reads = new JMenuItem("Load reads");
-        blast_reads = new JMenuItem("Blast reads");
+        load_reads = new JMenuItem("Blast against reference");
+        blast_reads = new JMenuItem("Read coverage file");
 
 
         load_reads.addActionListener(new ActionListener() {
@@ -286,7 +287,7 @@ public class IGVMenuBar extends JMenuBar {
         blast_reads.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                blasReadsAction();
+                blastReadsAction();
             }
         });
 
@@ -329,7 +330,7 @@ public class IGVMenuBar extends JMenuBar {
             FastaFileChooser fasta = new FastaFileChooser();
             String path = fasta.fastafile();
 
-            cont.setCurrentReads(path);
+            cont.readReads(path);
 
         }catch (Exception e){}
     }
@@ -628,14 +629,37 @@ public class IGVMenuBar extends JMenuBar {
 
     private void loadReadsAction() {
 
+	    JOptionPane.showMessageDialog(null,"kies een fastq");
 	    FastaFileChooser ffc = new FastaFileChooser();
-	    String readFile = ffc.fastafile();
+	    String fastqFile = ffc.fastafile();
 
-	    cont.setCurrentReads(readFile);
+        JOptionPane.showMessageDialog(null,"kies een reference genome");
+        ffc = new FastaFileChooser();
+        String genomeFile = ffc.fastafile();
+
+
+        try {
+            cont.blastAgainstReference(fastqFile,genomeFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidFileTypeException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
-    private void blasReadsAction() {
+    private void blastReadsAction() {
+
+        JOptionPane.showMessageDialog(null,"kies de geblaste fastq csv");
+        FastaFileChooser ffc = new FastaFileChooser();
+        String path = ffc.fastafile();
+
+        try {
+            cont.parseBlastedReads(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
