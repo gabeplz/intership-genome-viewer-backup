@@ -44,7 +44,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      * function building the Genomepanel in the application
      */
     public void init() {
-        this.setBackground(Color.CYAN);
+        this.setBackground(Color.GRAY);
         this.setLayout(new FlowLayout());
         this.setPreferredSize(new Dimension(200, 50));
         makeTextAreas();

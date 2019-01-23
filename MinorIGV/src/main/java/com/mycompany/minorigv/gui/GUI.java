@@ -44,8 +44,8 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 760, 710);
-		frame.setMinimumSize(new Dimension(760,710));
+		frame.setBounds(100, 100, 900, 710);
+		frame.setMinimumSize(new Dimension(900,710));
 		frame.setBounds(100, 100, 760, 480);
 		frame.setMinimumSize(new Dimension(760,480));
 

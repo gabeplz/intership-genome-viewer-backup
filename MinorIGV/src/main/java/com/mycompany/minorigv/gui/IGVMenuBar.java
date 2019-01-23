@@ -565,7 +565,6 @@ public class IGVMenuBar extends JMenuBar {
 	    JFrame window = new JFrame();
 	    window.add(new ColorORFs(cont));
 	    window.pack();
-	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    window.setVisible(true);
     }
 
