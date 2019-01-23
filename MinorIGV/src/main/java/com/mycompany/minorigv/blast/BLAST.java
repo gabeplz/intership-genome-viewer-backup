@@ -187,7 +187,8 @@ public class BLAST {
                     "-evalue", "1e-5",
                     "-outfmt","10 qacc sacc sstart send",
                     "-max_target_seqs", "1",
-                    "-out", output
+                    "-out", output,
+                    "-max_hsps" ,"1"
 
             };
 
