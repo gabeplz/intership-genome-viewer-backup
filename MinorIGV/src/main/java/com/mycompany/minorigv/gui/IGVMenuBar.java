@@ -41,7 +41,6 @@ public class IGVMenuBar extends JMenuBar {
 		featureMenu();
         condonTableMenu();
         motifSearchMenu();
-        motifSearchMenu2();
 	}
 
 	/**
@@ -318,23 +317,11 @@ public class IGVMenuBar extends JMenuBar {
 		return item;
 	}
 
-    public void motifSearchMenu(){
-	    JMenu motifSearchMenu = new JMenu("motif search");
-        JTextField searchbar = new JTextField(20);
-        searchbar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cont.setRegexPattern(searchbar.getText());
-                cont.setMotifMap(cont.getRegexPattern(), cont.getSubSequentie());
-            }
-        });
-        motifSearchMenu.add(searchbar);
-	    add(motifSearchMenu);
-    }
-
-
-    public void motifSearchMenu2() {
-        JMenu motifSearchMenu = new JMenu("True motif search");
+    /**
+     * maakt de motif search menu knop. maakt ook de nieuwe frame en set de context voor de frame
+     */
+    public void motifSearchMenu() {
+        JMenu motifSearchMenu = new JMenu("motif search");
         JMenuItem matrixFrame = new JMenuItem("input sequences");
         matrixFrame.addActionListener(new ActionListener() {
             @Override

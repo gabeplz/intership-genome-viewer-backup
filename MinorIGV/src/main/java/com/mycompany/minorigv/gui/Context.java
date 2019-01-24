@@ -27,14 +27,6 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private CodonTable currentCodonTable;
 
-	private String regexPattern;
-
-	private ArrayList<HashMap<String, Double>> scoreMatrix;
-
-	private TreeMap currentMotifMapForward;
-	private TreeMap currentMotifMapReverse;
-	private boolean mustDrawMotif;
-
 	private Feature[] currentFeatureList;
 	private int featStart;
 	private int featStop;
@@ -389,36 +381,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		pcs.firePropertyChange("CodonTable", oldValue, currentCodonTable);
 	}
 
-	public String getRegexPattern() {
-		return regexPattern;
-	}
-
-	public void setRegexPattern(String pattern) {
-		String oldValue = this.regexPattern;
-		this.regexPattern = pattern;
-		System.out.println("pattern in context changed");
-		pcs.firePropertyChange("regexPattern", oldValue, regexPattern);
-	}
-
-	public void setMotifMap(String sPattern, String sequence){
-		boolean x = Motif.checkCompile(sPattern);
-		if (x == true) {
-			TreeMap oldValue = this.currentMotifMapForward;
-			this.currentMotifMapForward = Motif.buildMotifMapForward(sPattern, sequence);
-			this.currentMotifMapReverse = Motif.buildMotifMapReverse(sPattern, sequence);
-			System.out.println("setMotive klaar");
-			pcs.firePropertyChange("motif", oldValue, currentMotifMapForward);
-        } else { }
-	}
-
-    //update matrixes on add and remove
-    // update matrixesForSearch; on search
-  //  private ArrayList matrixes;
-    //private ArrayList matrixesForSearch;
-
     public void addMatrix(PositionScoreMatrix x){
-
-        System.out.println("before add");
 	    this.matrixes.add(x);
     }
 
@@ -430,14 +393,12 @@ public class Context implements Serializable, PropertyChangeListener {
 	    return this.matrixes;
     }
 
-
     public void addMatrixForSearch(PositionScoreMatrix x){
-        System.out.println("before add search");
         this.matrixesForSearch.add(x);
     }
 
-    public void removeMatrixForSearch(int x){
-        this.matrixesForSearch.remove(x);
+    public void removeAllMatrixForSearch(){
+        this.matrixesForSearch.clear();
     }
 
     public ArrayList getMatrixesforSearch(){

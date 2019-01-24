@@ -7,9 +7,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+/**
+ * deze class bevat een frame waarin data word geplaatst door de gebruiker om matrixen te generen en selecteren voor
+ * verdere handelingen
+ */
 public class MotifFrame extends Frame {
     private Context cont;
-
+/**
+ * bouwt de frame en zet de funties van de knoppen
+ */
     public MotifFrame(ArrayList<PositionScoreMatrix> startUpContextMatrixList) {
         JFrame frame2 = new JFrame();
 
@@ -57,17 +63,16 @@ public class MotifFrame extends Frame {
             }
         }
 
-        matrixButton.addActionListener(new ActionListener() {
+        matrixButton.addActionListener(new ActionListener() {       //neemt de input data. bouwd een matrix. voegt item toe aan de list(via maodel)
             @Override
             public void actionPerformed(ActionEvent e) {
-                cont.setRegexPattern(sequenceArea.getText());
-                cont.addMatrix(PositionScoreMatrix.buildMatrix(cont.getRegexPattern(), matrixNameField.getText()));
+                cont.addMatrix(PositionScoreMatrix.buildMatrix(sequenceArea.getText(), matrixNameField.getText()));
                 ArrayList<PositionScoreMatrix> contextMatrixList = cont.getMatrixes();
                 model.addElement(contextMatrixList.get(contextMatrixList.size()-1).getName());
             }
         });
 
-        deleteButton.addActionListener(new ActionListener() {
+        deleteButton.addActionListener(new ActionListener() { // removes matrix from the list and context
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] selectedItems = matrixesBuildList.getSelectedIndices();
@@ -78,11 +83,12 @@ public class MotifFrame extends Frame {
             }
         });
 
-        searchButton.addActionListener(new ActionListener() {
+        searchButton.addActionListener(new ActionListener() { //clears de matrixesForSearch in context. voegd de huidig geselecteerde toe. start de motif search
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] selectedItems = matrixesBuildList.getSelectedIndices();
                 ArrayList<PositionScoreMatrix> contextMatrixList = cont.getMatrixes();
+                cont.removeAllMatrixForSearch();
                 for(int i=0; i < selectedItems.length ;i++) {
                     cont.addMatrixForSearch(contextMatrixList.get(selectedItems[i]));
                 }
@@ -108,6 +114,10 @@ public class MotifFrame extends Frame {
         frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
+    /**
+     * sets context
+     * @param cont
+     */
     public void setContext(Context cont) {
         this.cont = cont;
     }
