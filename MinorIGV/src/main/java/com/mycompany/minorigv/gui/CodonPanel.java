@@ -218,12 +218,16 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
         ArrayList<ORF> overlappingBlastedORFs = new ArrayList<>();
 
-        if(strandORFs != null){ //als uberhaubt ORF's.
+        if(strandORFs != null && strandORFs.size() > 0 ){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
                 if (indexRef <= stopORF && indexRef > startORF) {
-                    colorFrames(g, indexRef, letter, "ORF",width, null);
+
+                    if(!(o instanceof BlastedORF)) {
+                        colorFrames(g, indexRef, letter, "ORF", width, null);
+                        return;
+                    }
                     overlappingBlastedORFs.add(o);
 
                 }
@@ -243,7 +247,9 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             }
 
         }
+
         colorFrames(g, indexRef, letter, "-", width, null);
+
     }
 
     /**
@@ -386,12 +392,13 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
             // Ophalen breedte van scherm
             double widthPanel = (double) dim.getWidth();
+
             // Ophalen aantal nucleotide
             double length = cont.getLength();
             int start = cont.getStart();
 
-            double pixel = widthPanel/length;
-            int positie = (int)Math.ceil(X/pixel) + start;
+            int positie = (int) ((double)(X - 12) / ((widthPanel-24) / (length-1))); //inverse functie Drawingtools.calculateLetterPosition();
+            positie += start;
 
             ArrayList<ORF> listORF = cont.getCurORFListBetween();
             String bigMessage = ""; // Wanneer er meerdere ORFs zijn (op de geklikte plek) wordt de informatie van deze ORFs onder elkaar geplakt.
@@ -400,29 +407,29 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                     if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
                         if(strand.equals(Strand.POSITIVE)){
                             if(Y >= 10 && Y <= 29 && o.getReadingframe() == 2){         // Reading frame bepalen
-                                String message = getInformationORF((BlastedORF) o);
+                                String message = getInformationORF(o);
                                 bigMessage = bigMessage  + message + "\n\n\n";
                                 //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
                             }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
-                                String message = getInformationORF((BlastedORF) o);
+                                String message = getInformationORF(o);
                                 bigMessage = bigMessage  + message + "\n\n\n";
                                 //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
                             }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 0){
-                                String message = getInformationORF((BlastedORF) o);
+                                String message = getInformationORF( o);
                                 bigMessage = bigMessage  + message + "\n\n\n";
                                 //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
                             }
                         }else if(strand.equals(Strand.NEGATIVE)){
                             if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){         // Reading frame bepalen
-                                String message = getInformationORF((BlastedORF) o);
+                                String message = getInformationORF(o);
                                 bigMessage = bigMessage  + message + "\n\n\n";
                                 //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
                             }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
-                                String message = getInformationORF((BlastedORF) o);
+                                String message = getInformationORF(o);
                                 bigMessage = bigMessage  + message + "\n\n\n";
                                 //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
                             }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
-                                String message = getInformationORF((BlastedORF) o);
+                                String message = getInformationORF(o);
                                 bigMessage = bigMessage  + message + "\n\n\n";
                                 //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
                             }
@@ -443,8 +450,17 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
          */
         public void popUp(String message){
 
-            JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, message, "Hits BLAST ORF(s)", JOptionPane.INFORMATION_MESSAGE);
+            JTextArea textVeld = new JTextArea(message);
+            textVeld.setText(message);
+            textVeld.setEditable(false);
+
+            JScrollPane scroller = new JScrollPane(textVeld);
+
+            scroller.setPreferredSize(new Dimension(400,400));
+            textVeld.setCaretPosition(0);
+            JOptionPane.showMessageDialog(null, scroller, "Hits BLAST ORF(s)", JOptionPane.INFORMATION_MESSAGE);
+
+            System.out.println(textVeld.getText());
         }
 
         /**
@@ -452,22 +468,34 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
          * @param orf   Object ORF die geselecteerd is door de gebruiker.
          * @return      String die gevisualiseerd moet worden.
          */
-        public String getInformationORF(BlastedORF orf){
+        public String getInformationORF(ORF orf){
 
-            if(!orf.hasHit()){
-                return "No BLAST-hits.";
-            }
-
-            String hitID = orf.getBestHit().getHitId();
-            String hitDef = orf.getBestHit().getHitDef();
-            String hitAcc = orf.getBestHit().getHitAccession();
-            String bitScore = orf.getBestHsp().getHspBitScore();
-            String score = orf.getBestHsp().getHspScore();
-            String evalue = orf.getBestHsp().getHspEvalue();
-            String identity = orf.getBestHsp().getHspIdentity();
             int startORF = orf.getStart();
             int stopORF = orf.getStop();
             int rfORF = orf.getReadingframe();
+            if(!(orf instanceof BlastedORF)){
+
+                String message = "Start ORF: " + startORF + System.lineSeparator() +
+                                 "Stop ORF: "  + stopORF  + System.lineSeparator() +
+                                 "RF ORF: "    + rfORF    + System.lineSeparator();
+                return message;
+            }
+
+            BlastedORF blastedOrf = (BlastedORF) orf;
+
+
+            if(!blastedOrf.hasHit()){
+                return "No BLAST-hits.";
+            }
+
+            String hitID = blastedOrf.getBestHit().getHitId();
+            String hitDef = blastedOrf.getBestHit().getHitDef();
+            String hitAcc = blastedOrf.getBestHit().getHitAccession();
+            String bitScore = blastedOrf.getBestHsp().getHspBitScore();
+            String score = blastedOrf.getBestHsp().getHspScore();
+            String evalue = blastedOrf.getBestHsp().getHspEvalue();
+            String identity = blastedOrf.getBestHsp().getHspIdentity();
+
 
             String message =
                     "Hit id:    " + hitID + "\n" +
