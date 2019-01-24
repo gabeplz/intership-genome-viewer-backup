@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gui;
 
 
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -62,14 +61,18 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private BlastOutput blastOutput;
 
+	GUI gui;
+
 
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	/**
 	 * constructor voor Context ten behoeve van uitbreidbaarheid.
-	 */
-	public Context(){
+     * @param gui
+     */
+	public Context(GUI gui){
+	    this.gui = gui;
 		this.addPropertyChangeListener(this);
 		this.choiceUser = new ArrayList<String>();
 		this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
@@ -609,7 +612,15 @@ public class Context implements Serializable, PropertyChangeListener {
 
     }
 
-    /**
+	public ReadCoverage getReadCoverage() {
+		return readCoverage;
+	}
+
+	public void setReadCoverage(ReadCoverage readCoverage) {
+		this.readCoverage = readCoverage;
+	}
+
+	/**
      * Functie voor het parsen van blastreads tot depth arrays
      * @param path path van de blast file.
      * @throws IOException IOException
@@ -618,10 +629,16 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	    this.readCoverage = new ReadCoverage(this.organism);
 	    readCoverage.parseBlastCSV(path);
+	    gui.organism.add(new GraphPanel(this));
 
-//        for (String key: organism.getChromosomes().keySet()) {
-//            System.out.println(Arrays.toString(readCoverage.getCoverageBetween(key,0,10000)));
-//
-//        }
     }
+
+	public int[] getCurrentReadCoverage() {
+
+        if (readCoverage != null){
+            return readCoverage.getCoverageBetween(curChromosome.getId(),start,stop);
+        }
+        return null;
+
+	}
 }

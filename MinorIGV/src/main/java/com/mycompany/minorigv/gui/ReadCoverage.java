@@ -99,6 +99,9 @@ public class ReadCoverage {
      */
     public int[] getCoverageBetween(String chrID, int startIndex, int endIndex){
 
+        if (coverageMap == null){
+            return null;
+        }
         return Arrays.copyOfRange(coverageMap.get(chrID), startIndex, endIndex);
 
     }

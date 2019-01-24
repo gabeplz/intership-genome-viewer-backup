@@ -15,6 +15,7 @@ public class GUI {
 
 	private JFrame frame;
 	private Context context;
+	public OrganismPanel organism;
 
 	/**
 	 * Launch the application.
@@ -49,7 +50,7 @@ public class GUI {
 		frame.setBounds(100, 100, 760, 480);
 		frame.setMinimumSize(new Dimension(760,480));
 
-        context = new Context();
+        context = new Context(this);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -85,7 +86,7 @@ public class GUI {
         gbcOrganism.gridy = 2;
         gbcOrganism.weighty = 1.0;
 
-		OrganismPanel organism = new OrganismPanel(context);
+        organism = new OrganismPanel(context);
 
 		organism.init();
 
