@@ -18,6 +18,8 @@ import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
+import com.mycompany.minorigv.gffparser.*;
+import com.mycompany.minorigv.motif.PositionScoreMatrix;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 import com.mycompany.minorigv.sequence.Strand;
@@ -53,6 +55,10 @@ public class Context implements Serializable, PropertyChangeListener {
 	private ArrayList<String> choiceUser;
 	private HashMap<String,String> fastaMap = new HashMap<>();
 	private String nameFastaFile;
+
+	private ArrayList<PositionScoreMatrix> matrixes = new ArrayList<PositionScoreMatrix>();
+	private ArrayList<PositionScoreMatrix> matrixesForSearch = new ArrayList<PositionScoreMatrix>();
+
 
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
@@ -234,7 +240,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		//er is al een gff ingelezen & niet een fasta.
 		else if (curChromosome.getFeatures().size() > 0 && curChromosome.getSeqTemp() == null) {
-			this.setOrganism(new Organisms());
+		    this.setOrganism(new Organisms());
 		}
 		//er is geen gff ingelezen maar wel al een fasta.
 		else if (curChromosome.getFeatures().size() == 0 && curChromosome.getSeqTemp() != null) {
@@ -424,6 +430,30 @@ public class Context implements Serializable, PropertyChangeListener {
 
     }
 
+    public void addMatrix(PositionScoreMatrix x){
+	    this.matrixes.add(x);
+    }
+
+    public void removeMatrix(int x){
+	    this.matrixes.remove(x);
+    }
+
+    public ArrayList getMatrixes(){
+	    return this.matrixes;
+    }
+
+    public void addMatrixForSearch(PositionScoreMatrix x){
+        this.matrixesForSearch.add(x);
+    }
+
+    public void removeAllMatrixForSearch(){
+        this.matrixesForSearch.clear();
+    }
+
+    public ArrayList getMatrixesforSearch(){
+        return this.matrixesForSearch;
+    }
+
 	/**
 	 * encapsulatie van de property change support
 	 * @param listener het element dat geinformeerd wil worden
@@ -471,20 +501,20 @@ public class Context implements Serializable, PropertyChangeListener {
 		)
 		{this.setChromosomeNames();}
 		if(name.equals("range")){
-			this.updateCurrentFeatureList();
-		}
+		    this.updateCurrentFeatureList();
+        }
 
 	}
 
 	public String getSequentie() {
-		return curChromosome.getSeqTemp();
+	    return curChromosome.getSeqTemp();
 	}
 
 	/**
 	 * @return een ArrayList met ORFs tussen een bepaalde start en stop.
 	 */
 	public ArrayList<ORF> getCurORFListBetween() {
-		return curChromosome.getORFsBetween(start, stop);
+	    return curChromosome.getORFsBetween(start, stop);
 	}
 
 	/**
