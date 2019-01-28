@@ -397,7 +397,8 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             double length = cont.getLength();
             int start = cont.getStart();
 
-            int positie = (int) ((double)(X - 12) / ((widthPanel-24) / (length-1))); //inverse functie Drawingtools.calculateLetterPosition();
+            //int positie = (int) ((double)(X - 12) / ((widthPanel-24) / (length-1)));
+            int positie = (int) DrawingTools.calculatePixelPosition(X, widthPanel, length, start); //inverse functie Drawingtools.calculateLetterPosition();
             positie += start;
 
             ArrayList<ORF> listORF = cont.getCurORFListBetween();
