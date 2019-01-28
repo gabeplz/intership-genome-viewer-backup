@@ -72,7 +72,7 @@ public class IGVMenuBar extends JMenuBar {
      */
     public void menus() {
         //Eerst menu item Files
-        files = new JMenu("files");
+        files = new JMenu("Files");
 
         //Sub items voor Files
         openRef = new JMenuItem("Load reference");

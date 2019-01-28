@@ -498,16 +498,16 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
 
             String message =
-                    "Hit id:    " + hitID + "\n" +
-                    "Hit def:    " + hitDef + "\n" +
-                    "Hit acc:    " + hitAcc + "\n" +
-                    "Bit score:    " + bitScore + "\n" +
-                    "Score:    " + score + "\n" +
-                    "E-value:    " + evalue + "\n" +
-                    "Identity:    " + identity + "\n"+
-                    "Start ORF:    " + startORF + "\n"+
-                    "Stop ORF:    " + stopORF + "\n"+
-                    "RF ORF:    " + rfORF + "\n";
+                    "Hit id:\t" + hitID + "\n" +
+                    "Hit def:\t" + hitDef + "\n" +
+                    "Hit acc:\t" + hitAcc + "\n" +
+                    "Bit score:\t" + bitScore + "\n" +
+                    "Score:\t" + score + "\n" +
+                    "E-value:\t" + evalue + "\n" +
+                    "Identity:\t" + identity + "\n"+
+                    "Start ORF:\t" + startORF + "\n"+
+                    "Stop ORF:\t" + stopORF + "\n"+
+                    "RF ORF:\t" + rfORF + "\n";
 
             return message;
         }
