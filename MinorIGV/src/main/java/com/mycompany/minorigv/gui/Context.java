@@ -1,7 +1,6 @@
 package com.mycompany.minorigv.gui;
 
 
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -9,6 +8,7 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.blast.BLAST;
 import com.mycompany.minorigv.blast.BlastOutput;
 import com.mycompany.minorigv.fastqparser.FastqReader;
 import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
@@ -43,6 +43,8 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private CodonTable currentCodonTable;
 
+	private ReadCoverage readCoverage;
+
     private ArrayList<Read> currentReads;
 
 	private Feature[] currentFeatureList;
@@ -65,14 +67,18 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private BlastOutput blastOutput;
 
+	GUI gui;
+
 
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	/**
 	 * constructor voor Context ten behoeve van uitbreidbaarheid.
-	 */
-	public Context(){
+     * @param gui
+     */
+	public Context(GUI gui){
+	    this.gui = gui;
 		this.addPropertyChangeListener(this);
 		this.choiceUser = new ArrayList<String>();
 		this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
@@ -416,12 +422,17 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public ArrayList<Read> getCurrentReads() { return currentReads; }
 
-	public void setCurrentReads(String path){
-	    ArrayList<Read> oldValue = this.currentReads;
+	public void setCurrentReads(ArrayList<Read> readArrayList) {
+		this.currentReads = readArrayList;
+	}
+	
+	public void readReads(String path){
+
         FastqReader reader = new FastqReader();
         try {
-            this.currentReads = reader.parse(path);
-			pcs.firePropertyChange("Reads", oldValue, currentReads);
+        	String pathOut = path + ".fasta";
+            reader.convertToFasta(path,pathOut);
+			pcs.firePropertyChange("Reads", null, currentReads);
         } catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "IOE error. something went wrong while reading the file. check if: the file isn't corrupted, your user account has access rigts, each contig in the file is sepperated by enters onto 4 lines.");
         } catch (InvalidFileTypeException e){
@@ -591,4 +602,73 @@ public class Context implements Serializable, PropertyChangeListener {
 		writerAA.close();
 	}
 
+    /**
+     * Functie voor het blasten tegen een referentie regelen.
+     * @param fastqFile de fastQfile die naar fasta moet en dan gebruikt
+     * @param genomeFile file van het genoom, al in fasta.
+     * @throws IOException IOException
+     * @throws InvalidFileTypeException InvalidFileTypeException
+     */
+    public void blastAgainstReference(String fastqFile, String genomeFile) throws IOException, InvalidFileTypeException {
+
+
+	    FastqReader fastqReader = new FastqReader();
+	    String fastqOutputPath = getPath(Paths.OUTPUT_READS) + "readsTemp.fna";
+	    fastqReader.convertToFasta(fastqFile,fastqOutputPath);
+
+	    String blastDBOutputPath = getPath(Paths.OUTPUT_READS) + "refGenome";
+
+        BLAST.makeBlastDB(genomeFile,blastDBOutputPath);
+
+        String temp = new File(fastqFile).getName();
+        int pos = temp.lastIndexOf(".");
+        if (pos > 0) {
+            temp = temp.substring(0, pos);
+        }
+
+        temp += "_";
+
+        temp += new File(blastDBOutputPath).getName();
+        pos = temp.lastIndexOf(".");
+        if (pos > 0) {
+            temp = temp.substring(0, pos); //hackish naam genereren.
+        }
+        temp += ".csv";
+
+        String blastResultName = getPath(Paths.OUTPUT_READS) + temp;
+
+        System.out.println(blastResultName);
+        BLAST.runBLASTAgainstReference(fastqOutputPath,blastResultName,"blastn",blastDBOutputPath);
+
+    }
+
+	public ReadCoverage getReadCoverage() {
+		return readCoverage;
+	}
+
+	public void setReadCoverage(ReadCoverage readCoverage) {
+		this.readCoverage = readCoverage;
+	}
+
+	/**
+     * Functie voor het parsen van blastreads tot depth arrays
+     * @param path path van de blast file.
+     * @throws IOException IOException
+     */
+    public void parseBlastedReads(String path) throws IOException {
+
+	    this.readCoverage = new ReadCoverage(this.organism);
+	    readCoverage.parseBlastCSV(path);
+	    gui.organism.add(new GraphPanel(this));
+
+    }
+
+	public int[] getCurrentReadCoverage() {
+
+        if (readCoverage != null){
+            return readCoverage.getCoverageBetween(curChromosome.getId(),start,stop);
+        }
+        return null;
+
+	}
 }

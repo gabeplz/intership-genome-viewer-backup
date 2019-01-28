@@ -5,6 +5,7 @@ import com.mycompany.minorigv.blast.BLAST;
 import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.blast.Choices;
 import com.mycompany.minorigv.blast.ColorORFs;
+import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.motif.MotifFrame;
 import com.mycompany.minorigv.motif.PositionScoreMatrix;
 import com.mycompany.minorigv.sequence.CodonTable;
@@ -38,7 +39,7 @@ public class IGVMenuBar extends JMenuBar {
     JMenu files, tools, features, reads;
 
     // Defineer de menu items die zelf niet sub items zullen bevatten.
-    JMenuItem openRef, openData, openReads, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton,showTabelButton ;
+    JMenuItem openRef, openData, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton,showTabelButton ;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
@@ -73,12 +74,11 @@ public class IGVMenuBar extends JMenuBar {
      */
     public void menus() {
         //Eerst menu item Files
-        files = new JMenu("files");
+        files = new JMenu("Files");
 
         //Sub items voor Files
         openRef = new JMenuItem("Load reference");
         openData = new JMenuItem("Load GFF");
-        openReads = new JMenuItem("Load Reads");
 
         //Action listeners voor de sub items van Files
         openRef.addActionListener(new ActionListener() {
@@ -93,17 +93,10 @@ public class IGVMenuBar extends JMenuBar {
                 openDataAction();
             }
         });
-        openReads.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openReadsAction();
-            }
-        });
 
         //Voeg de subitems toe aan  "File"
         files.add(openRef);
         files.add(openData);
-        files.add(openReads);
 
         //Voeg Files toe aan de menubar.
         add(files);
@@ -268,8 +261,8 @@ public class IGVMenuBar extends JMenuBar {
         reads = new JMenu("Reads");
 
         //Sub items voor Files
-        load_reads = new JMenuItem("Load reads");
-        blast_reads = new JMenuItem("Blast reads");
+        load_reads = new JMenuItem("Blast against reference");
+        blast_reads = new JMenuItem("Read coverage file");
 
 
         load_reads.addActionListener(new ActionListener() {
@@ -283,7 +276,7 @@ public class IGVMenuBar extends JMenuBar {
         blast_reads.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                blasReadsAction();
+                blastReadsAction();
             }
         });
 
@@ -317,19 +310,18 @@ public class IGVMenuBar extends JMenuBar {
 
             cont.addGFF(path);
 
-        } catch (Exception e) {
+		}catch (Exception e){
         }
     }
 
     private void openReadsAction() {
-        try {
+        try{
             FastaFileChooser fasta = new FastaFileChooser();
             String path = fasta.fastafile();
 
-            cont.setCurrentReads(path);
+            cont.readReads(path);
 
-        } catch (Exception e) {
-        }
+        }catch (Exception e){}
     }
 
     /**
@@ -569,7 +561,6 @@ public class IGVMenuBar extends JMenuBar {
 	    JFrame window = new JFrame();
 	    window.add(new ColorORFs(cont));
 	    window.pack();
-	    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    window.setVisible(true);
     }
 
@@ -670,14 +661,37 @@ public class IGVMenuBar extends JMenuBar {
 
     private void loadReadsAction() {
 
+	    JOptionPane.showMessageDialog(null,"kies een fastq");
 	    FastaFileChooser ffc = new FastaFileChooser();
-	    String readFile = ffc.fastafile();
+	    String fastqFile = ffc.fastafile();
 
-	    cont.setCurrentReads(readFile);
+        JOptionPane.showMessageDialog(null,"kies een reference genome");
+        ffc = new FastaFileChooser();
+        String genomeFile = ffc.fastafile();
+
+
+        try {
+            cont.blastAgainstReference(fastqFile,genomeFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidFileTypeException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
-    private void blasReadsAction() {
+    private void blastReadsAction() {
+
+        JOptionPane.showMessageDialog(null,"kies de geblaste fastq csv");
+        FastaFileChooser ffc = new FastaFileChooser();
+        String path = ffc.fastafile();
+
+        try {
+            cont.parseBlastedReads(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
