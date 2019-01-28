@@ -374,6 +374,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public void setChoiceUser(ArrayList<String> choices){
 		this.choiceUser = choices;
+		this.updateCurrentFeatureList();
 	}
 
 	public int getStart() {
