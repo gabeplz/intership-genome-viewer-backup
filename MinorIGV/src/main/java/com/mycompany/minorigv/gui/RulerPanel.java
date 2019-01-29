@@ -15,19 +15,19 @@ import javax.swing.JPanel;
  */
 public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
-    private int x;                  //linkerkant selectie rechthoek
-    private int x2;                 //rechterkant selectie rechthoek
+	private int x;                  //linkerkant selectie rechthoek
+	private int x2;                 //rechterkant selectie rechthoek
 
 
-    public RulerPanel(Context context) {
-        super();
-        setContext(context);
-        setListeners();
-        init();
-    }
+	public RulerPanel(Context context) {
+		super();
+		setContext(context);
+		setListeners();
+		init();
+	}
 
 
-    /**
+	/**
 	 * initializes the panel
 	 */
 	public void init() {
@@ -37,9 +37,9 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 		setMinimumSize(new Dimension(100,30));
 
 		x = x2 = 0; //selectie rechthoek
-        MyMouseListener listener = new MyMouseListener(); //luisteren naar de muis
-        addMouseListener(listener);
-        addMouseMotionListener(listener);
+		MyMouseListener listener = new MyMouseListener(); //luisteren naar de muis
+		addMouseListener(listener);
+		addMouseMotionListener(listener);
 
 	}
 
@@ -61,27 +61,27 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
 		int stepSize = calculateStepSize(length);
 		int first = (start - (start % stepSize)) + stepSize - 1;	// de waarde van first is gelijk aan de positie in de sequentie van de
-																	// eerste nucleotide waarboven de eerste ruler lijn getekend word
+		// eerste nucleotide waarboven de eerste ruler lijn getekend word
 
 		for (int j = first; j < stop; j+= stepSize){
 
 
 			int pos = (int) DrawingTools.calculateLetterPosition(this.getWidth(), length,Double.valueOf(j-start)); //schaald de posities in sequentie naar de breedte van de panel
 			g.drawLine(pos,40,pos,30);								// draws line on the ruler
-			g.drawString(String.valueOf(j + 1) + "bp", pos, 30);		// draws the nucleotide position(in sequence) above the line
+			g.drawString(String.valueOf(j + 1) , pos, 30);		// draws the nucleotide position(in sequence) above the line
 
 		}
 
-        int alpha = 127; // 50% transparent
-        Color myColour = new Color(255, 0, 0, alpha);
+		int alpha = 127; // 50% transparent
+		Color myColour = new Color(255, 0, 0, alpha);
 		g.setColor(myColour);
 
 		if (x < x2){
-            g.fillRect(x,0,x2-x,getHeight());  //selectie rechthoek
-        }
-        else{
-            g.fillRect(x2,0,x-x2,getHeight()); //inverse rechthoek.
-        }
+			g.fillRect(x,0,x2-x,getHeight());  //selectie rechthoek
+		}
+		else{
+			g.fillRect(x2,0,x-x2,getHeight()); //inverse rechthoek.
+		}
 	}
 
 	/**
@@ -116,86 +116,86 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 		this.cont = conti;
 	}
 
-    @Override
-    public void setListeners() {
-        cont.addPropertyChangeListener("range", this); // luisterd of in context de functie firePropertyChange met als topic: "range", word uitgevoerd.
+	@Override
+	public void setListeners() {
+		cont.addPropertyChangeListener("range", this); // luisterd of in context de functie firePropertyChange met als topic: "range", word uitgevoerd.
 
-    }
+	}
 
-    /**
-     * Start van selectie rechthoek instellen.
-     * @param x
-     */
-    public void setStartPoint(int x) {
-        this.x = x;
+	/**
+	 * Start van selectie rechthoek instellen.
+	 * @param x
+	 */
+	public void setStartPoint(int x) {
+		this.x = x;
 
-    }
+	}
 
-    /**
-     * stop van selectie rechthoek instellen.
-     * @param x
-     */
-    public void setEndPoint(int x) {
-        x2 = (x);
+	/**
+	 * stop van selectie rechthoek instellen.
+	 * @param x
+	 */
+	public void setEndPoint(int x) {
+		x2 = (x);
 
-    }
+	}
 
-    /**
-     * functie die het zoomen doet op mouse release.
-     */
-    private void dragZoom() {
+	/**
+	 * functie die het zoomen doet op mouse release.
+	 */
+	private void dragZoom() {
 
-	    int width = this.getWidth();
+		int width = this.getWidth();
 
-	    int start = cont.getStart();
-	    int stop = cont.getStop();
-        double amount = stop-start;
+		int start = cont.getStart();
+		double amount = cont.getLength();
 
-	    int newStart = (int) (((double)x / (double)width) * amount) + start;
-        int newStop =  (int) (((double)x2 / (double)width) * amount) + start;
-        x = x2 = 0;
+		int newStart = (int) DrawingTools.calculatePixelPosition(x ,width,amount,start);
+		int newStop  = (int) DrawingTools.calculatePixelPosition(x2,width,amount,start);
+		x = x2 = 0;
 
-        int temp;
-        if (newStop < newStart){
-            temp = newStart;
-            newStart = newStop;
-            newStop = temp;
-        }
+		int temp;
+		if (newStop < newStart){
+			temp = newStart;
+			newStart = newStop;
+			newStop = temp;
+		}
 
-        cont.changeSize(newStart,newStop);
+		cont.changeSize(newStart,newStop);
 
-    }
+	}
 
-    /**
-     * functie die repaint spamt tijdens het bewegen. //TODO bufferen.
-     */
-    private void dragPaint() {
+	/**
+	 * functie die repaint spamt tijdens het bewegen. //TODO bufferen.
+	 */
+	private void dragPaint() {
 
-	    //buffer die image ooit
-	    repaint();
-    }
+		//buffer die image ooit
+		invalidate();
+		repaint();
+	}
 
-    /**
-     * Hulper class MouseListener voor de selectie
-     */
-    class MyMouseListener extends MouseAdapter {
+	/**
+	 * Hulper class MouseListener voor de selectie
+	 */
+	class MyMouseListener extends MouseAdapter {
 
-        public void mousePressed(MouseEvent e) {
-            setStartPoint(e.getX());
-        }
+		public void mousePressed(MouseEvent e) {
+			setStartPoint(e.getX());
+		}
 
-        public void mouseDragged(MouseEvent e) {
-            setEndPoint(e.getX());
-            dragPaint();
-        }
+		public void mouseDragged(MouseEvent e) {
+			setEndPoint(e.getX());
+			dragPaint();
+		}
 
-        public void mouseReleased(MouseEvent e) {
-            setEndPoint(e.getX());
-            dragZoom();
-            invalidate();
-            repaint();
+		public void mouseReleased(MouseEvent e) {
+			setEndPoint(e.getX());
+			dragZoom();
+			invalidate();
+			repaint();
 
-        }
-    }
+		}
+	}
 
 }

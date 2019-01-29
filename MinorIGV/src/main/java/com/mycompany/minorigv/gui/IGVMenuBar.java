@@ -1,9 +1,13 @@
 package com.mycompany.minorigv.gui;
 
 import com.mycompany.minorigv.FastaFileChooser;
-import com.mycompany.minorigv.blast.CallBlastORF;
-import com.mycompany.minorigv.motif.PositionScoreMatrix;
+import com.mycompany.minorigv.blast.BLAST;
+import com.mycompany.minorigv.blast.BlastORF;
+import com.mycompany.minorigv.blast.Choices;
+import com.mycompany.minorigv.blast.ColorORFs;
+import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.motif.MotifFrame;
+import com.mycompany.minorigv.motif.PositionScoreMatrix;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.TranslationManager;
 import org.xml.sax.SAXException;
@@ -35,13 +39,15 @@ public class IGVMenuBar extends JMenuBar {
     JMenu files, tools, features, reads;
 
     // Defineer de menu items die zelf niet sub items zullen bevatten.
-    JMenuItem openRef, openData, openReads, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads;
-
+    JMenuItem openRef, openData, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton,showTabelButton ;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
 
-    private JRadioButton buttonAll, buttonBetween;
+    ColorORFs colorORFs;
+
+    private ButtonGroup group, groupBlast;
+    private JRadioButton buttonAll, buttonBetween, buttonIdentity, buttonBitScore, buttonScore, buttonEvalue, buttonNCBI, buttonDiamond;
     private JFormattedTextField textField;
 
     public IGVMenuBar(Context context) {
@@ -68,12 +74,11 @@ public class IGVMenuBar extends JMenuBar {
      */
     public void menus() {
         //Eerst menu item Files
-        files = new JMenu("files");
+        files = new JMenu("Files");
 
         //Sub items voor Files
         openRef = new JMenuItem("Load reference");
         openData = new JMenuItem("Load GFF");
-        openReads = new JMenuItem("Load Reads");
 
         //Action listeners voor de sub items van Files
         openRef.addActionListener(new ActionListener() {
@@ -88,17 +93,10 @@ public class IGVMenuBar extends JMenuBar {
                 openDataAction();
             }
         });
-        openReads.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openReadsAction();
-            }
-        });
 
         //Voeg de subitems toe aan  "File"
         files.add(openRef);
         files.add(openData);
-        files.add(openReads);
 
         //Voeg Files toe aan de menubar.
         add(files);
@@ -106,21 +104,21 @@ public class IGVMenuBar extends JMenuBar {
         //Tweede menu item "tools"
         tools = new JMenu("ORF");
 
-        //Sub items voor menu item 2 "tools"
-        findORF = new JMenuItem("Find ORFs");
-        saveORF = new JMenuItem("Save ORFs");
-        blast = new JMenuItem("BLAST");
+	    //Sub items voor menu item 2 "tools"
+		findORF = new JMenuItem("Find ORFs");
+		saveORF = new JMenuItem("Save ORFs");
+		blast = new JMenuItem("BLAST");
+		showLegendButton = new JMenuItem("Show legend");
+        showLegendButton.setEnabled(false);
+        showTabelButton = new JMenuItem("Show Table");
+        showTabelButton.setEnabled(false);
 
-        File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
-        if (f.exists() && f.isDirectory()) {
-            blast.setEnabled(true);
-        } else {
-            blast.setEnabled(false);
-        }
-        //Sub items voor menu item 2 "tools"
-        findORF = new JMenuItem("Find ORFs");
-        saveORF = new JMenuItem("Save ORFs");
-        blast = new JMenuItem("Blast");
+		File f = new File(cont.getPath(Paths.HOME_DIRECTORY));
+		if(f.exists() && f.isDirectory()){
+			blast.setEnabled(true);
+		}else{
+			blast.setEnabled(false);
+		}
 
         //Action listeners voor de sub item van tools
         findORF.addActionListener(new ActionListener() {
@@ -149,14 +147,33 @@ public class IGVMenuBar extends JMenuBar {
             }
         });
 
+        showLegendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showLegendAction();
+            }
+        });
+
+        showTabelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showTableAction();
+            }
+        });
+
 
         //Voeg de sub items toe aan "tools"
         tools.add(findORF);
         tools.add(saveORF);
         tools.add(blast);
-
+        tools.add(showLegendButton);
+        tools.add(showTabelButton);
         //Voeg tools toe aan de menu bar.
         add(tools);
+    }
+
+    private void showTableAction() {
+        BlastTable blastTable = new BlastTable(cont);
     }
 
     /**
@@ -244,8 +261,8 @@ public class IGVMenuBar extends JMenuBar {
         reads = new JMenu("Reads");
 
         //Sub items voor Files
-        load_reads = new JMenuItem("Load reads");
-        blast_reads = new JMenuItem("Blast reads");
+        load_reads = new JMenuItem("Blast against reference");
+        blast_reads = new JMenuItem("Read coverage file");
 
 
         load_reads.addActionListener(new ActionListener() {
@@ -259,7 +276,7 @@ public class IGVMenuBar extends JMenuBar {
         blast_reads.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                blasReadsAction();
+                blastReadsAction();
             }
         });
 
@@ -293,19 +310,18 @@ public class IGVMenuBar extends JMenuBar {
 
             cont.addGFF(path);
 
-        } catch (Exception e) {
+		}catch (Exception e){
         }
     }
 
     private void openReadsAction() {
-        try {
+        try{
             FastaFileChooser fasta = new FastaFileChooser();
             String path = fasta.fastafile();
 
-            cont.setCurrentReads(path);
+            cont.readReads(path);
 
-        } catch (Exception e) {
-        }
+        }catch (Exception e){}
     }
 
     /**
@@ -363,7 +379,14 @@ public class IGVMenuBar extends JMenuBar {
      */
     private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException {
         // haalt de ingevoerde lengte op van het ORF.
-        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+        int lengthORFUser = 0;
+        try {
+            lengthORFUser = Integer.parseInt(textField.getValue().toString());
+        }catch(Exception e){
+            System.out.println(e);
+            e.printStackTrace();
+            return;
+        }
         // Set de ORFs
         cont.setCurORFListALL(lengthORFUser);
         // Kijkt welke Radio Button is aangeklikt.
@@ -384,6 +407,11 @@ public class IGVMenuBar extends JMenuBar {
         cont.setCurORFListALL(lenghtORF);
     }
 
+    /**
+     * Het maken van een pop-up window zodra BLAST wordt geselecteerd. Hierin heeft de gebruiker de optie om alle ORFs van het chromosoom/contig
+     * te blasten of tussen bepaalde posities de ORFs te blasten. Daarnaast kan de gebruiker aangeven op welke eigenschappen de geblaste ORFs
+     * worden gekleurd (Identity, E-value, Bit score en Score).
+     */
     private void blastAction() {
         JPanel panel = popupWindow();
 
@@ -398,10 +426,49 @@ public class IGVMenuBar extends JMenuBar {
         // Er wordt een Padding ingesteld.
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+        JPanel panelForColor = new JPanel();
+
+        JPanel panelForBlast = new JPanel();
+
+        // Opties voor de kleuring van de geblaste ORFs.
+        group = new ButtonGroup();
+        buttonIdentity = new JRadioButton("Identity");
+        buttonIdentity.setSelected(true);
+        buttonBitScore = new JRadioButton("Bit score");
+        buttonScore = new JRadioButton("Score");
+        buttonEvalue = new JRadioButton("E-value");
+
+        group.add(buttonIdentity);
+        group.add(buttonBitScore);
+        group.add(buttonScore);
+        group.add(buttonEvalue);
+
+        panelForColor.add(buttonIdentity);
+        panelForColor.add(buttonBitScore);
+        panelForColor.add(buttonScore);
+        panelForColor.add(buttonEvalue);
+
+        groupBlast = new ButtonGroup();
+        buttonNCBI = new JRadioButton("NCBI BLAST");
+        buttonNCBI.setSelected(true);
+        buttonDiamond = new JRadioButton("Diamond BLAST");
+
+        groupBlast.add(buttonNCBI);
+        groupBlast.add(buttonDiamond);
+
+        panelForBlast.add(buttonNCBI);
+        panelForBlast.add(buttonDiamond);
+
+        panelForColor.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Color"));
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "ORF Settings"));
+        panelForBlast.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "BLAST"));
+
         // Er wordt een frame aangemaakt.
         JFrame f = new JFrame();
         f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.PAGE_AXIS));
+        f.getContentPane().add(panelForBlast);
         f.getContentPane().add(panel);
+        f.getContentPane().add(panelForColor);
         f.getContentPane().add(panelForButton);
         f.pack();
         f.setLocationRelativeTo(null);
@@ -433,32 +500,82 @@ public class IGVMenuBar extends JMenuBar {
 
     }
 
-    /**
-     * Kijk of er op de All of Between knop is geklikt. En roept de CallBlastORF vervolgens aan.
-     *
-     * @throws IOException
-     * @throws JAXBException
-     */
-    private void blastButtonAction() throws IOException, JAXBException, ParserConfigurationException, SAXException {
-        CallBlastORF blastORF = new CallBlastORF(cont);
+	/**
+	 * Kijk of er op de All of Between knop is geklikt. En roept de CallBlastORF vervolgens aan.
+	 * @throws IOException
+	 * @throws JAXBException
+	 */
+	private void blastButtonAction() throws IOException, JAXBException, ParserConfigurationException, SAXException {
+
+
+		BlastORF blastORF = new BlastORF(cont);
         // haalt de ingevoerde lengte op van het ORF.
         int lengthORFUser = Integer.parseInt(textField.getValue().toString());
-        // Set de ORFs
+        // Zoeken van de ORFs
         cont.setCurORFListALL(lengthORFUser);
-        // Kijkt welke Radio Button is aangeklikt.
-        Boolean m = buttonAll.isSelected();
-        if (m == true) {
-            String partOutputName = "_A_" + lengthORFUser + ".xml";
-            blastORF.callBlast(cont.getCurORFListALL(), partOutputName);
-        } else {
-            String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop() + ".xml";
-            blastORF.callBlast(cont.getCurORFListBetween(), partOutputName);
+
+		//buttonIdentity, buttonBitScore, buttonScore, buttonEvalue;
+        if(buttonIdentity.isSelected()){
+            ColorORFs.setColorSetting(Choices.IDENTITY);
+        }else if(buttonBitScore.isSelected()){
+            ColorORFs.setColorSetting(Choices.BITSCORE);
+        }else if(buttonScore.isSelected()){
+            ColorORFs.setColorSetting(Choices.SCORE);
+        }else if(buttonEvalue.isSelected()){
+            ColorORFs.setColorSetting(Choices.EVALUE);
         }
 
 
+		BlastORF blastOrf = new BlastORF(cont);
+        // Als de optie All is geselecteerd.
+        if(buttonAll.isSelected()){
+			String partOutputName = "_A_" + lengthORFUser+ ".xml";
+			if(buttonNCBI.isSelected()){
+                String blastXMLFile = blastORF.callBlastNCBI(cont.getCurORFListALL(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }else{
+                String blastXMLFile = blastORF.callBlastDiamond(cont.getCurORFListALL(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }
+		}else{
+			String partOutputName = "_B_" + lengthORFUser + "_" + cont.getStart() + "-" + cont.getStop()+ ".xml";
+			if(buttonNCBI.isSelected()){
+                String blastXMLFile = blastORF.callBlastNCBI(cont.getCurORFListBetween(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }else{
+                String blastXMLFile = blastORF.callBlastDiamond(cont.getCurORFListBetween(), partOutputName);
+                blastOrf.parseBlastResults(BLAST.parseXML(blastXMLFile));
+            }
+
+		}
+
+        blastIsParsedAction();
+
     }
 
-    private JPanel popupWindow() {
+    /**
+     * Als er Blast resultaten zijn worden de legenda en tabel opties in het menu enabled.
+     */
+    private void blastIsParsedAction() {
+	    this.showTabelButton.setEnabled(true);
+	    this.showLegendButton.setEnabled(true);
+    }
+
+    /**
+     * Pop-up window zodra er op de show legend optie wordt geklikt.
+     */
+    private void showLegendAction(){
+	    JFrame window = new JFrame();
+	    window.add(new ColorORFs(cont));
+	    window.pack();
+	    window.setVisible(true);
+    }
+
+    /**
+     * Maken van de pop-up window voor de BLAST en save ORF.
+     * @return
+     */
+    private JPanel popupWindow(){
         // Radio Button wordt aangemaakt.
         buttonAll = new JRadioButton("All", true);
         buttonBetween = new JRadioButton("Between");
@@ -492,8 +609,10 @@ public class IGVMenuBar extends JMenuBar {
         PopUpFrame popup = new PopUpFrame(cont);
     }
 
-    // Action performed voor het choose Feature menu
-    // Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
+    /**
+     * Action performed voor het choose Feature menu
+     * Als een checkbox geslecteerd word zal de bijhorende feature worden toegevoegd aan de featureArray.
+     */
     private void genesAction() {
         Boolean m = genes.isSelected();
         if (m == true) {
@@ -549,9 +668,39 @@ public class IGVMenuBar extends JMenuBar {
 
     private void loadReadsAction() {
 
+	    JOptionPane.showMessageDialog(null,"kies een fastq");
+	    FastaFileChooser ffc = new FastaFileChooser();
+	    String fastqFile = ffc.fastafile();
+
+        JOptionPane.showMessageDialog(null,"kies een reference genome");
+        ffc = new FastaFileChooser();
+        String genomeFile = ffc.fastafile();
+
+
+        try {
+            cont.blastAgainstReference(fastqFile,genomeFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidFileTypeException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
-    private void blasReadsAction() {
+    private void blastReadsAction() {
+
+
+
+        JOptionPane.showMessageDialog(null,"kies de geblaste fastq csv");
+        FastaFileChooser ffc = new FastaFileChooser();
+        String path = ffc.fastafile();
+
+        try {
+            cont.parseBlastedReads(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

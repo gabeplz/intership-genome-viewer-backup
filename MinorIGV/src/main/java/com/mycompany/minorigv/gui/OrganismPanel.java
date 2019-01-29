@@ -29,8 +29,6 @@ public class OrganismPanel extends JPanel implements PropertyChangeListener{
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setBackground(Color.GREEN);
-
-
 	}
 
     public void setContext(Context conti){

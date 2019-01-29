@@ -48,4 +48,7 @@ public class DrawingTools {
 		g.drawString(String.valueOf(charr), (int) (x-(font_width/2)),(int) (y+(font_height/2)));
 	}
 
+    public static double calculatePixelPosition(int x, double widthPanel, double length, int start) {
+		return start + ((double)Math.max((x - 12),0) / ((widthPanel-24) / (length-1)));
+    }
 }

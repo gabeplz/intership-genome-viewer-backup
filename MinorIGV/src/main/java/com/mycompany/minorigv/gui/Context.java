@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.blast.BLAST;
+import com.mycompany.minorigv.blast.BlastOutput;
 import com.mycompany.minorigv.fastqparser.FastqReader;
 import com.mycompany.minorigv.fastqparser.InvalidFileTypeException;
 import com.mycompany.minorigv.fastqparser.Read;
@@ -22,6 +24,7 @@ import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
+
 
 import javax.swing.*;
 
@@ -41,6 +44,10 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private CodonTable currentCodonTable;
 
+	private ReadCoverage readCoverage_fw;
+    private ReadCoverage readCoverage_rv;
+    private boolean graphBool;
+
     private ArrayList<Read> currentReads;
 
 	private Feature[] currentFeatureList;
@@ -52,7 +59,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private ArrayList<String> choiceUser;
 	private HashMap<String,String> fastaMap = new HashMap<>();
-	private String nameFasta;
+	private String nameFastaFile;
 
 	private ArrayList<PositionScoreMatrix> matrixes = new ArrayList<PositionScoreMatrix>();
 	private ArrayList<PositionScoreMatrix> matrixesForSearch = new ArrayList<PositionScoreMatrix>();
@@ -62,17 +69,24 @@ public class Context implements Serializable, PropertyChangeListener {
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
 
+	private BlastOutput blastOutput;
+
+	GUI gui;
+
 
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	/**
 	 * constructor voor Context ten behoeve van uitbreidbaarheid.
-	 */
-	public Context(){
+     * @param gui
+     */
+	public Context(GUI gui){
+	    this.gui = gui;
 		this.addPropertyChangeListener(this);
 		this.choiceUser = new ArrayList<String>();
 		this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
+        graphBool = false;
 
 		try {
 			parseProperties();
@@ -137,36 +151,40 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param newStop de nieuwe stop
 	 */
 	public void changeSize(int newStart, int newStop) throws IndexOutOfBoundsException {
-		if(this.organism == null || this.curChromosome == null) {
+
+		if(this.organism == null || this.curChromosome == null || curChromosome.getSeqTemp() == null) {
 			return;
 		}
 
 		if(newStop < newStart){
 			throw new IndexOutOfBoundsException("nieuwe stop kleiner dan nieuwe start");
 		}
-		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
-			this.setStart(newStart);
-			this.setStop(this.curChromosome.getSeqTemp().length()-1);
-		}
-		else if(newStart < 0){
-			throw new IndexOutOfBoundsException("start onder nul");
-		}
-        else if(newStop-newStart < 10){
-			return;
-		}
-		else {
-			this.setStart(newStart);
-			this.setStop(newStop);
 
+		if(newStop > this.curChromosome.getSeqTemp().length()-1){
+			newStop = this.curChromosome.getSeqTemp().length()-1;
 		}
+
+		if(newStart < 0){
+			newStart = 0;
+		}
+
+        if(newStop-newStart < 10){
+			throw new IndexOutOfBoundsException("minimale afstand van 10 nodig");
+		}
+
+
+        this.setStart(newStart);
+        this.setStop(newStop);
+
+
 		pcs.firePropertyChange("range", null, null); //Fire the range change event
 	}
 
 
 
-	public void addFasta(String path) throws Exception{
+	public void addFasta(String pathFasta) throws Exception{
 
-	    File file = new File(path);
+	    File file = new File(pathFasta);
         if (!file.exists()){
             return;
         }
@@ -192,10 +210,11 @@ public class Context implements Serializable, PropertyChangeListener {
 			//voor volledigheid
 		}
 
-		fastaMap = FastaFileReader.getSequences(path);
+		fastaMap = FastaFileReader.getSequences(pathFasta);
 
-		File f = new File(path);
+		File f = new File(pathFasta);
 		System.out.println(f.getName());
+		setFastFileName(f.getName());
 
 		//loopen over de [header]->Sequentie paren.
 		for(String id : fastaMap.keySet()){
@@ -364,6 +383,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public void setChoiceUser(ArrayList<String> choices){
 		this.choiceUser = choices;
+		this.updateCurrentFeatureList();
 	}
 
 	public int getStart() {
@@ -412,12 +432,17 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	public ArrayList<Read> getCurrentReads() { return currentReads; }
 
-	public void setCurrentReads(String path){
-	    ArrayList<Read> oldValue = this.currentReads;
+	public void setCurrentReads(ArrayList<Read> readArrayList) {
+		this.currentReads = readArrayList;
+	}
+
+	public void readReads(String path){
+
         FastqReader reader = new FastqReader();
         try {
-            this.currentReads = reader.parse(path);
-			pcs.firePropertyChange("Reads", oldValue, currentReads);
+        	String pathOut = path + ".fasta";
+            reader.convertToFasta(path,pathOut);
+			pcs.firePropertyChange("Reads", null, currentReads);
         } catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "IOE error. something went wrong while reading the file. check if: the file isn't corrupted, your user account has access rigts, each contig in the file is sepperated by enters onto 4 lines.");
         } catch (InvalidFileTypeException e){
@@ -513,7 +538,6 @@ public class Context implements Serializable, PropertyChangeListener {
 	}
 
 	/**
-	 *
 	 * @return een ArrayList met ORFs tussen een bepaalde start en stop.
 	 */
 	public ArrayList<ORF> getCurORFListBetween() {
@@ -525,7 +549,10 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param lenghtORF		de lengte die het ORF minimaal mag hebben, ingevoerd door de gebruiker.
 	 */
 	public void setCurORFListALL(int lenghtORF){
-		curChromosome.setListORF(lenghtORF);
+	    if (curChromosome.getSeqTemp() == null){
+            return; //als oepsie.
+        }
+		curChromosome.createListOrf(lenghtORF);
 	}
 
 	/**
@@ -534,6 +561,29 @@ public class Context implements Serializable, PropertyChangeListener {
 	 */
 	public ArrayList<ORF> getCurORFListALL(){
 		return curChromosome.getListORF();
+	}
+
+	/**
+	 * Naam van het fasta file setten (input .fna file)
+	 * @param nameFastaFile
+	 */
+	public void setFastFileName(String nameFastaFile){
+		this.nameFastaFile = nameFastaFile;
+	}
+
+	/**
+	 * @return Naam van het .fna (input) file.
+	 */
+	public String getNameFasta(){
+		return nameFastaFile;
+	}
+
+	public BlastOutput getBlastOutput() {
+		return blastOutput;
+	}
+
+	public void setBlastOutput(BlastOutput blastOutput) {
+		this.blastOutput = blastOutput;
 	}
 
 	/**
@@ -571,4 +621,109 @@ public class Context implements Serializable, PropertyChangeListener {
 		writerAA.close();
 	}
 
+    /**
+     * Functie voor het blasten tegen een referentie regelen.
+     * @param fastqFile de fastQfile die naar fasta moet en dan gebruikt
+     * @param genomeFile file van het genoom, al in fasta.
+     * @throws IOException IOException
+     * @throws InvalidFileTypeException InvalidFileTypeException
+     */
+    public void blastAgainstReference(String fastqFile, String genomeFile) throws IOException, InvalidFileTypeException {
+
+
+	    FastqReader fastqReader = new FastqReader();
+	    String fastqOutputPath = getPath(Paths.OUTPUT_READS) + "readsTemp.fna";
+	    fastqReader.convertToFasta(fastqFile,fastqOutputPath);
+
+	    String blastDBOutputPath = getPath(Paths.OUTPUT_READS) + "refGenome";
+
+        BLAST.makeBlastDB(genomeFile,blastDBOutputPath);
+
+        String temp = new File(fastqFile).getName();
+        int pos = temp.lastIndexOf(".");
+        if (pos > 0) {
+            temp = temp.substring(0, pos);
+        }
+
+        temp += "_";
+
+        temp += new File(genomeFile).getName();
+        pos = temp.lastIndexOf(".");
+        if (pos > 0) {
+            temp = temp.substring(0, pos); //hackish naam genereren.
+        }
+        temp += ".csv";
+
+        String blastResultName = getPath(Paths.OUTPUT_READS) + temp;
+
+        System.out.println(blastResultName);
+        BLAST.runBLASTAgainstReference(fastqOutputPath,blastResultName,"blastn",blastDBOutputPath);
+
+    }
+
+	public ReadCoverage getReadCoverage_fw() {
+		return readCoverage_fw;
+	}
+
+	public void setReadCoverage_fw(ReadCoverage readCoverage_fw) {
+		this.readCoverage_fw = readCoverage_fw;
+	}
+
+    public ReadCoverage getReadCoverage_rv() {
+        return readCoverage_rv;
+    }
+
+    public void setReadCoverage_rv(ReadCoverage readCoverage_rv) {
+        this.readCoverage_rv = readCoverage_rv;
+    }
+
+    /**
+     * Functie voor het parsen van blastreads tot depth arrays
+     * @param path path van de blast file.
+     * @throws IOException IOException
+     */
+    public void parseBlastedReads(String path) throws IOException {
+
+        File f = new File(path);
+        if (f.exists() == false) return;
+
+        if (f.getName().contains("_1")){
+            this.readCoverage_fw = new ReadCoverage(this.organism);
+            readCoverage_fw.parseBlastCSV(path);
+
+
+        }else if (f.getName().contains("_2")){
+            this.readCoverage_rv = new ReadCoverage(this.organism);
+            readCoverage_rv.parseBlastCSV(path);
+
+        }
+        else{
+            readCoverage_fw = new ReadCoverage(this.organism);
+            readCoverage_fw.parseBlastCSV(path);
+            readCoverage_rv = null;
+        }
+
+        if(!graphBool) {
+            gui.organism.add(new GraphPanel(this));
+            graphBool = true;
+        }
+    }
+
+	public ArrayList<int[]> getCurrentReadCoverage() {
+
+        ArrayList<int[]> readList = new ArrayList<int[]>(2);
+
+        if(readCoverage_fw == null && readCoverage_rv == null) return null;
+
+
+        if (readCoverage_fw != null){
+            readList.add(readCoverage_fw.getCoverageBetween(curChromosome.getId(),start,stop));
+        }
+        if (readCoverage_rv != null){
+            readList.add(readCoverage_rv.getCoverageBetween(curChromosome.getId(),start,stop));
+        }
+        return readList;
+
+
+	}
 }

@@ -1,8 +1,7 @@
 package com.mycompany.minorigv.gui;
 
-import com.mycompany.minorigv.blast.BlastORF;
 import com.mycompany.minorigv.blast.ColorORFs;
-import com.mycompany.minorigv.blast.Iteration;
+import com.mycompany.minorigv.gffparser.BlastedORF;
 import com.mycompany.minorigv.gffparser.ORF;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.Strand;
@@ -14,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -27,6 +25,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
 	Strand strand;
 	Dimension dim;
+	ColorORFs colorPicker;
 
 	private final int ZOOM_SIZE_1 = 20; //Hoeveelheid pixels waarna maar één kleur blauw gebruikt wordt. Letters weergeven.
 	private final int ZOOM_SIZE_2 = 14; //Hoeveelheid pixels waarna de aminozuur letters verdwijnen. (ORF (geel) + start (groen) + stop (rood))
@@ -37,6 +36,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         this.setContext(cont);
         this.setListeners();
         this.init(strand);
+        colorPicker = new ColorORFs(cont);
 
     }
 
@@ -67,6 +67,9 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 		String seq;
 		try {
 			seq = cont.getSequentie();
+			if (seq == null){
+			    return;
+            }
 		}
 		catch (Exception e){
 			return;
@@ -133,12 +136,12 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 xPosLeft = xPosRight; //oude links -> rechts.
                 xPosRight = (int) DrawingTools.calculateLetterPosition( panelWidth, length, indexSubSeq+1.5); //nieuwe xPos bepalen.
                 int xPos = (int) DrawingTools.calculateLetterPosition(panelWidth,length, indexSubSeq); //positie van de letter.
-                selectColor(strandORFs, g, indexRef, letter, letterWidth, frame);
+                selectColor(strandORFs, g, indexRef, letter, letterWidth);
 
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 				g.setColor(Color.BLACK);
 
@@ -186,7 +189,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
                 int width = xPosRight-xPosLeft; //breedte van het vierkantje |<-->|
                 int height = calcHeight(strand,frame);//20+20*(frame);
 
-                selectColor(strandORFs, g, indexRef, letter,letterWidth, frame); //instellen juiste kleur.
+                selectColor(strandORFs, g, indexRef, letter,letterWidth); //instellen juiste kleur.
                 g.fillRect(xPosLeft,height,width,20);
 
                 g.setColor(Color.BLACK);
@@ -206,47 +209,50 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
     }
 
     /**
+     * Selecteren van de kleur die meegeven moet worden aan het ORF op de visualisatie.
+     * 
      * @param strandORFs  een ArrayList met van 1 frame op 1 strand alle ORFs tussen de start en stop van de gebruiker
      * @param g           graphics object g.
      * @param indexRef    de index gemapt naar de referentie.
      * @param letter      de letter van het aminozuur.
      * @param width
      */
-    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width, int frame){
-        ColorORFs colList = new ColorORFs();
-        if(!colList.getHeaderColor().isEmpty()){
-            HashMap<String, Color> headerColor = colList.getHeaderColor();
-            for(String header: headerColor.keySet()){
-                String[] informationHeader = header.split("\\|");
-                int RF = Integer.parseInt(informationHeader[1].split(":")[1]);
-                int startORF = Integer.parseInt(informationHeader[2].split(":")[1]);
-                int stopORF = Integer.parseInt(informationHeader[3].split(":")[1]);
-                String strandORF = informationHeader[4].split(":")[1];
-                Strand strandORFenum = null;
-                if(strandORF.equals("POSITIVE")){
-                    strandORFenum = Strand.POSITIVE;
-                }else if(strandORF.equals("NEGATIVE")){
-                    strandORFenum = Strand.NEGATIVE;
-                }
-                if(strandORFenum.equals(strand) && frame == RF){
-                    if (indexRef < stopORF && indexRef > startORF) {
-                        colorFrames(g, indexRef, letter, "BLAST",width, headerColor.get(header));
-                        return;
-                    }
-                }
-            }
-        }
-        if(strandORFs != null){ //als uberhaubt ORF's.
+    public void selectColor(ArrayList<ORF> strandORFs, Graphics g, int indexRef, char letter, double width){
+
+        ArrayList<ORF> overlappingBlastedORFs = new ArrayList<>();
+
+        if(strandORFs != null && strandORFs.size() > 0 ){ //als uberhaubt ORF's.
             for(ORF o: strandORFs) {
                 int startORF = o.getStart();
                 int stopORF = o.getStop();
-                if (indexRef < stopORF && indexRef > startORF) {
-                    colorFrames(g, indexRef, letter, "ORF",width, null);
+                if (indexRef <= stopORF && indexRef > startORF) {
+
+                    if(!(o instanceof BlastedORF)) {
+                        colorFrames(g, indexRef, letter, "ORF", width, null);
+                        return;
+                    }
+                    overlappingBlastedORFs.add(o);
+
+                }
+            }
+            // Als er ORFs overlappen wordt de kleur van het kortste ORF gevisualiseerd.
+            if (!overlappingBlastedORFs.isEmpty()) {
+                ORF temp = overlappingBlastedORFs.get(0);
+                for (ORF o : overlappingBlastedORFs) {
+                    if (temp.getLengthORF() > o.getLengthORF()) {
+                        temp = o;
+                    }
+                }
+                if(temp instanceof BlastedORF){
+                    g.setColor(colorPicker.getColor(temp));
                     return;
                 }
             }
+
         }
+
         colorFrames(g, indexRef, letter, "-", width, null);
+
     }
 
     /**
@@ -263,8 +269,6 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
             g.setColor(new Color(250, 0, 0));
         }else if(sign.equals("ORF")){
             g.setColor(new Color(255, 255, 0));
-        }else if(sign.equals("BLAST")){
-            g.setColor(colBlast);
         }else if(indexRef%2 > 0 || letterWidth < ZOOM_SIZE_1 ) {  //als te smalle vakjes voor 2 kleuren blauw.
             g.setColor(new Color(127, 191, 226));
         }else{
@@ -356,15 +360,17 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
         // Tekent het grote blauwe blok
         g.fillRect(xPosLeft,10,xPosRight-xPosLeft,3*20);
 
-	    ArrayList<ORF> listORF = getORFs(strand);
-	    if(listORF != null){
+
+        ArrayList<ORF> listORF = getORFs(strand);
+
+        if(listORF != null){
             for(ORF o : listORF){
                 // Linker positie in pixel van het ORF (geel)
                 xPosLeft = (int) DrawingTools.calculateLetterPosition(panelWidth, length,o.getStart()-start);
                 // Rechter positie in pixel van het ORF (geel).
                 xPosRight = (int) DrawingTools.calculateLetterPosition(panelWidth, length, o.getStop()-start);
                 int height = calcHeight(strand, o.getReadingframe());
-                g.setColor(new Color(255, 255, 0));
+                g.setColor(colorPicker.getColor(o));
                 g.fillRect(xPosLeft, height, xPosRight-xPosLeft, 20);
                 g.setColor(Color.BLACK);
             }
@@ -372,72 +378,142 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
     }
 
+    /**
+     * Checken op welk geblaste ORF de gebruiker klikt: visualiseren van de informatie van dat (geblaste)ORF.
+     *
+     * @author Anne van Ewijk en Amber Janssen Groesbeek
+     */
     class MyMouseListener extends MouseAdapter{
 
-
-
-
+        /**
+         * Bepalen waar de gebruiker klikt: welk reading frame en welk ORF.
+         * @param e
+         */
         public void mouseClicked(MouseEvent e){
             int X = e.getX();
             int Y = e.getY();
 
             // Ophalen breedte van scherm
             double widthPanel = (double) dim.getWidth();
+
             // Ophalen aantal nucleotide
             double length = cont.getLength();
             int start = cont.getStart();
 
-            double pixel = widthPanel/length;
-            int positie = (int)Math.ceil(X/pixel) + start;
+            //int positie = (int) ((double)(X - 12) / ((widthPanel-24) / (length-1)));
+            int positie = (int) DrawingTools.calculatePixelPosition(X, widthPanel, length, start); //inverse functie Drawingtools.calculateLetterPosition();
+            positie += start;
 
             ArrayList<ORF> listORF = cont.getCurORFListBetween();
+            String bigMessage = ""; // Wanneer er meerdere ORFs zijn (op de geklikte plek) wordt de informatie van deze ORFs onder elkaar geplakt.
             if(listORF != null){
                 for(ORF o: listORF){
                     if(o.getStart() <= positie && o.getStop() >= positie && o.getStrand() == strand){
-                        if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){
-                            getInformationORF(o.getIdORF());
-                            popUp(o);
-                        }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
-                            popUp(o);
-                        }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
-                            popUp(o);
+                        if(strand.equals(Strand.POSITIVE)){
+                            if(Y >= 10 && Y <= 29 && o.getReadingframe() == 2){         // Reading frame bepalen
+                                String message = getInformationORF(o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
+                                String message = getInformationORF(o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 0){
+                                String message = getInformationORF( o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }
+                        }else if(strand.equals(Strand.NEGATIVE)){
+                            if(Y >= 10 && Y <= 29 && o.getReadingframe() == 0){         // Reading frame bepalen
+                                String message = getInformationORF(o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 30 && Y <= 49 && o.getReadingframe() == 1){
+                                String message = getInformationORF(o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }else if(Y >= 50 && Y <= 69 && o.getReadingframe() == 2){
+                                String message = getInformationORF(o);
+                                bigMessage = bigMessage  + message + "\n\n\n";
+                                //popUp(message);           // Kan men aanzetten wanneer men per ORF een pop-up wilt.
+                            }
                         }
                     }
-
-
                 }
+                if(!bigMessage.equals("")){
+                    popUp(bigMessage);                    // Kan men uitzetten wanneer men per ORF een pop-up wilt.
+                }
+
             }
 
         }
-        public void popUp(ORF clickedORF){
 
-            JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Kut anne.");
+        /**
+         * Maken van een popup window
+         * @param message   De tekst die gevisualiseerd moet worden in het window.
+         */
+        public void popUp(String message){
+
+            JTextArea textVeld = new JTextArea(message);
+            textVeld.setText(message);
+            textVeld.setEditable(false);
+
+            JScrollPane scroller = new JScrollPane(textVeld);
+
+            scroller.setPreferredSize(new Dimension(400,400));
+            textVeld.setCaretPosition(0);
+            JOptionPane.showMessageDialog(null, scroller, "Hits BLAST ORF(s)", JOptionPane.INFORMATION_MESSAGE);
+
+            System.out.println(textVeld.getText());
         }
 
+        /**
+         * Ophalen van de informatie van het geblaste ORF.
+         * @param orf   Object ORF die geselecteerd is door de gebruiker.
+         * @return      String die gevisualiseerd moet worden.
+         */
+        public String getInformationORF(ORF orf){
 
-        public void getInformationORF(String idORF){
-            BlastORF blastInfo = new BlastORF();
-            HashMap<String, Iteration> infoKey = blastInfo.getHeaderIteration();
-            Iteration info = infoKey.get(idORF);
-            //.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue()
-            String hitID = info.getIterationHits().getHit().get(0).getHitId();
-            String hitDef = info.getIterationHits().getHit().get(0).getHitDef();
-            String hitAcc = info.getIterationHits().getHit().get(0).getHitAccession();
-            String bitScore = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspBitScore();
-            String score = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspScore();
-            String evalue = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspEvalue();
-            String identity = info.getIterationHits().getHit().get(0).getHitHsps().getHsp().get(0).getHspIdentity();
+            int startORF = orf.getStart();
+            int stopORF = orf.getStop();
+            int rfORF = orf.getReadingframe();
+            if(!(orf instanceof BlastedORF)){
 
-            String message = "Hit id: " + hitID + "\n" +
-                    "Hit def: " + hitDef + "\n" +
-                    "Hit acc: " + hitAcc + "\n" +
-                    "Bit score: " + bitScore + "\n" +
-                    "Score: " + score + "\n" +
-                    "E-value: " + evalue + "\n" +
-                    "Identity: " + identity + "\n";
+                String message = "Start ORF: " + startORF + System.lineSeparator() +
+                                 "Stop ORF: "  + stopORF  + System.lineSeparator() +
+                                 "RF ORF: "    + rfORF    + System.lineSeparator();
+                return message;
+            }
+
+            BlastedORF blastedOrf = (BlastedORF) orf;
 
 
+            if(!blastedOrf.hasHit()){
+                return "No BLAST-hits.";
+            }
+
+            String hitID = blastedOrf.getBestHit().getHitId();
+            String hitDef = blastedOrf.getBestHit().getHitDef();
+            String hitAcc = blastedOrf.getBestHit().getHitAccession();
+            String bitScore = blastedOrf.getBestHsp().getHspBitScore();
+            String score = blastedOrf.getBestHsp().getHspScore();
+            String evalue = blastedOrf.getBestHsp().getHspEvalue();
+            String identity = blastedOrf.getBestHsp().getHspIdentity();
+
+
+            String message =
+                    "Hit id:\t" + hitID + "\n" +
+                    "Hit def:\t" + hitDef + "\n" +
+                    "Hit acc:\t" + hitAcc + "\n" +
+                    "Bit score:\t" + bitScore + "\n" +
+                    "Score:\t" + score + "\n" +
+                    "E-value:\t" + evalue + "\n" +
+                    "Identity:\t" + identity + "\n"+
+                    "Start ORF:\t" + startORF + "\n"+
+                    "Stop ORF:\t" + stopORF + "\n"+
+                    "RF ORF:\t" + rfORF + "\n";
+
+            return message;
         }
 
     }

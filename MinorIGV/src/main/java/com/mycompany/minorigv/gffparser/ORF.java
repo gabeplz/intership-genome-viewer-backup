@@ -2,6 +2,8 @@ package com.mycompany.minorigv.gffparser;
 
 import com.mycompany.minorigv.sequence.Strand;
 
+import java.util.Objects;
+
 /**
  * In de sequentie van een chromosoom/contig wordt er gezocht naar Open Reading Frames (ORFs) en
  * informatie van een ORF en de sequentie zelf worden opgeslagen in een object.
@@ -13,6 +15,24 @@ public class ORF implements MappableFeature{
     private String idORF;
     private Strand strand;
     private int lengthORF;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ORF orf = (ORF) o;
+        return start == orf.start &&
+                stop == orf.stop &&
+                readingframe == orf.readingframe &&
+                strand == orf.strand &&
+                Objects.equals(chromosomeID, orf.chromosomeID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, stop, readingframe, strand, chromosomeID);
+    }
+
     private String chromosomeID;
 
 
