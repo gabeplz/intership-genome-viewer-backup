@@ -80,13 +80,13 @@ public class ReadCoverage {
                 arrey[i]++;  //ophogen van alle waardes tussen start en stop met 1 omdat hier een read ligt.
             }
 
-            if(start ==1){
-                System.out.println(line);
-            }
+//            if(start ==1){
+//                System.out.println(line);
+//            }
 
 
         }
-        System.out.println(k);
+//        System.out.println(k);
 
     }
 

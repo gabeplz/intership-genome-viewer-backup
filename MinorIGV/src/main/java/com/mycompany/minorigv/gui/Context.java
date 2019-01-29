@@ -18,12 +18,12 @@ import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
-import com.mycompany.minorigv.gffparser.*;
 import com.mycompany.minorigv.motif.PositionScoreMatrix;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
+
 
 import javax.swing.*;
 
@@ -43,7 +43,9 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private CodonTable currentCodonTable;
 
-	private ReadCoverage readCoverage;
+	private ReadCoverage readCoverage_fw;
+    private ReadCoverage readCoverage_rv;
+    private boolean graphBool;
 
     private ArrayList<Read> currentReads;
 
@@ -82,6 +84,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		this.addPropertyChangeListener(this);
 		this.choiceUser = new ArrayList<String>();
 		this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
+        graphBool = false;
 
 		try {
 			parseProperties();
@@ -146,28 +149,32 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param newStop de nieuwe stop
 	 */
 	public void changeSize(int newStart, int newStop) throws IndexOutOfBoundsException {
-		if(this.organism == null || this.curChromosome == null) {
+
+		if(this.organism == null || this.curChromosome == null || curChromosome.getSeqTemp() == null) {
 			return;
 		}
 
 		if(newStop < newStart){
 			throw new IndexOutOfBoundsException("nieuwe stop kleiner dan nieuwe start");
 		}
-		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
-			this.setStart(newStart);
-			this.setStop(this.curChromosome.getSeqTemp().length()-1);
-		}
-		else if(newStart < 0){
-			throw new IndexOutOfBoundsException("start onder nul");
-		}
-        else if(newStop-newStart < 10){
-			return;
-		}
-		else {
-			this.setStart(newStart);
-			this.setStop(newStop);
 
+		if(newStop > this.curChromosome.getSeqTemp().length()-1){
+			newStop = this.curChromosome.getSeqTemp().length()-1;
 		}
+
+		if(newStart < 0){
+			newStart = 0;
+		}
+
+        if(newStop-newStart < 10){
+			throw new IndexOutOfBoundsException("minimale afstand van 10 nodig");
+		}
+
+
+        this.setStart(newStart);
+        this.setStop(newStop);
+
+
 		pcs.firePropertyChange("range", null, null); //Fire the range change event
 	}
 
@@ -632,7 +639,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
         temp += "_";
 
-        temp += new File(blastDBOutputPath).getName();
+        temp += new File(genomeFile).getName();
         pos = temp.lastIndexOf(".");
         if (pos > 0) {
             temp = temp.substring(0, pos); //hackish naam genereren.
@@ -646,33 +653,69 @@ public class Context implements Serializable, PropertyChangeListener {
 
     }
 
-	public ReadCoverage getReadCoverage() {
-		return readCoverage;
+	public ReadCoverage getReadCoverage_fw() {
+		return readCoverage_fw;
 	}
 
-	public void setReadCoverage(ReadCoverage readCoverage) {
-		this.readCoverage = readCoverage;
+	public void setReadCoverage_fw(ReadCoverage readCoverage_fw) {
+		this.readCoverage_fw = readCoverage_fw;
 	}
 
-	/**
+    public ReadCoverage getReadCoverage_rv() {
+        return readCoverage_rv;
+    }
+
+    public void setReadCoverage_rv(ReadCoverage readCoverage_rv) {
+        this.readCoverage_rv = readCoverage_rv;
+    }
+
+    /**
      * Functie voor het parsen van blastreads tot depth arrays
      * @param path path van de blast file.
      * @throws IOException IOException
      */
     public void parseBlastedReads(String path) throws IOException {
 
-	    this.readCoverage = new ReadCoverage(this.organism);
-	    readCoverage.parseBlastCSV(path);
-	    gui.organism.add(new GraphPanel(this));
+        File f = new File(path);
+        if (f.exists() == false) return;
 
+        if (f.getName().contains("_1")){
+            this.readCoverage_fw = new ReadCoverage(this.organism);
+            readCoverage_fw.parseBlastCSV(path);
+
+
+        }else if (f.getName().contains("_2")){
+            this.readCoverage_rv = new ReadCoverage(this.organism);
+            readCoverage_rv.parseBlastCSV(path);
+
+        }
+        else{
+            readCoverage_fw = new ReadCoverage(this.organism);
+            readCoverage_fw.parseBlastCSV(path);
+            readCoverage_rv = null;
+        }
+
+        if(!graphBool) {
+            gui.organism.add(new GraphPanel(this));
+            graphBool = true;
+        }
     }
 
-	public int[] getCurrentReadCoverage() {
+	public ArrayList<int[]> getCurrentReadCoverage() {
 
-        if (readCoverage != null){
-            return readCoverage.getCoverageBetween(curChromosome.getId(),start,stop);
+        ArrayList<int[]> readList = new ArrayList<int[]>(2);
+
+        if(readCoverage_fw == null && readCoverage_rv == null) return null;
+
+
+        if (readCoverage_fw != null){
+            readList.add(readCoverage_fw.getCoverageBetween(curChromosome.getId(),start,stop));
         }
-        return null;
+        if (readCoverage_rv != null){
+            readList.add(readCoverage_rv.getCoverageBetween(curChromosome.getId(),start,stop));
+        }
+        return readList;
+
 
 	}
 }

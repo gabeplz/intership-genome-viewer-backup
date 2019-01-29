@@ -68,7 +68,7 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
 			int pos = (int) DrawingTools.calculateLetterPosition(this.getWidth(), length,Double.valueOf(j-start)); //schaald de posities in sequentie naar de breedte van de panel
 			g.drawLine(pos,40,pos,30);								// draws line on the ruler
-			g.drawString(String.valueOf(j + 1) + "bp", pos, 30);		// draws the nucleotide position(in sequence) above the line
+			g.drawString(String.valueOf(j + 1) , pos, 30);		// draws the nucleotide position(in sequence) above the line
 
 		}
 
@@ -148,7 +148,6 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 		int width = this.getWidth();
 
 		int start = cont.getStart();
-		int stop = cont.getStop();
 		double amount = cont.getLength();
 
 		int newStart = (int) DrawingTools.calculatePixelPosition(x ,width,amount,start);
@@ -172,6 +171,7 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 	private void dragPaint() {
 
 		//buffer die image ooit
+		invalidate();
 		repaint();
 	}
 
