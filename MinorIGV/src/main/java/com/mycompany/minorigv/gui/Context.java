@@ -24,6 +24,7 @@ import com.mycompany.minorigv.sequence.MakeCompStrand;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
 
+
 import javax.swing.*;
 
 /**
@@ -148,28 +149,32 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param newStop de nieuwe stop
 	 */
 	public void changeSize(int newStart, int newStop) throws IndexOutOfBoundsException {
-		if(this.organism == null || this.curChromosome == null) {
+
+		if(this.organism == null || this.curChromosome == null || curChromosome.getSeqTemp() == null) {
 			return;
 		}
 
 		if(newStop < newStart){
 			throw new IndexOutOfBoundsException("nieuwe stop kleiner dan nieuwe start");
 		}
-		else if(newStop > this.curChromosome.getSeqTemp().length()-1){
-			this.setStart(newStart);
-			this.setStop(this.curChromosome.getSeqTemp().length()-1);
-		}
-		else if(newStart < 0){
-			throw new IndexOutOfBoundsException("start onder nul");
-		}
-        else if(newStop-newStart < 10){
-			return;
-		}
-		else {
-			this.setStart(newStart);
-			this.setStop(newStop);
 
+		if(newStop > this.curChromosome.getSeqTemp().length()-1){
+			newStop = this.curChromosome.getSeqTemp().length()-1;
 		}
+
+		if(newStart < 0){
+			newStart = 0;
+		}
+
+        if(newStop-newStart < 10){
+			throw new IndexOutOfBoundsException("minimale afstand van 10 nodig");
+		}
+
+
+        this.setStart(newStart);
+        this.setStop(newStop);
+
+
 		pcs.firePropertyChange("range", null, null); //Fire the range change event
 	}
 
@@ -634,7 +639,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
         temp += "_";
 
-        temp += new File(blastDBOutputPath).getName();
+        temp += new File(genomeFile).getName();
         pos = temp.lastIndexOf(".");
         if (pos > 0) {
             temp = temp.substring(0, pos); //hackish naam genereren.

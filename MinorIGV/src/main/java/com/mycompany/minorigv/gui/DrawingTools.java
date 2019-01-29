@@ -49,6 +49,6 @@ public class DrawingTools {
 	}
 
     public static double calculatePixelPosition(int x, double widthPanel, double length, int start) {
-		return start + ((double)(x - 12) / ((widthPanel-24) / (length-1)));
+		return start + ((double)Math.max((x - 12),0) / ((widthPanel-24) / (length-1)));
     }
 }

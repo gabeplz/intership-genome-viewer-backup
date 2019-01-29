@@ -134,6 +134,15 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
         locus.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         locus.setText("1-101");
 
+
+        locus.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent e){
+
+                searchAction();
+
+            }});
+
         ActionListener chromosomeListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -213,7 +222,12 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
      */
     private void searchAction() {
         parseInput();
-        cont.changeSize(start, stop);
+        try {
+            cont.changeSize(start, stop);
+        }
+        catch(Exception e){
+            ExceptionDialogs.ErrorDialog(e.getMessage(),"error");
+        }
     }
 
     /**

@@ -67,6 +67,9 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 		String seq;
 		try {
 			seq = cont.getSequentie();
+			if (seq == null){
+			    return;
+            }
 		}
 		catch (Exception e){
 			return;
