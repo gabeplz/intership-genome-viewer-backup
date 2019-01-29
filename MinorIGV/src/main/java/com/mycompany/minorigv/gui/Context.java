@@ -534,6 +534,9 @@ public class Context implements Serializable, PropertyChangeListener {
 	 * @param lenghtORF		de lengte die het ORF minimaal mag hebben, ingevoerd door de gebruiker.
 	 */
 	public void setCurORFListALL(int lenghtORF){
+	    if (curChromosome.getSeqTemp() == null){
+            return; //als oepsie.
+        }
 		curChromosome.createListOrf(lenghtORF);
 	}
 

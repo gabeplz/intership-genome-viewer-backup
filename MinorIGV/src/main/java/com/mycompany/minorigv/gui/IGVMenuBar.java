@@ -379,7 +379,14 @@ public class IGVMenuBar extends JMenuBar {
      */
     private void saveButtonAction() throws FileNotFoundException, UnsupportedEncodingException {
         // haalt de ingevoerde lengte op van het ORF.
-        int lengthORFUser = Integer.parseInt(textField.getValue().toString());
+        int lengthORFUser = 0;
+        try {
+            lengthORFUser = Integer.parseInt(textField.getValue().toString());
+        }catch(Exception e){
+            System.out.println(e);
+            e.printStackTrace();
+            return;
+        }
         // Set de ORFs
         cont.setCurORFListALL(lengthORFUser);
         // Kijkt welke Radio Button is aangeklikt.

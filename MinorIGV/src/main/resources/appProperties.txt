@@ -1,0 +1,5 @@
+homeDirectory=/home/kahuub/Documents/github-minor/app
+saveORF=/home/kahuub/Documents/github-minor/app/output/ORF/
+saveBlastORF=/home/kahuub/Documents/github-minor/app/output/ORF/
+outputORF=/home/kahuub/Documents/github-minor/app/output/ORF/
+outputReads=/home/kahuub/Documents/github-minor/app/output/reads/
