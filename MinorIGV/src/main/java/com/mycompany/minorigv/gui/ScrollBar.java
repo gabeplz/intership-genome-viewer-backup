@@ -13,9 +13,9 @@ import java.beans.PropertyChangeListener;
  */
 public class ScrollBar extends JScrollBar implements PropertyChangeListener {
 
-    Context cont;
-    AdjustmentListener listener;
-
+    private Context cont;
+    private AdjustmentListener listener;
+    private boolean semafoor;
 
     /**
      * Constructor voor Scrollbar.
@@ -27,6 +27,7 @@ public class ScrollBar extends JScrollBar implements PropertyChangeListener {
      */
     public ScrollBar(int orientation, int value, int extent, int min, int max){
         super(orientation, value, extent, min, max);
+        semafoor = false;
     }
 
 
@@ -52,13 +53,15 @@ public class ScrollBar extends JScrollBar implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
 
         if (cont == null || cont.getCurChromosome() == null || cont.getSequentie() == null)return ; //als dingen niet kloppen, stop.
-
+        semafoor = true;
         this.setMaximum(cont.getFullLenght()-1); //rechterlimiet
         this.setValue(cont.getStart()); //value is de nucleotide links.
         this.setVisibleAmount(cont.getLength()); //zichtbaar is de lengte van de subseq
+
         int unitIncrement = (int) Math.ceil((double)cont.getLength() / 10); //10% naar rechts
         this.setUnitIncrement(unitIncrement); //klikken op pijltje
         this.setBlockIncrement(cont.getLength()); //klikken op balk //100%
+        semafoor = false;
 
     }
 
@@ -78,16 +81,20 @@ public class ScrollBar extends JScrollBar implements PropertyChangeListener {
      */
     class MyAdjustmentListener implements AdjustmentListener {
         public void adjustmentValueChanged(AdjustmentEvent evt) {
+            if (semafoor){
+                return;
+            }
             Adjustable source = evt.getAdjustable();
             if (evt.getValueIsAdjusting()) {
                 //return; hier valt in te stellen dat hij niet reageert als hij beweegt tijdens scrollen.
             }
             int type = evt.getAdjustmentType(); //soort scroll beweging, maar niet interesant.
+
             int value = evt.getValue();
             int length = cont.getLength();
             int start = cont.getStart();
 
-            if(start == value || start+length > cont.getFullLenght())return;  //checkt of hij onverandert is en stopt anders.
+            if(start == value || start+length > cont.getFullLenght()) return;  //checkt of hij onverandert is en stopt anders.
 
             cont.changeSize(value,value+length);
         }
