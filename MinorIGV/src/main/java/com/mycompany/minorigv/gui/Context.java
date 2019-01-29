@@ -16,7 +16,7 @@ import com.mycompany.minorigv.gffparser.Feature;
 import com.mycompany.minorigv.gffparser.Organisms;
 import com.mycompany.minorigv.gffparser.GffReader;
 import com.mycompany.minorigv.gffparser.ORF;
-import com.mycompany.minorigv.gffparser.*;
+import com.mycompany.minorigv.motif.MotifAlignment;
 import com.mycompany.minorigv.motif.PositionScoreMatrix;
 import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
@@ -56,7 +56,8 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private ArrayList<PositionScoreMatrix> matrixes = new ArrayList<PositionScoreMatrix>();
 	private ArrayList<PositionScoreMatrix> matrixesForSearch = new ArrayList<PositionScoreMatrix>();
-
+    private HashMap<Integer, double[]> matrixForwardAlignmentScores = new HashMap<>();
+    private HashMap<Integer, double[]> matrixReverseAlignmentScores = new HashMap<>();
 
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
@@ -448,6 +449,12 @@ public class Context implements Serializable, PropertyChangeListener {
     public ArrayList getMatrixesforSearch(){
         return this.matrixesForSearch;
     }
+
+    public void gogo(){
+        this.matrixForwardAlignmentScores = MotifAlignment.Align(curChromosome.getSeqTemp(), getMatrixesforSearch());
+        this.matrixReverseAlignmentScores = MotifAlignment.Align(MakeCompStrand.getReverseComplement(curChromosome.getSeqTemp()), getMatrixesforSearch());
+    } ///562643
+
 
 	/**
 	 * encapsulatie van de property change support

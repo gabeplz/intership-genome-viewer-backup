@@ -44,7 +44,7 @@ public class PositionScoreMatrix {
 
         matrix = normalizeByNumberOfLines(matrix, lines.length);
         double sumScore = calculateSumScore(matrix);
-        matrix = normalizeBySumScore(matrix, sumScore);
+ //       matrix = normalizeBySumScore(matrix, sumScore);
         PositionScoreMatrix newMatrix = new PositionScoreMatrix(name, sumScore, matrix, inputSequences);
 
         return newMatrix;
@@ -159,7 +159,7 @@ public class PositionScoreMatrix {
      * @return
      */
     private static double[][] normalizeBySumScore(double[][] matrix, double sumScore) {
-        int maxScore = matrix[0].length;           //4
+        int maxScore = matrix[0].length;
         double normalizer = sumScore / maxScore;
         for (int column = 0; column < matrix[0].length; column++) {
             for (int row = 0; row < matrix.length; row++) {
@@ -168,7 +168,17 @@ public class PositionScoreMatrix {
         }
     return matrix;
     }
+// 1    1     0,5       0,5      3     0,75
+// 0,75 0,75  0,375     0,375    2,25
 
+// 1    0,5    0,5      0,5      2,5
+// 0,75 0,375  0,375    0,375    1,875
+//
+// 0,5    0,5    0,5    0,5      2
+// 0,375  0,375  0,375  0,375    1,5
+//
+//0,25 0,25 0,5 0,5
+//0,25 0,25 0,5 0,5           1,125
     /**
      * getter
      * @return String name
