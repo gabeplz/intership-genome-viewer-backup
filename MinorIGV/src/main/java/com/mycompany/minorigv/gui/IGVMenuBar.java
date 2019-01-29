@@ -690,6 +690,8 @@ public class IGVMenuBar extends JMenuBar {
 
     private void blastReadsAction() {
 
+
+
         JOptionPane.showMessageDialog(null,"kies de geblaste fastq csv");
         FastaFileChooser ffc = new FastaFileChooser();
         String path = ffc.fastafile();
