@@ -41,7 +41,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * function building the Genomepanel in the application
+     * functie voor het aanmaken van Genomepanel in de application
      */
     public void init() {
         this.setBackground(Color.GRAY);
@@ -53,7 +53,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Function that adds all the elements to the Genomepanel
+     * Function dat de elementen toevoegd aan Genomepanel
      */
     private void addElements() {
         this.add(organism);
@@ -66,7 +66,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Convection user input to pc input by subtracting 1 so a user input of 1 will be seen by the pc as index 0.
+     * Converteren van user input naar pc input door -1 zodat een user input van 1 door de pc word gebruikt als index 0.
      */
     private void parseInput() {
 
@@ -91,7 +91,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * function creating the text area that will display the name of an organism who's dna sequence is shown on screen and the position of the DNA sequence the user is looking at
+     * functie de de text area maakt waaring de naam van het organimse waar op het moment naar gekegen weergegeven wordt.
      */
     private void makeTextAreas() {
         // Maakt de ComboBox voor de organismen.
@@ -187,7 +187,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Function creating the +, - and search zoom buttons
+     * Functie die de + en - zoom buttons maakt.
      */
     private void makeZoomButtons() {
         // TODO: 20/12/2018 disable zoom out while fasta is not loaded
@@ -218,7 +218,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Function changing the start and stop used in context with a start and stop chosen by the user
+     * Functie die de start en stop in context verandert met een user input start en stop.
      */
     private void searchAction() {
         parseInput();
@@ -231,7 +231,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * ZoomInAction contains the logic behind the zoom in button
+     * ZoomInAction bevat de logica van de zoom in button.
      */
     private void zoomInAction() {
         parseInput();
@@ -257,7 +257,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * ZoomOutAction contains the logic behind the zoom out button
+     * ZoomOutAction bevat de logica van de zoom out button
      */
     private void zoomOutAction() {
         parseInput();
@@ -282,7 +282,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * change the context when a new chromosome is chosen when loading a new fasta file or a new range is selected
+     * verander context wanneer er een nieuw chromosome wordt gebruikt, een nieuwe fasta wordt ingeladen of een nieuwe range word geselecteerd.
      * @param cont
      */
     public void setContext(Context cont) {
@@ -297,7 +297,7 @@ public class GenomePanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * set the correct start "-" stop for Locus
+     * set de juiste start "-" stop voor Locus
      */
     private void syncSize() {
 
