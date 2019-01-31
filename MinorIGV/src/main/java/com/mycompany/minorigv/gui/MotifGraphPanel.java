@@ -76,7 +76,7 @@ public class MotifGraphPanel extends IGVPanel implements PropertyChangeListener 
         }
 
         // create x and y axes
-        g2.drawLine(BORDER_GAP, getHeight() - BORDER_GAP, BORDER_GAP, BORDER_GAP + 20);
+        g2.drawLine(BORDER_GAP, getHeight() - BORDER_GAP, BORDER_GAP, BORDER_GAP);
         g2.drawLine(BORDER_GAP, getHeight() - BORDER_GAP, getWidth() - BORDER_GAP, getHeight() - BORDER_GAP);
 
         Stroke oldStroke = g2.getStroke();
