@@ -251,9 +251,11 @@ public class Context implements Serializable, PropertyChangeListener {
             for(Component c : gui.organism.getComponents()){
                 if(c instanceof GraphPanel){
                     gui.organism.remove(c);
+                    graphBool = false;
                 }
                 if(c instanceof MotifGraphPanel){
                     gui.organism.remove(c);
+                    graphBoolMotif = false;
                 }
             }
 
