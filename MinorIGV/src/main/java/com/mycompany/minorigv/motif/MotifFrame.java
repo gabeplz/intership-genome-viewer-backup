@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.motif;
 
 import com.mycompany.minorigv.gui.Context;
+import com.mycompany.minorigv.gui.IGVMenuBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,11 +14,14 @@ import javax.swing.JFrame;
  */
 public class MotifFrame extends Frame {
     private Context cont;
+    private IGVMenuBar bar;
+    JFrame frame2;
 /**
  * bouwt de frame en zet de funties van de knoppen
  */
-    public MotifFrame(ArrayList<PositionScoreMatrix> startUpContextMatrixList) {
-        JFrame frame2 = new JFrame();
+    public MotifFrame(ArrayList<PositionScoreMatrix> startUpContextMatrixList, IGVMenuBar barr) {
+        frame2 = new JFrame();
+        bar = barr;
 
         JLabel matrixNameLabel = new JLabel("Matrix name");
         JTextField matrixNameField = new JTextField();
@@ -114,6 +118,12 @@ public class MotifFrame extends Frame {
         frame2.setLayout(null);
         frame2.setVisible(true);
         frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+
+    }
+
+    public void kys(){
+        frame2.dispose();
     }
 
     /**

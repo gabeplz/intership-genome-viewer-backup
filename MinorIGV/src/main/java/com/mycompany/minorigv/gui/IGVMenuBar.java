@@ -20,6 +20,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
  *
  * @Auteur: Tim Kuijpers
  */
-public class IGVMenuBar extends JMenuBar {
+public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
 
     private Context cont;
     // Defineer de menu items die zelf sub items zullen bevatten.
@@ -40,6 +42,12 @@ public class IGVMenuBar extends JMenuBar {
 
     // Defineer de menu items die zelf niet sub items zullen bevatten.
     JMenuItem openRef, openData, saveORF, findORF, blast, genes, mRNA, exon, region, CDS, featureList, blast_reads, load_reads, showLegendButton,showTabelButton ;
+
+
+    JMenu motifSearchMenu;
+    JMenuItem matrixFrame;
+
+    MotifFrame x;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
@@ -67,6 +75,10 @@ public class IGVMenuBar extends JMenuBar {
         condonTableMenu();
         motifSearchMenu();
         readMenu();
+
+        setEnabledButtonsSequence(false);
+        setEnabledButtonsGFF(false);
+
     }
 
     /**
@@ -161,7 +173,6 @@ public class IGVMenuBar extends JMenuBar {
             }
         });
 
-
         //Voeg de sub items toe aan "tools"
         tools.add(findORF);
         tools.add(saveORF);
@@ -170,6 +181,29 @@ public class IGVMenuBar extends JMenuBar {
         tools.add(showTabelButton);
         //Voeg tools toe aan de menu bar.
         add(tools);
+    }
+
+    private void setEnabledButtonsSequence(boolean b) {
+
+        findORF.setEnabled(b);
+        saveORF.setEnabled(b);
+        blast.setEnabled(b);
+        showLegendButton.setEnabled(b);
+        showTabelButton.setEnabled(b);
+        matrixFrame.setEnabled(b);
+        blast_reads.setEnabled(b);
+
+    }
+
+    private void setEnabledButtonsGFF(boolean b) {
+
+        featureList.setEnabled(b);
+        genes.setEnabled(b);
+        mRNA.setEnabled(b);
+        exon.setEnabled(b);
+        region.setEnabled(b);
+        CDS.setEnabled(b);
+
     }
 
     private void showTableAction() {
@@ -192,7 +226,6 @@ public class IGVMenuBar extends JMenuBar {
         exon = new JCheckBoxMenuItem("Exon");
         region = new JCheckBoxMenuItem("Region");
         CDS = new JCheckBoxMenuItem("CDS");
-
 
         featureList.addActionListener(new ActionListener() {
             @Override
@@ -717,6 +750,8 @@ public class IGVMenuBar extends JMenuBar {
 
     public void setContext(Context cont) {
         this.cont = cont;
+        cont.addPropertyChangeListener("fasta",this);
+        cont.addPropertyChangeListener("gff",this);
     }
 
     /**
@@ -767,17 +802,45 @@ public class IGVMenuBar extends JMenuBar {
      * maakt de motif search menu knop. maakt ook de nieuwe frame en set de context voor de frame
      */
     public void motifSearchMenu() {
-        JMenu motifSearchMenu = new JMenu("motif search");
-        JMenuItem matrixFrame = new JMenuItem("input sequences");
+        motifSearchMenu = new JMenu("motif search");
+        matrixFrame = new JMenuItem("input sequences");
         matrixFrame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<PositionScoreMatrix> startUpMatrixList = cont.getMatrixes();
-                MotifFrame x = new MotifFrame(startUpMatrixList);
-                x.setContext(cont);
+
+                if(x != null){
+                    x.kys();
+                }
+
+                createMatrixFrame();
             }
         });
         motifSearchMenu.add(matrixFrame);
         add(motifSearchMenu);
+
     }
+
+    public void createMatrixFrame(){
+        //matrixFrame.setEnabled(false);
+        ArrayList<PositionScoreMatrix> startUpMatrixList = cont.getMatrixes();
+        x = new MotifFrame(startUpMatrixList, this );
+        x.setContext(cont);
+    }
+
+    public void enableMotifButton(Boolean b){
+        matrixFrame.setEnabled(b);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+        if(evt.getPropertyName().equals("fasta")) {
+            setEnabledButtonsSequence(true);
+        }
+        else if(evt.getPropertyName().equals("gff")){
+            setEnabledButtonsGFF(true);
+        }
+
+    }
+
 }

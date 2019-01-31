@@ -484,6 +484,8 @@ public class Context implements Serializable, PropertyChangeListener {
         if(!graphBoolMotif) {
             gui.organism.add(new MotifGraphPanel(this));
             graphBoolMotif = true;
+            gui.organism.revalidate();
+            gui.organism.repaint();
         }
     }
     public HashMap<Integer, double[]> getmatrixForwardAlignmentScores(){return this.matrixForwardAlignmentScores;}
@@ -639,6 +641,9 @@ public class Context implements Serializable, PropertyChangeListener {
      */
     public void blastAgainstReference(String fastqFile, String genomeFile) throws IOException, InvalidFileTypeException {
 
+        if((!new File(fastqFile).exists()) || (!new File(genomeFile).exists())){
+            return;
+        }
 
 	    FastqReader fastqReader = new FastqReader();
 	    String fastqOutputPath = getPath(Paths.OUTPUT_READS) + "readsTemp.fna";
@@ -715,6 +720,8 @@ public class Context implements Serializable, PropertyChangeListener {
         if(!graphBool) {
             gui.organism.add(new GraphPanel(this));
             graphBool = true;
+            gui.organism.revalidate();
+            gui.organism.repaint();
         }
     }
 

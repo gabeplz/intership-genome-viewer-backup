@@ -24,6 +24,7 @@ public class MotifGraphPanel extends IGVPanel implements PropertyChangeListener 
         this.setContext(context);
         this.setListeners();
         this.init();
+
     }
 
     @Override
