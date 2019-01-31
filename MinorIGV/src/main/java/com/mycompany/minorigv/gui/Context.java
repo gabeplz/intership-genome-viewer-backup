@@ -100,29 +100,39 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 	}
 
-	private void parseProperties() throws IOException {
+    private void parseProperties() throws IOException {
 
-		ClassLoader classLoader = getClass().getClassLoader();
+        ClassLoader classLoader = getClass().getClassLoader();
 
-		InputStream defaultProperties = classLoader.getResourceAsStream("defaultProperties.txt");
-		InputStream appProperties = classLoader.getResourceAsStream("appProperties.txt");
+        InputStream defaultProperties = classLoader.getResourceAsStream("defaultProperties.txt");
+        // create and load default properties
+        Properties defaultProps = new Properties();
+        InputStream in = defaultProperties;
+        defaultProps.load(in);
+        in.close();
+        applicationProps = new Properties(defaultProps);
 
-		// create and load default properties
-		Properties defaultProps = new Properties();
-		InputStream in = defaultProperties;
-		defaultProps.load(in);
-		in.close();
 
-		// create application properties with default
-		applicationProps = new Properties(defaultProps);
+        File props = new File("./appProperties.txt");
+        if (props.exists()) {
+            InputStream appProperties = new FileInputStream(props);
+            // now load properties
+            // from last invocation
+            in = appProperties;
+            applicationProps.load(in);
+            in.close();
 
-		// now load properties
-		// from last invocation
-		in = appProperties;
-		applicationProps.load(in);
-		in.close();
+        }else{
+            InputStream appProperties =classLoader.getResourceAsStream("appProperties.txt");
+            // now load properties
+            // from last invocation
+            in = appProperties;
+            applicationProps.load(in);
+            in.close();
 
-	}
+        }
+
+    }
 
 	public String getPath(Paths pathEnum){
 		return this.applicationProps.getProperty(pathEnum.toString());
