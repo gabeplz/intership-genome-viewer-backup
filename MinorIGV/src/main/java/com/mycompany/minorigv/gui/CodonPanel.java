@@ -402,7 +402,7 @@ public class CodonPanel extends IGVPanel implements PropertyChangeListener{
 
             //int positie = (int) ((double)(X - 12) / ((widthPanel-24) / (length-1)));
             int positie = (int) DrawingTools.calculatePixelPosition(X, widthPanel, length, start); //inverse functie Drawingtools.calculateLetterPosition();
-            positie += start;
+            //positie += start;
 
             ArrayList<ORF> listORF = cont.getCurORFListBetween();
             String bigMessage = ""; // Wanneer er meerdere ORFs zijn (op de geklikte plek) wordt de informatie van deze ORFs onder elkaar geplakt.

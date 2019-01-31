@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
@@ -101,13 +102,13 @@ public class Context implements Serializable, PropertyChangeListener {
 	private void parseProperties() throws IOException {
 
 		ClassLoader classLoader = getClass().getClassLoader();
-		String defaultProperties = java.net.URLDecoder.decode(classLoader.getResource("defaultProperties.txt").getFile(),"UTF-8");
-		String appProperties = java.net.URLDecoder.decode(classLoader.getResource("appProperties.txt").getFile(),"UTF-8");
 
+		InputStream defaultProperties = classLoader.getResourceAsStream("defaultProperties.txt");
+		InputStream appProperties = classLoader.getResourceAsStream("appProperties.txt");
 
 		// create and load default properties
 		Properties defaultProps = new Properties();
-		FileInputStream in = new FileInputStream(defaultProperties);
+		InputStream in = defaultProperties;
 		defaultProps.load(in);
 		in.close();
 
@@ -116,17 +117,9 @@ public class Context implements Serializable, PropertyChangeListener {
 
 		// now load properties
 		// from last invocation
-		in = new FileInputStream(appProperties);
+		in = appProperties;
 		applicationProps.load(in);
 		in.close();
-
-		//applicationProps.setProperty("homeDirectory","/home/hoi/yo");
-
-		FileOutputStream outStream  = new FileOutputStream(appProperties);
-		applicationProps.store(outStream, "---No Comment---");
-		outStream.close();
-
-		System.out.println(getPath(Paths.NR));
 
 	}
 
