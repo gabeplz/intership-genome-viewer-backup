@@ -93,6 +93,7 @@ public class MotifFrame extends Frame {
                     cont.addMatrixForSearch(contextMatrixList.get(selectedItems[i]));
                 }
                 cont.gogo();
+                cont.drawMotifs();
             }
         });
 

@@ -47,6 +47,8 @@ public class Context implements Serializable, PropertyChangeListener {
 	private ReadCoverage readCoverage_fw;
     private ReadCoverage readCoverage_rv;
     private boolean graphBool;
+    private boolean graphBoolMotif;
+
 
     private ArrayList<Read> currentReads;
 
@@ -65,7 +67,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	private ArrayList<PositionScoreMatrix> matrixesForSearch = new ArrayList<PositionScoreMatrix>();
     private HashMap<Integer, double[]> matrixForwardAlignmentScores = new HashMap<>();
     private HashMap<Integer, double[]> matrixReverseAlignmentScores = new HashMap<>();
-
+    private double[] StepsForMotifs;
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
 
@@ -87,6 +89,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		this.choiceUser = new ArrayList<String>();
 		this.setCurrentCodonTable(1);						//the ncbi standard coding table always has an id of 1
         graphBool = false;
+        graphBoolMotif = false;
 
 		try {
 			parseProperties();
@@ -459,7 +462,7 @@ public class Context implements Serializable, PropertyChangeListener {
 	    this.matrixes.remove(x);
     }
 
-    public ArrayList getMatrixes(){
+    public ArrayList<PositionScoreMatrix> getMatrixes(){
 	    return this.matrixes;
     }
 
@@ -471,15 +474,28 @@ public class Context implements Serializable, PropertyChangeListener {
         this.matrixesForSearch.clear();
     }
 
-    public ArrayList getMatrixesforSearch(){
+    public ArrayList<PositionScoreMatrix> getMatrixesforSearch(){
         return this.matrixesForSearch;
     }
 
     public void gogo(){
         this.matrixForwardAlignmentScores = MotifAlignment.Align(curChromosome.getSeqTemp(), getMatrixesforSearch());
         this.matrixReverseAlignmentScores = MotifAlignment.Align(MakeCompStrand.getReverseComplement(curChromosome.getSeqTemp()), getMatrixesforSearch());
-    } ///562643
+        this.StepsForMotifs = MotifAlignment.GenerateNrOfScores(curChromosome.getSeqTemp(), getMatrixesforSearch());
+	} ///562643
+    public double[] getStepsForMotifs(){
+	    return this.StepsForMotifs;
+    }
 
+    public void drawMotifs(){
+        if(!graphBoolMotif) {
+            gui.organism.add(new MotifGraphPanel(this));
+            graphBoolMotif = true;
+        }
+    }
+    public HashMap<Integer, double[]> getmatrixForwardAlignmentScores(){return this.matrixForwardAlignmentScores;}
+
+    public HashMap<Integer, double[]> getMatrixReverseAlignmentScores(){return this.matrixReverseAlignmentScores;}
 
 	/**
 	 * encapsulatie van de property change support

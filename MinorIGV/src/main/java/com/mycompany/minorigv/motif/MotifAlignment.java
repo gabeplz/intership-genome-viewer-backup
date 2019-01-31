@@ -8,7 +8,6 @@ public class MotifAlignment {
     public static HashMap<Integer, double[]> Align(String kaas, ArrayList<PositionScoreMatrix> matrixesForSearch) {
         String baas = kaas;
         int f = 0;
-
         HashMap<Integer, double[]> allMotifScores = new HashMap<>();
         //System.out.println("matrixesforsearch.size" + matrixesForSearch.size());
         for (int m = 0; m < matrixesForSearch.size(); m++) {
@@ -54,13 +53,19 @@ public class MotifAlignment {
             allMotifScores.put(m,motifScores);
 
         }
-  //      System.out.println(allMotifScores.keySet());
-  //      System.out.println(allMotifScores.values());
-
-
-
 
         return allMotifScores;
+    }
 
+    public static double[] GenerateNrOfScores (String sequence, ArrayList<PositionScoreMatrix> matrixes){
+        double[] nrOfScores = new double[matrixes.size()];
+        for (int m = 0; m < matrixes.size(); m++) {
+            //System.out.println("matrixesforsearch.size" + matrixesForSearch.size());
+
+            double[][] curMatrix = matrixes.get(m).getScoreMatrix();
+            nrOfScores[m] = sequence.length() - curMatrix[0].length + 1;
+        }
+
+        return nrOfScores;
     }
 }
