@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gui;
 
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -223,11 +224,32 @@ public class Context implements Serializable, PropertyChangeListener {
 		this.updateCurrentFeatureList(); //resetten featureList
 		defaultSize(); //defaulten qua size
 		pcs.firePropertyChange("fasta", null, null); //fire the fasta event
+        removeNonsense();
+
 
 	}
 	public ArrayList<String> getChoicesUser(){
 		return choiceUser;
 	}
+
+    /**
+     * super hackish snel panels on the fly verwijderen.
+     */
+    private void removeNonsense() {
+
+        if(graphBool || graphBoolMotif){
+            for(Component c : gui.organism.getComponents()){
+                if(c instanceof GraphPanel){
+                    gui.organism.remove(c);
+                }
+                if(c instanceof MotifGraphPanel){
+                    gui.organism.remove(c);
+                }
+            }
+
+        }
+
+    }
 
 	/**
 	 * Functie voor het toevoegen van een GFF File aan het organism/aanmaken van
