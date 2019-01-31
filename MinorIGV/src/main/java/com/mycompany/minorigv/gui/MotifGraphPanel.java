@@ -59,9 +59,9 @@ public class MotifGraphPanel extends IGVPanel implements PropertyChangeListener 
 
                 int k;
                 double valueNeg = MAX_SCORE;
-                for (k = 0; k < (int) Math.ceil(stepSize); k++) {
+                for (k = 0; k < (int) stepSize; k++) {
 
-                    double temp = new Double(MAX_SCORE - scores[t+k]);
+                    double temp = new Double(MAX_SCORE - scores[Math.min(t+k,scores.length-1)]);
                     if (temp < valueNeg){
                         valueNeg = temp;
                     }
