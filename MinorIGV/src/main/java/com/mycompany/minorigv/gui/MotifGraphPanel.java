@@ -69,7 +69,7 @@ public class MotifGraphPanel extends IGVPanel implements PropertyChangeListener 
 
                 double percHeight = valueNeg / MAX_SCORE;
                 int pixHeight = (getHeight() - 2 * BORDER_GAP);
-                int y1 = (int) (percHeight * pixHeight);
+                int y1 =  BORDER_GAP + (int)(percHeight * pixHeight);
                 graphPoints.get(i).add(new Point(x1, y1));
 
             }
