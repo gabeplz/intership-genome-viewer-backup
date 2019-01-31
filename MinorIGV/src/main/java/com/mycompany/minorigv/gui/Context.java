@@ -1,6 +1,7 @@
 package com.mycompany.minorigv.gui;
 
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -24,6 +25,7 @@ import com.mycompany.minorigv.sequence.CodonTable;
 import com.mycompany.minorigv.sequence.MakeCompStrand;
 import com.mycompany.minorigv.sequence.Strand;
 import com.mycompany.minorigv.sequence.TranslationManager;
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 
 
 import javax.swing.*;
@@ -222,12 +224,29 @@ public class Context implements Serializable, PropertyChangeListener {
             organism.addSequence(id, fastaMap.get(id));
         }
 
+        removeNonsense();
+
 
         setChromosomeNames(); //update chromosoom namen
         this.setCurChromosome(organism.getChromosome(this.chromosomeNameArray[0])); //chromosome resetten
         this.updateCurrentFeatureList(); //resetten featureList
         defaultSize(); //defaulten qua size
         pcs.firePropertyChange("fasta", null, null); //fire the fasta event
+
+    }
+
+    /**
+     * super hackish snel panels on the fly verwijderen.
+     */
+    private void removeNonsense() {
+
+        if(graphBool){
+            for(Component c : gui.organism.getComponents()){
+                if(c instanceof GraphPanel){
+                    gui.organism.remove(c);
+                }
+            }
+        }
 
     }
 
