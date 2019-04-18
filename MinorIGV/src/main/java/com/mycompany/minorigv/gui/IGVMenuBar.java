@@ -47,6 +47,9 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
     JMenu motifSearchMenu;
     JMenuItem matrixFrame;
 
+    JMenu readbarMenu;
+    JMenuItem readbarButton;
+
     MotifFrame x;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
@@ -75,7 +78,7 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         condonTableMenu();
         motifSearchMenu();
         readMenu();
-
+        makeReadbarMenu();
         setEnabledButtonsSequence(false);
         setEnabledButtonsGFF(false);
 
@@ -830,6 +833,46 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
     public void enableMotifButton(Boolean b){
         matrixFrame.setEnabled(b);
     }
+
+    public void makeReadbarMenu(){
+        readbarMenu = new JMenu("readbartest");
+        readbarButton = new JMenuItem ("make bar chart");
+        readbarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                samReadsAction();
+                //looptestAction();
+                cont.drawBarmap();
+            }
+        });
+        readbarMenu.add(readbarButton);
+        add(readbarMenu);
+        // JMenuItem ;
+    }
+
+    private void samReadsAction() {
+
+
+
+        JOptionPane.showMessageDialog(null,"kies een sam file met x= in de cigar string");
+        FastaFileChooser ffc = new FastaFileChooser();
+        String path = ffc.fastafile();
+
+            cont.parseSamReads(path);
+
+
+    }
+    private void looptestAction() {
+        JOptionPane.showMessageDialog(null,"kies een sam file met x= in de cigar string");
+        FastaFileChooser ffc = new FastaFileChooser();
+        String path = ffc.fastafile();
+
+        cont.looptestWhile(path);
+
+    }
+
+
+
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

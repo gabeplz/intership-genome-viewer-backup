@@ -52,6 +52,10 @@ public class Context implements Serializable, PropertyChangeListener {
     private boolean graphBoolMotif;
 
 
+    private ArrayList<SamRead> memorySAM = new ArrayList<>();
+    private HashMap<String,int[][]> barCoverageMap;
+    private int yAxisStartRange;
+
     private ArrayList<Read> currentReads;
 
 	private Feature[] currentFeatureList;
@@ -124,7 +128,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
         }else{
             InputStream appProperties =classLoader.getResourceAsStream("appProperties.txt");
-            // now load properties
+            // now load propertiescd In
             // from last invocation
             in = appProperties;
             applicationProps.load(in);
@@ -776,4 +780,189 @@ public class Context implements Serializable, PropertyChangeListener {
 
 
 	}
+
+	public void looptestWhile(String path) {
+
+             BufferedReader br = null;
+                   try {
+                     br = new BufferedReader(new FileReader(path));
+                   String line;
+
+                 while ((line = br.readLine()) != null) {
+                  int pl = 1;
+                      pl += 1;
+                     System.out.println();
+               }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                    System.out.println("closeattempt1");
+                }
+                if (br != null) {
+
+                    br.close();
+                    System.out.println("closeattempt2");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void parseSamReads(String path)  {
+        BufferedReader br = null;
+        this.barCoverageMap = new HashMap<>(organism.getChromosomes().keySet().size());
+
+
+        for (String chrID : organism.getChromosomes().keySet()){
+
+            int[][] errey = new int[5][organism.getChromosome(chrID).getSeqTemp().length()];
+     //       Arrays.fill(errey,0);
+
+            this.barCoverageMap.put(chrID,errey); //int array ter grote van chromosoom's sequentie.
+
+        }
+        try {
+
+            br = new BufferedReader(new FileReader(path));
+            String line;
+            br.readLine(); // useless header
+            System.out.println(Arrays.toString("1=6I87=".split("(?<=\\D)")));
+
+
+
+        while ((line = br.readLine()).startsWith("@SQ") == true) {
+
+
+            System.out.println(line);
+
+        }
+        br.readLine(); // input files header
+        while ((line = br.readLine()) != null) {
+           // System.out.println(line);
+            String[] lineArray = line.split("\\s+");
+            //  System.out.println(lineArray[5].toString());
+            String chromString = lineArray[2].toString();
+            String cigarString = lineArray[5].toString();
+            String sequenceString = lineArray[9].toString();
+            int collumIndex = Integer.parseInt(lineArray[3])-1;
+            // System.out.println(Arrays.toString(cigarString.split("(?<=\\D)")));
+            //SamRead t = new SamRead(lineArray[9].toString(), cigarString.split("(?<=\\D)"));
+            //this.memorySAM.add(t);
+
+
+            //String  = new String("AAGGTTTTCCCCC");
+            //String[] cigarArray = "2=2I4D5=".split("(?<=\\D)");
+
+            String[] cigarArray = cigarString.split("(?<=\\D)");
+            if (!cigarString.equals("*")) {
+                int[][] crommap = this.barCoverageMap.get(chromString);
+                // int[][] crommap = new int[5][16];
+
+
+                int positionInReadModifier = 0;
+                for (int x = 0; x < cigarArray.length; x++) {
+                    int operatrions = Integer.parseInt(cigarArray[x].substring(0, cigarArray[x].length() - 1));
+
+                    if (cigarArray[x].endsWith("=")) {
+                        for (int z = 0; z < operatrions; z++) {
+
+                            crommap[0][collumIndex] += 1;
+                            collumIndex += 1;
+                        }
+                        positionInReadModifier += operatrions;
+                    }
+
+                    if (cigarArray[x].endsWith("D")) {
+                        for (int z = 0; z < operatrions; z++) {
+
+                            //crommap[0][collumIndex] += 1;
+                            collumIndex += 1;
+                        }
+                        //positionInReadModifier += operatrions;
+                    }
+
+                    if (cigarArray[x].endsWith("I")) {
+                        for (int z = 0; z < operatrions; z++) {
+
+                            //crommap[0][collumIndex] += 1;
+                            //collumIndex += 1;
+                        }
+                        positionInReadModifier += operatrions;
+                    }
+
+                    if (cigarArray[x].endsWith("X")) {
+
+                        for (int z = 0; z < operatrions; z++) {
+                            if (sequenceString.charAt(z + positionInReadModifier) == 'A') {
+                                crommap[1][collumIndex] += 1;
+                                collumIndex += 1;
+                            }
+                            if (sequenceString.charAt(z + positionInReadModifier) == 'T') {
+                                crommap[2][collumIndex] += 1;
+                                collumIndex += 1;
+                            }
+                            if (sequenceString.charAt(z + positionInReadModifier) == 'C') {
+                                crommap[3][collumIndex] += 1;
+                                collumIndex += 1;
+                            }
+                            if (sequenceString.charAt(z + positionInReadModifier) == 'G') {
+                                crommap[4][collumIndex] += 1;
+                                collumIndex += 1;
+                            }
+                        }
+                        positionInReadModifier += operatrions;
+
+                    }
+                }
+            }
+        }
+  //      System.out.println(Arrays.toString("1=2I4D5=".split("(?<=\\D)")));
+
+  //      br.close();
+      //  System.out.println(organism.getChromosomes().keySet().size());
+      //  System.out.println(organism.getChromosomes().keySet());
+     //   for (int i = 0; i < 5; i++){
+       //     line = br.readLine();
+         //   System.out.println(line);
+        //}
+        }catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null){
+                    br.close();
+                    System.out.println("close");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int[][] getCurrentBarCovarage(){
+        int[][] crommap = this.barCoverageMap.get(this.curChromosome.getId());
+        int[][] currentmap = new int[crommap.length][getLength()];
+
+        //for (int row = this.start; row < this.stop; row++){
+        for (int row = 0; row < crommap.length; row++){
+            for (int collum = this.start; collum < this.stop; collum++){
+                currentmap[row][collum-this.start] = crommap[row][collum];
+            }
+        }
+        return currentmap;
+    }
+
+
+	public void drawBarmap(){
+        gui.organism.add(new ReadBarPanel(this));
+        gui.organism.revalidate();
+        gui.organism.repaint();
+    }
 }

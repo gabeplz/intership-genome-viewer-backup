@@ -18,7 +18,9 @@ public class FastaFileChooser {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File SelectedFile = jfc.getSelectedFile();
             fasta = (SelectedFile.getAbsolutePath());
+
         }
+
 
         return fasta;
 
