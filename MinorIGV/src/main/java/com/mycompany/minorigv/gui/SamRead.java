@@ -11,4 +11,8 @@ public class SamRead {
 
     }
 
+    public void addToGapped (String a){
+
+    }
+
 }

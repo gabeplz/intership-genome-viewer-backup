@@ -49,8 +49,12 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
 
     JMenu readbarMenu;
     JMenuItem readbarButton;
+    JMenuItem readbarScaleButton;
+    JMenuItem readAllignButton;
+    JMenuItem xxx;
 
     MotifFrame x;
+    BarScaleFrame b;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
@@ -828,6 +832,7 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         ArrayList<PositionScoreMatrix> startUpMatrixList = cont.getMatrixes();
         x = new MotifFrame(startUpMatrixList, this );
         x.setContext(cont);
+
     }
 
     public void enableMotifButton(Boolean b){
@@ -846,13 +851,46 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
             }
         });
         readbarMenu.add(readbarButton);
+
+        readbarScaleButton = new JMenuItem ("set bar chart scale");
+        readbarScaleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createBarScaleFrame();                //looptestAction();
+            }
+        });
+        readbarMenu.add(readbarButton);
+        readbarMenu.add(readbarScaleButton);
+        add(readbarMenu);
+        // JMenuItem ;
+
+        readAllignButton = new JMenuItem ("make scroll");
+        readAllignButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createAllignPanel();                //looptestAction();
+            }
+        });
+
+        xxx = new JMenuItem ("area");
+        xxx.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cont.xxx();                //looptestAction();
+            }
+        });
+
+        readbarMenu.add(readbarButton);
+        readbarMenu.add(readbarScaleButton);
+        readbarMenu.add(readAllignButton);
+        readbarMenu.add(xxx);
         add(readbarMenu);
         // JMenuItem ;
     }
 
+
+
     private void samReadsAction() {
-
-
 
         JOptionPane.showMessageDialog(null,"kies een sam file met x= in de cigar string");
         FastaFileChooser ffc = new FastaFileChooser();
@@ -871,6 +909,16 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
 
     }
 
+    public void createBarScaleFrame(){
+        //matrixFrame.setEnabled(false);
+
+        b = new BarScaleFrame(cont.getCoverageReadsPerPixel(), this );
+        b.setContext(cont);
+
+    }
+    private void createAllignPanel(){
+        cont.drawReadAllignment();
+    }
 
 
 

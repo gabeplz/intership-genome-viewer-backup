@@ -6,7 +6,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
@@ -54,7 +53,8 @@ public class Context implements Serializable, PropertyChangeListener {
 
     private ArrayList<SamRead> memorySAM = new ArrayList<>();
     private HashMap<String,int[][]> barCoverageMap;
-    private int yAxisStartRange;
+    private int coverageReadsPerPixel = 1;
+    //private Dimension area = new Dimension(0,0);
 
     private ArrayList<Read> currentReads;
 
@@ -850,7 +850,7 @@ public class Context implements Serializable, PropertyChangeListener {
             String chromString = lineArray[2].toString();
             String cigarString = lineArray[5].toString();
             String sequenceString = lineArray[9].toString();
-            int collumIndex = Integer.parseInt(lineArray[3])-1;
+            int collumIndex = Integer.parseInt(lineArray[3])-1;   //position on the genome substract 1 because the SAM format starts counting at 1 and this program at zero
             // System.out.println(Arrays.toString(cigarString.split("(?<=\\D)")));
             //SamRead t = new SamRead(lineArray[9].toString(), cigarString.split("(?<=\\D)"));
             //this.memorySAM.add(t);
@@ -887,8 +887,8 @@ public class Context implements Serializable, PropertyChangeListener {
                         //positionInReadModifier += operatrions;
                     }
 
-                    if (cigarArray[x].endsWith("I")) {
-                        for (int z = 0; z < operatrions; z++) {
+                    if (cigarArray[x].endsWith("I")) {			// inserts: pieces of sequence that are in the read but not in the reference sequence
+                        for (int z = 0; z < operatrions; z++) { // inserts are not saved in the main sequence but in a seperate sequence for a tooltip
 
                             //crommap[0][collumIndex] += 1;
                             //collumIndex += 1;
@@ -959,10 +959,31 @@ public class Context implements Serializable, PropertyChangeListener {
         return currentmap;
     }
 
+    public int getCoverageReadsPerPixel(){return this.coverageReadsPerPixel;}
+
+    public void setCoverageReadsPerPixel(int newHeightInReadsPerPixel){
+    	this.coverageReadsPerPixel = newHeightInReadsPerPixel;
+        pcs.firePropertyChange("coverageReadsPerPixel",null,null);
+	}
+
+	public void xxx(){
+		pcs.firePropertyChange("area",null,null);
+		System.out.println("xxx");
+	}
 
 	public void drawBarmap(){
         gui.organism.add(new ReadBarPanel(this));
         gui.organism.revalidate();
         gui.organism.repaint();
     }
+	public void drawReadAllignment(){
+		JScrollPane scroller = new JScrollPane(new ReadAlignmentPanel(this));
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setPreferredSize(new Dimension(882,142));
+		scroller.setMaximumSize(new Dimension(2000,40));
+		gui.organism.add(scroller);
+		gui.organism.revalidate();
+		gui.organism.repaint();
+	}
 }
