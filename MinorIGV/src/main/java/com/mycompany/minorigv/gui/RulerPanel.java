@@ -72,7 +72,7 @@ public class RulerPanel extends IGVPanel implements PropertyChangeListener{
 
 		}
 
-		int alpha = 127; // 50% transparent
+		int alpha = 127; // 50% transparent/
 		Color myColour = new Color(255, 0, 0, alpha);
 		g.setColor(myColour);
 

@@ -51,10 +51,15 @@ public class Context implements Serializable, PropertyChangeListener {
     private boolean graphBoolMotif;
 
 
-    private ArrayList<SamRead> memorySAM = new ArrayList<>();
+    private ArrayList<SamRead> currentSamReads = new ArrayList<>();
     private HashMap<String,int[][]> barCoverageMap;
     private int coverageReadsPerPixel = 1;
+    private int pixelHeightReads = 3 ;
+    private int pixelSpaceBetweenReads = 7;
     //private Dimension area = new Dimension(0,0);
+
+	private HashMap<String,ArrayList<SamRead>> readMap;
+	private HashMap<Rectangle,String> insertTooltipsMap;
 
     private ArrayList<Read> currentReads;
 
@@ -781,8 +786,123 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	}
 
-	public void looptestWhile(String path) {
+	public void looptestWhile() {
+		//ArrayList<SamRead> elist = this.readMap.get("BK006935.2");
+		//	ArrayList<SamRead> asd = this.readMap.
+		//	System.out.println("start sort");
+		//	Collections.sort(elist, (a,b) -> a.getStart() < b.getStart() ? -1: a.getStart() == b.getStart() ? 0 : 1);
+		//	System.out.println("stop sort");}
+		//   Iterator entries = this.readMap.entrySet().iterator();
+		//for (this.readMap.Entry<String, ArrayList<SamRead>> item)
+		System.out.println("start sort");
+		int kdkd = 1;
+		for (ArrayList<SamRead> value : this.readMap.values()){
+			Collections.sort(value, (a,b) -> a.getStart() < b.getStart() ? -1: a.getStart() == b.getStart() ? 0 : 1);
+		//Map.Entry entry = (Map.Entry) entries.next();
+		//Integer key = (Integer) entry.getKey();
+			 }
+		kdkd += 2;
+		System.out.println("stop sort");
+    }
 
+    public HashMap<String,ArrayList<SamRead>> getReadMap(){
+    	return this.readMap;
+	}
+
+	public void sortReadmapByStart() {
+		for (ArrayList<SamRead> value : this.readMap.values()) {
+			Collections.sort(value, (a, b) -> a.getStart() < b.getStart() ? -1 : a.getStart() == b.getStart() ? 0 : 1);
+		}
+	}
+
+	public void setReadHeightLayers(){
+    	System.out.println("start readheight");
+		HashMap<String, ArrayList<SamRead>> d = this.getReadMap();
+
+		for (ArrayList<SamRead> samArray : d.values()) {
+			int[] heightArray = new int[samArray.size()];
+			int previousStartPos = samArray.get(0).getStart();
+			int maxheight = 0;
+			System.out.println("chrom position" + samArray.size());
+
+			for (int x = 0; x < samArray.size(); x++){
+				int currentStartPos = samArray.get(x).getStart();
+
+				if (previousStartPos != currentStartPos){ //TODO als er een nieuwe positie is moet er gekeken worder naar de afstand tussen de vorige en zovaak de aftrek loop uitvoeren
+					int xposdiff = currentStartPos - previousStartPos;
+
+					for (int i = 0; i < maxheight + 1; i++){
+						heightArray[i] = Math.max(0,heightArray[i]-xposdiff);
+					}
+
+					previousStartPos = currentStartPos;
+
+				}
+				for (int i = 0; i < heightArray.length; i++){
+					if (i > maxheight){
+						maxheight = i;
+					}
+					if (heightArray[i] == 0){
+						heightArray[i] += samArray.get(x).getTotalLength();
+						samArray.get(x).setHeightLayer(i);
+
+						break;
+
+					}
+				}
+			}
+
+		}
+		System.out.println("stop readheight");
+    }
+
+    public void setCurrentSamReads(){
+		ArrayList<SamRead> samArray = this.getReadMap().get(this.curChromosome.getId());
+		ArrayList<SamRead> samArray2 = new ArrayList<>();
+		for (int i = 0; i < samArray.size(); i++){
+			SamRead currentSamRead = samArray.get(i);
+			if(currentSamRead.getStart() + currentSamRead.getTotalLength() - 1 >= this.start && currentSamRead.getStart() <= this.stop){
+				samArray2.add(currentSamRead);
+			}
+		}
+	//	System.out.println(Collections.max(samArray2, Comparator.comparing(c -> c.getHeightLayer())).getHeightLayer() + "size max");
+		Collections.sort(samArray2, (a,b) -> a.getHeightLayer() < b.getHeightLayer() ? -1: a.getHeightLayer() == b.getHeightLayer() ? 0 : 1);
+
+		this.currentSamReads = samArray2;
+				//currentSamReads
+	}
+
+    public ArrayList<SamRead> getCurrentSamReads(){ return this.currentSamReads;}
+
+    public int getCurrentSamReadMaxHeight(){
+		if (this.currentSamReads.size() == 0){
+			return 0;
+		} else {
+			System.out.println(this.currentSamReads.get(Math.max(0,this.currentSamReads.size()-1)).getHeightLayer() + "size last index");
+			return this.currentSamReads.get(Math.max(0,this.currentSamReads.size()-1)).getHeightLayer();
+		}
+
+	}
+    /**	try {
+
+		//	ArrayList<SamRead> elist = this.readMap.get("BK006935.2");
+			BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+			for (int z = 0; z < elist.size(); z++){
+				int y = elist.get(z).getStart();
+				String str = elist.get(z).getSam()+","+String.valueOf(z)+","+String.valueOf(y);
+				writer.write(str);
+				writer.newLine();
+			}
+
+
+	 		writer.close();
+		}
+	 catch (IOException e) {
+		e.printStackTrace();
+	}
+    }**/
+
+/**
              BufferedReader br = null;
                    try {
                      br = new BufferedReader(new FileReader(path));
@@ -812,12 +932,31 @@ public class Context implements Serializable, PropertyChangeListener {
                 e.printStackTrace();
             }
         }
-    }
+    }**/
 
+	public void resetInsertTooltipsMap(){
+		this.insertTooltipsMap = new HashMap<>();
+	}
+
+	public void putIntoInsertTooltipsMap(Rectangle rect, String insertSequence){
+		this.insertTooltipsMap.put(rect, insertSequence);
+	}
+
+	public String getTooltipForPoint(Point point){
+
+		for (Map.Entry<Rectangle, String> entry : this.insertTooltipsMap.entrySet()) {
+			Rectangle key = entry.getKey();
+			String value = entry.getValue();
+			if (key.contains(point)){
+				return value;
+			}
+		}
+		return null;
+	}
     public void parseSamReads(String path)  {
         BufferedReader br = null;
         this.barCoverageMap = new HashMap<>(organism.getChromosomes().keySet().size());
-
+        this.readMap = new HashMap<>();
 
         for (String chrID : organism.getChromosomes().keySet()){
 
@@ -846,12 +985,14 @@ public class Context implements Serializable, PropertyChangeListener {
         while ((line = br.readLine()) != null) {
            // System.out.println(line);
             String[] lineArray = line.split("\\s+");
+			String samnum = lineArray[0];
             //  System.out.println(lineArray[5].toString());
             String chromString = lineArray[2].toString();
             String cigarString = lineArray[5].toString();
             String sequenceString = lineArray[9].toString();
             int collumIndex = Integer.parseInt(lineArray[3])-1;   //position on the genome substract 1 because the SAM format starts counting at 1 and this program at zero
-            // System.out.println(Arrays.toString(cigarString.split("(?<=\\D)")));
+			int startPosition = collumIndex;
+			// System.out.println(Arrays.toString(cigarString.split("(?<=\\D)")));
             //SamRead t = new SamRead(lineArray[9].toString(), cigarString.split("(?<=\\D)"));
             //this.memorySAM.add(t);
 
@@ -859,45 +1000,61 @@ public class Context implements Serializable, PropertyChangeListener {
             //String  = new String("AAGGTTTTCCCCC");
             //String[] cigarArray = "2=2I4D5=".split("(?<=\\D)");
 
+
+
             String[] cigarArray = cigarString.split("(?<=\\D)");
+
             if (!cigarString.equals("*")) {
+				int[] operrationsarray = new int[cigarArray.length];
+				char[] cigarCharArray = new char[cigarArray.length];
+
+
                 int[][] crommap = this.barCoverageMap.get(chromString);
                 // int[][] crommap = new int[5][16];
 
-
+				int lengthOfSamRead = 0;
                 int positionInReadModifier = 0;
                 for (int x = 0; x < cigarArray.length; x++) {
                     int operatrions = Integer.parseInt(cigarArray[x].substring(0, cigarArray[x].length() - 1));
+					operrationsarray[x] += operatrions;
 
                     if (cigarArray[x].endsWith("=")) {
+						cigarCharArray[x] = '=';
+
                         for (int z = 0; z < operatrions; z++) {
 
                             crommap[0][collumIndex] += 1;
                             collumIndex += 1;
                         }
                         positionInReadModifier += operatrions;
+
+                        lengthOfSamRead += operatrions;
                     }
 
                     if (cigarArray[x].endsWith("D")) {
+						cigarCharArray[x] = 'D';
                         for (int z = 0; z < operatrions; z++) {
 
                             //crommap[0][collumIndex] += 1;
                             collumIndex += 1;
                         }
                         //positionInReadModifier += operatrions;
+						lengthOfSamRead += operatrions;
                     }
 
                     if (cigarArray[x].endsWith("I")) {			// inserts: pieces of sequence that are in the read but not in the reference sequence
-                        for (int z = 0; z < operatrions; z++) { // inserts are not saved in the main sequence but in a seperate sequence for a tooltip
+						cigarCharArray[x] = 'I';
+                        for (int z = 0; z < operatrions; z++) {
 
                             //crommap[0][collumIndex] += 1;
                             //collumIndex += 1;
+							//ACCACCACACCCACACTTTTCACATCTACCTCTACTCTCGCTGTCACTCCTTACCCGGCTTTCTGACCGAAATTAAAAAAAAAAAAATGAAA
                         }
                         positionInReadModifier += operatrions;
                     }
 
                     if (cigarArray[x].endsWith("X")) {
-
+						cigarCharArray[x] = 'X';
                         for (int z = 0; z < operatrions; z++) {
                             if (sequenceString.charAt(z + positionInReadModifier) == 'A') {
                                 crommap[1][collumIndex] += 1;
@@ -917,9 +1074,18 @@ public class Context implements Serializable, PropertyChangeListener {
                             }
                         }
                         positionInReadModifier += operatrions;
+						lengthOfSamRead += operatrions;
 
                     }
                 }
+                SamRead newRead = new SamRead(sequenceString, startPosition, lengthOfSamRead, samnum, cigarCharArray, operrationsarray);
+				if (readMap.containsKey(chromString) == true){
+					readMap.get(chromString).add(newRead);
+				} else {
+					ArrayList<SamRead> list = new ArrayList<>();
+					readMap.put(chromString ,list);
+					readMap.get(chromString).add(newRead);
+				}
             }
         }
   //      System.out.println(Arrays.toString("1=2I4D5=".split("(?<=\\D)")));
@@ -946,6 +1112,8 @@ public class Context implements Serializable, PropertyChangeListener {
         }
     }
 
+   // publiv insertTooltips
+
     public int[][] getCurrentBarCovarage(){
         int[][] crommap = this.barCoverageMap.get(this.curChromosome.getId());
         int[][] currentmap = new int[crommap.length][getLength()];
@@ -965,11 +1133,28 @@ public class Context implements Serializable, PropertyChangeListener {
     	this.coverageReadsPerPixel = newHeightInReadsPerPixel;
         pcs.firePropertyChange("coverageReadsPerPixel",null,null);
 	}
-
-	public void xxx(){
-		pcs.firePropertyChange("area",null,null);
-		System.out.println("xxx");
+	public void setpixelHeightReads(int newPixelHeightReadsValue){
+		this.pixelHeightReads = newPixelHeightReadsValue;
+		pcs.firePropertyChange("pixelHeightReads",null,null);
 	}
+
+	public int getPixelHeightReads(){
+		return this.pixelHeightReads;
+	}
+
+	public void SetPixelSpaceBetweenReads(int newPixelSpaceBetweenReadsValue){
+		this.pixelSpaceBetweenReads = newPixelSpaceBetweenReadsValue;
+		pcs.firePropertyChange("PixelSpaceBetweenReads",null,null);
+	}
+
+	public int getPixelSpaceBetweenReads(){
+		return this.pixelSpaceBetweenReads;
+	}
+	//public void xxx(){
+	//	pcs.firePropertyChange("area",null,null);
+	//	System.out.println("xxx");
+
+	//}
 
 	public void drawBarmap(){
         gui.organism.add(new ReadBarPanel(this));
@@ -977,13 +1162,21 @@ public class Context implements Serializable, PropertyChangeListener {
         gui.organism.repaint();
     }
 	public void drawReadAllignment(){
-		JScrollPane scroller = new JScrollPane(new ReadAlignmentPanel(this));
+		ReadAlignmentPanel k = new ReadAlignmentPanel(this);
+	//	k.addMouseListener(new MouseInputAdapter() {
+	//	});
+		JScrollPane scroller = new JScrollPane(k);
 		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		System.out.println(scroller.getVerticalScrollBar().getWidth());
 		scroller.setPreferredSize(new Dimension(882,142));
 		scroller.setMaximumSize(new Dimension(2000,40));
+		scroller.setBorder(null);
 		gui.organism.add(scroller);
+
 		gui.organism.revalidate();
 		gui.organism.repaint();
+
+
 	}
 }

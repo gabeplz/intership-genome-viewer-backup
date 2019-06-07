@@ -50,11 +50,13 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
     JMenu readbarMenu;
     JMenuItem readbarButton;
     JMenuItem readbarScaleButton;
+    JMenuItem readScaleButton;
     JMenuItem readAllignButton;
     JMenuItem xxx;
 
     MotifFrame x;
     BarScaleFrame b;
+    ReadScaleFrame r;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
@@ -846,8 +848,11 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 samReadsAction();
-                //looptestAction();
+
+                readAllignAction();
+               // looptestAction();
                 cont.drawBarmap();
+                cont.drawReadAllignment();
             }
         });
         readbarMenu.add(readbarButton);
@@ -864,6 +869,17 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         add(readbarMenu);
         // JMenuItem ;
 
+        readScaleButton = new JMenuItem ("set read hight and whitespace");
+        readScaleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createReadScaleFrame();
+            }
+        });
+        readbarMenu.add(readScaleButton);
+        readbarMenu.add(readScaleButton);
+        add(readScaleButton);
+
         readAllignButton = new JMenuItem ("make scroll");
         readAllignButton.addActionListener(new ActionListener() {
             @Override
@@ -876,7 +892,8 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         xxx.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cont.xxx();                //looptestAction();
+              //  cont.xxx();
+                looptestAction();
             }
         });
 
@@ -900,13 +917,19 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
 
 
     }
+
+    private void readAllignAction(){
+        cont.sortReadmapByStart();
+        cont.setReadHeightLayers();
+        cont.setCurrentSamReads();
+    }
+
     private void looptestAction() {
-        JOptionPane.showMessageDialog(null,"kies een sam file met x= in de cigar string");
-        FastaFileChooser ffc = new FastaFileChooser();
-        String path = ffc.fastafile();
+     //   JOptionPane.showMessageDialog(null,"kies een sam file met x= in de cigar string");
+       // FastaFileChooser ffc = new FastaFileChooser();
+      //  String path = ffc.fastafile();
 
-        cont.looptestWhile(path);
-
+        cont.looptestWhile();
     }
 
     public void createBarScaleFrame(){
@@ -914,8 +937,15 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
 
         b = new BarScaleFrame(cont.getCoverageReadsPerPixel(), this );
         b.setContext(cont);
-
     }
+
+    public void createReadScaleFrame(){
+        //matrixFrame.setEnabled(false);
+
+        r = new ReadScaleFrame(cont.getPixelHeightReads(), cont.getPixelSpaceBetweenReads(), this );
+        r.setContext(cont);
+    }
+
     private void createAllignPanel(){
         cont.drawReadAllignment();
     }

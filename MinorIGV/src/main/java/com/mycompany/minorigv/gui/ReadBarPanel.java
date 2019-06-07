@@ -55,22 +55,28 @@ public class ReadBarPanel extends IGVPanel implements PropertyChangeListener {
         Graphics2D g2 = (Graphics2D) g;
         int barLenght = currentBarCovarage[0].length;
         Dimension dim = this.getSize();
+        System.out.println(this.getSize() + "readbar");
         int realWidth = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), barLenght);  //bepaal de toegewezen breedte per pixel.
 
         int xPos = (int) DrawingTools.calculateLetterPosition( (int) dim.getWidth(), barLenght, -0.5); //linkerkant van rechthoekje, positie op de x-as.
         int oldXPos; //onthouden oude xPos.
-        System.out.println("____________");
+
+ /**       System.out.println("____________");
         System.out.println(currentBarCovarage[0][0]);
         System.out.println(currentBarCovarage[1][0]);
         System.out.println(currentBarCovarage[2][0]);
         System.out.println(currentBarCovarage[3][0]);
         System.out.println(currentBarCovarage[4][0]);
-        System.out.println((int) (dim.getHeight()));
+        System.out.println((int) (dim.getHeightLayer()));**/
         for(int i = 0; i < barLenght; i++  ) {
             int heightModifier = 0; //
 
             oldXPos = xPos;
             xPos = (int) DrawingTools.calculateLetterPosition((int) dim.getWidth(), barLenght, i + 0.5); //nieuwe xPos bepalen.
+
+          //  System.out.println(oldXPos);
+            //System.out.println(xPos);
+
             int width = xPos - oldXPos;  //breedte vierkantje
 
             if (realWidth > 2) {
@@ -96,6 +102,8 @@ public class ReadBarPanel extends IGVPanel implements PropertyChangeListener {
         g2.drawLine(0,0,0,50);
         g2.drawLine(0,0,2,0);
         g2.drawLine(0,49,2,49);
+
+       // g2.drawLine(900,0,900,49);
     }
 
     public void init() {

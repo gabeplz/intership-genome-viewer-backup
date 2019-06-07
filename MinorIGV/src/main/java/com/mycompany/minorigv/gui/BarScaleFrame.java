@@ -28,7 +28,7 @@ public class BarScaleFrame extends Frame {
         infoField.setBounds(200, 50, 190, 60);
         infoField.setLineWrap(true);
 
-        JTextArea infoField2 = new JTextArea("the graph shows a scale of 0 to 50");
+        JTextArea infoField2 = new JTextArea("the graph shows the coverage up to "+50 * coverageReadsPerPixel+ " Reads");
         infoField2.setBounds(200, 120, 190, 60);
         infoField2.setLineWrap(true);
 
@@ -42,7 +42,8 @@ public class BarScaleFrame extends Frame {
                 int newCoverageReadsPerPixel = Integer.parseInt(newValueField.getText());
                 if (newCoverageReadsPerPixel > 0){
                     cont.setCoverageReadsPerPixel(newCoverageReadsPerPixel);
-
+                    infoField.setText(cont.getCoverageReadsPerPixel()+" read(s) will heighten \n the bar with 1 pixel");
+                    infoField2.setText("the graph shows the coverage up to "+50 * cont.getCoverageReadsPerPixel() + " Reads");
 
                 } else{
                     ExceptionDialogs.ErrorDialog("Please enter a rounded number above zero","foutieve invoer");
