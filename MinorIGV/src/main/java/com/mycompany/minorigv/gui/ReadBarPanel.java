@@ -10,8 +10,10 @@ public class ReadBarPanel extends IGVPanel implements PropertyChangeListener {
     public static Color adenineColor = new Color(255,0,0);
     public static Color cytosineColor = new Color(123, 215,0);
     public static Color guanineColor = new Color(0, 215, 215);
+    public static Color ambiguousColor = new Color(60, 60, 60);
+
     public static Color matchColor = new Color(100, 100, 100);
-    public static Color[] colourArray = { matchColor,adenineColor,thymineColor,cytosineColor,guanineColor};
+    public static Color[] colourArray = { matchColor,adenineColor,thymineColor,cytosineColor,guanineColor , ambiguousColor};
 
     /**
      * Constructor
@@ -34,12 +36,12 @@ public class ReadBarPanel extends IGVPanel implements PropertyChangeListener {
 
         int width = (int) DrawingTools.calculateLetterWidth((int) dim.getWidth(), currentBarCovarage[0].length);
 
-        if(width >= 1 ){
+   //     if(width >= 1 ){
             drawBar(g,currentBarCovarage);  //Vierkantje teken functie
-        }
-        else {
+   //     }
+    //    else {
             //Nog niks, gewoon vol negeren.
-        }
+     //   }
 
 
 

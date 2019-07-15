@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Deze class maakt een menubar voor de applicatie die verschillende menus bevat zoals menus voor het laden van files tools etc.
@@ -53,10 +54,12 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
     JMenuItem readScaleButton;
     JMenuItem readAllignButton;
     JMenuItem xxx;
+    JMenuItem exportButton;
 
     MotifFrame x;
     BarScaleFrame b;
     ReadScaleFrame r;
+    ExportSequenceFrame exportSequenceFrame;
 
     // Een lijst die de features bevat die de gebruiker op dat moment wil zien.
     ArrayList<String> featureArray = new ArrayList<String>();
@@ -847,15 +850,17 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         readbarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                samReadsAction();
+                boolean readsParsed = samReadsAction();
+                if (readsParsed == true) {
 
-                readAllignAction();
-               // looptestAction();
-                cont.drawBarmap();
-                cont.drawReadAllignment();
+                    readAllignAction();
+                    // looptestAction();
+                    cont.drawBarmap();
+                    cont.drawReadAllignment();
+                }
             }
         });
-        readbarMenu.add(readbarButton);
+      //  readbarMenu.add(readbarButton);
 
         readbarScaleButton = new JMenuItem ("set bar chart scale");
         readbarScaleButton.addActionListener(new ActionListener() {
@@ -864,10 +869,7 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
                 createBarScaleFrame();                //looptestAction();
             }
         });
-        readbarMenu.add(readbarButton);
-        readbarMenu.add(readbarScaleButton);
-        add(readbarMenu);
-        // JMenuItem ;
+
 
         readScaleButton = new JMenuItem ("set read hight and whitespace");
         readScaleButton.addActionListener(new ActionListener() {
@@ -876,9 +878,7 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
                 createReadScaleFrame();
             }
         });
-        readbarMenu.add(readScaleButton);
-        readbarMenu.add(readScaleButton);
-        add(readScaleButton);
+
 
         readAllignButton = new JMenuItem ("make scroll");
         readAllignButton.addActionListener(new ActionListener() {
@@ -888,32 +888,66 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
             }
         });
 
-        xxx = new JMenuItem ("area");
+        xxx = new JMenuItem ("add currently visible sequence for export");
         xxx.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
               //  cont.xxx();
-                looptestAction();
+                //looptestAction();
+                HashMap <String,String> fastaMap = new HashMap<>();
+                String s1 = new String("a");
+                String s2 = new String("a");
+                fastaMap.put(s1,"ddd");
+                System.out.println(fastaMap.get(s2));
+                System.out.println(s1.equals(s2));
+                cont.addToSelectedSequncesFastaMap(cont.getStart(),cont.getStop());
+            }
+        });
+        exportButton = new JMenuItem ("Export selected sequences ");
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(exportSequenceFrame != null){
+                    exportSequenceFrame.kys();
+                }
+               createExportSequenceFrame();
             }
         });
 
         readbarMenu.add(readbarButton);
         readbarMenu.add(readbarScaleButton);
+        readbarMenu.add(readScaleButton);
         readbarMenu.add(readAllignButton);
         readbarMenu.add(xxx);
+        readbarMenu.add(exportButton);
         add(readbarMenu);
         // JMenuItem ;
     }
 
 
 
-    private void samReadsAction() {
 
-        JOptionPane.showMessageDialog(null,"kies een sam file met x= in de cigar string");
+
+
+    private boolean samReadsAction() {
+    try {
+        JOptionPane.showMessageDialog(null, "kies een sam file met x= in de cigar string");
         FastaFileChooser ffc = new FastaFileChooser();
         String path = ffc.fastafile();
-
+        System.out.println(path.length());
+        if (path.equalsIgnoreCase("")) {
+            System.out.println("double quote");
+            return false;
+        } else {
             cont.parseSamReads(path);
+            return true;
+        }
+
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+
+        }
 
 
     }
@@ -944,6 +978,11 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
 
         r = new ReadScaleFrame(cont.getPixelHeightReads(), cont.getPixelSpaceBetweenReads(), this );
         r.setContext(cont);
+    }
+
+    public void createExportSequenceFrame(){
+        exportSequenceFrame = new ExportSequenceFrame(this, cont);
+       // exportSequenceFrame.setContext(cont);
     }
 
     private void createAllignPanel(){

@@ -11,6 +11,7 @@ public class SamRead {
   //  private int[] insertSequencesPos;
     private char[] cigarChars;
     private int[] cigarNumbers;
+    private boolean drawAllColoursBoolean;
 
     public SamRead(String sequence, int start, int totalLenght, String samcode, char[] cigarChars, int[] cigarNumbers){
         this.sequence = sequence;
@@ -20,6 +21,7 @@ public class SamRead {
         this.samcode = samcode;
         this.cigarChars = cigarChars;
         this.cigarNumbers = cigarNumbers;
+        this.drawAllColoursBoolean = false;
     }
 
   /**  public static Comparator<SamRead> startPosComparator = new Comparator<SamRead>() {
@@ -40,11 +42,15 @@ public class SamRead {
     }; **/
 
 
-        public void setHeightLayer(int height){
-        this.heightLayer = height;
-    }
     public String getSequence(){return this.sequence;}
+
+    public void setHeightLayer(int height){this.heightLayer = height;}
     public int getHeightLayer(){return this.heightLayer;}
+
+    public void setDrawAllColoursBoolean(boolean NewDrawAllColoursValue){this.drawAllColoursBoolean = NewDrawAllColoursValue;}
+    public void inverseDrawAllColoursBoolean(){this.drawAllColoursBoolean = !this.drawAllColoursBoolean;}
+
+    public boolean getDrawAllColoursBoolean (){return this.drawAllColoursBoolean;}
 
     public int getStart(){return this.start;}
     public int getTotalLength(){return this.totalLength;}

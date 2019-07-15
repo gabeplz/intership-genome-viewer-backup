@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.*;
 
 import com.mycompany.minorigv.FastaFileReader;
+import com.mycompany.minorigv.HashmapToFastaWriter;
 import com.mycompany.minorigv.blast.BLAST;
 import com.mycompany.minorigv.blast.BlastOutput;
 import com.mycompany.minorigv.fastqparser.FastqReader;
@@ -49,7 +50,7 @@ public class Context implements Serializable, PropertyChangeListener {
     private ReadCoverage readCoverage_rv;
     private boolean graphBool;
     private boolean graphBoolMotif;
-
+	private boolean ReadAllignBool;
 
     private ArrayList<SamRead> currentSamReads = new ArrayList<>();
     private HashMap<String,int[][]> barCoverageMap;
@@ -60,8 +61,9 @@ public class Context implements Serializable, PropertyChangeListener {
 
 	private HashMap<String,ArrayList<SamRead>> readMap;
 	private HashMap<Rectangle,String> insertTooltipsMap;
+	private HashMap<Rectangle,SamRead> currentAreaReadMap;
 
-    private ArrayList<Read> currentReads;
+	private ArrayList<Read> currentReads;
 
 	private Feature[] currentFeatureList;
 	private int featStart;
@@ -81,6 +83,14 @@ public class Context implements Serializable, PropertyChangeListener {
     private double[] StepsForMotifs;
 	private final int DEFAULT_START = 0;
 	private final int DEFAULT_STOP = 100;
+
+	private LinkedHashMap<String,String> selectedSequncesMap = new LinkedHashMap<>();
+	private ArrayList<String> selectedSequncesKeysForSaving = new ArrayList<>();
+
+	private int clickedRefPosition;
+	private int selectionPosition1;
+	private int selectionPosition2;
+
 
 	private BlastOutput blastOutput;
 
@@ -256,7 +266,7 @@ public class Context implements Serializable, PropertyChangeListener {
      */
     private void removeNonsense() {
 
-        if(graphBool || graphBoolMotif){
+        if(graphBool || graphBoolMotif||ReadAllignBool){
             for(Component c : gui.organism.getComponents()){
                 if(c instanceof GraphPanel){
                     gui.organism.remove(c);
@@ -266,6 +276,14 @@ public class Context implements Serializable, PropertyChangeListener {
                     gui.organism.remove(c);
                     graphBoolMotif = false;
                 }
+				if(c instanceof ReadAlignmentPanel) {
+					gui.organism.remove(c);
+					ReadAllignBool = false;
+				}
+				if(c instanceof ReadBarPanel) {
+					gui.organism.remove(c);
+					ReadAllignBool = false;
+				}
             }
 
         }
@@ -374,6 +392,22 @@ public class Context implements Serializable, PropertyChangeListener {
 	 */
 	public String getSubSequentie() throws NullPointerException {
 		return this.curChromosome.getSeqTemp().substring(start, stop);
+
+	}
+
+
+	/**
+	 * Functie voor het verkrijgen van subsequentie gebaseerd op zero-based indexing.
+	 * @Param start position using zero-based indexing
+	 * @Param stop position using zero-based indexing
+	 * @return de subsequentie
+	 */
+	public String getSelectedSequentie(int start, int stop) throws NullPointerException {
+		if (this.stop > this.curChromosome.getSeqTemp().length()-1){
+			return "out of bounds";
+		} else return this.curChromosome.getSeqTemp().substring(start, stop + 1);
+
+
 
 	}
 
@@ -828,7 +862,7 @@ public class Context implements Serializable, PropertyChangeListener {
 			for (int x = 0; x < samArray.size(); x++){
 				int currentStartPos = samArray.get(x).getStart();
 
-				if (previousStartPos != currentStartPos){ //TODO als er een nieuwe positie is moet er gekeken worder naar de afstand tussen de vorige en zovaak de aftrek loop uitvoeren
+				if (previousStartPos != currentStartPos){ // als er een nieuwe positie is moet er gekeken worder naar de afstand tussen de vorige en zovaak de aftrek loop uitvoeren
 					int xposdiff = currentStartPos - previousStartPos;
 
 					for (int i = 0; i < maxheight + 1; i++){
@@ -934,9 +968,30 @@ public class Context implements Serializable, PropertyChangeListener {
         }
     }**/
 
+
+	public void resetCurrentAreaReadMap(){
+		this.currentAreaReadMap = new HashMap<>();
+	}
+
+	public void putIntoCurrentAreaReadMap(Rectangle rect, SamRead samRead){
+		this.currentAreaReadMap.put(rect, samRead);
+	}
+
+	public SamRead getSamReadForPoint(Point point){
+
+		for (Map.Entry<Rectangle, SamRead> entry : this.currentAreaReadMap.entrySet()) {
+			Rectangle key = entry.getKey();
+			SamRead value = entry.getValue();
+			if (key.contains(point)){
+				return value;
+			}
+		}
+		return null;
+	}
 	public void resetInsertTooltipsMap(){
 		this.insertTooltipsMap = new HashMap<>();
 	}
+
 
 	public void putIntoInsertTooltipsMap(Rectangle rect, String insertSequence){
 		this.insertTooltipsMap.put(rect, insertSequence);
@@ -953,6 +1008,18 @@ public class Context implements Serializable, PropertyChangeListener {
 		}
 		return null;
 	}
+
+	public void readAlignmentPanelPropertyChangeLauncer(){
+		pcs.firePropertyChange("showReadColours",null,null);
+
+	}
+
+	public void switchAllColors() {
+		ArrayList<SamRead> samArray = this.getReadMap().get(this.curChromosome.getId());
+		for (int i = 0; i < samArray.size(); i++) {
+			samArray.get(i).inverseDrawAllColoursBoolean();
+		}
+	}
     public void parseSamReads(String path)  {
         BufferedReader br = null;
         this.barCoverageMap = new HashMap<>(organism.getChromosomes().keySet().size());
@@ -960,7 +1027,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
         for (String chrID : organism.getChromosomes().keySet()){
 
-            int[][] errey = new int[5][organism.getChromosome(chrID).getSeqTemp().length()];
+            int[][] errey = new int[6][organism.getChromosome(chrID).getSeqTemp().length()];
      //       Arrays.fill(errey,0);
 
             this.barCoverageMap.put(chrID,errey); //int array ter grote van chromosoom's sequentie.
@@ -978,12 +1045,15 @@ public class Context implements Serializable, PropertyChangeListener {
         while ((line = br.readLine()).startsWith("@SQ") == true) {
 
 
-            System.out.println(line);
+            System.out.println(line + "seqwhile");
 
         }
-        br.readLine(); // input files header
+			System.out.println(line + "seqafterwhile");
+
+        // if you want the line with @PG do something here
+
         while ((line = br.readLine()) != null) {
-           // System.out.println(line);
+
             String[] lineArray = line.split("\\s+");
 			String samnum = lineArray[0];
             //  System.out.println(lineArray[5].toString());
@@ -1056,22 +1126,26 @@ public class Context implements Serializable, PropertyChangeListener {
                     if (cigarArray[x].endsWith("X")) {
 						cigarCharArray[x] = 'X';
                         for (int z = 0; z < operatrions; z++) {
-                            if (sequenceString.charAt(z + positionInReadModifier) == 'A') {
+                            if (Character.toUpperCase(sequenceString.charAt(z + positionInReadModifier)) == 'A') {
                                 crommap[1][collumIndex] += 1;
                                 collumIndex += 1;
-                            }
-                            if (sequenceString.charAt(z + positionInReadModifier) == 'T') {
+                            } else
+                            if (Character.toUpperCase(sequenceString.charAt(z + positionInReadModifier)) == 'T') {
                                 crommap[2][collumIndex] += 1;
                                 collumIndex += 1;
-                            }
-                            if (sequenceString.charAt(z + positionInReadModifier) == 'C') {
+                            } else
+                            if (Character.toUpperCase(sequenceString.charAt(z + positionInReadModifier)) == 'C') {
                                 crommap[3][collumIndex] += 1;
                                 collumIndex += 1;
-                            }
-                            if (sequenceString.charAt(z + positionInReadModifier) == 'G') {
+                            } else
+                            if (Character.toUpperCase(sequenceString.charAt(z + positionInReadModifier)) == 'G') {
                                 crommap[4][collumIndex] += 1;
                                 collumIndex += 1;
-                            }
+                            } else
+                            if (Character.toUpperCase(sequenceString.charAt(z + positionInReadModifier)) == 'N') {
+								crommap[5][collumIndex] += 1;
+								collumIndex += 1;
+							}
                         }
                         positionInReadModifier += operatrions;
 						lengthOfSamRead += operatrions;
@@ -1142,7 +1216,7 @@ public class Context implements Serializable, PropertyChangeListener {
 		return this.pixelHeightReads;
 	}
 
-	public void SetPixelSpaceBetweenReads(int newPixelSpaceBetweenReadsValue){
+	public void setPixelSpaceBetweenReads(int newPixelSpaceBetweenReadsValue){
 		this.pixelSpaceBetweenReads = newPixelSpaceBetweenReadsValue;
 		pcs.firePropertyChange("PixelSpaceBetweenReads",null,null);
 	}
@@ -1162,21 +1236,110 @@ public class Context implements Serializable, PropertyChangeListener {
         gui.organism.repaint();
     }
 	public void drawReadAllignment(){
-		ReadAlignmentPanel k = new ReadAlignmentPanel(this);
-	//	k.addMouseListener(new MouseInputAdapter() {
-	//	});
-		JScrollPane scroller = new JScrollPane(k);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		System.out.println(scroller.getVerticalScrollBar().getWidth());
-		scroller.setPreferredSize(new Dimension(882,142));
-		scroller.setMaximumSize(new Dimension(2000,40));
-		scroller.setBorder(null);
-		gui.organism.add(scroller);
+		if(!ReadAllignBool) {
+			ReadAlignmentPanel k = new ReadAlignmentPanel(this);
+			//	k.addMouseListener(new MouseInputAdapter() {
+			//	});
+			JScrollPane scroller = new JScrollPane(k);
+			scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			System.out.println(scroller.getVerticalScrollBar().getWidth());
+			scroller.setPreferredSize(new Dimension(882, 142));
+			scroller.setMaximumSize(new Dimension(2000, 40));
+			scroller.setBorder(null);
+			gui.organism.add(scroller);
 
-		gui.organism.revalidate();
-		gui.organism.repaint();
-
+			gui.organism.revalidate();
+			gui.organism.repaint();
+			ReadAllignBool =true;
+		}
 
 	}
+
+	public void addToSelectedSequncesFastaMap(int start, int stop)
+	{
+		String filename = this.getNameFasta();
+		int pos = filename.lastIndexOf(".");
+		String justName = pos > 0 ? filename.substring(0, pos) : filename;
+
+		String chromname = this.curChromosome.getId();
+
+		String seq = this.getSelectedSequentie(start, stop);
+		String header = ">"+chromname+" "+ (start +1) +" " + (stop + 1);
+		this.selectedSequncesMap.put(header, seq);
+		System.out.println(header.hashCode());
+		pcs.firePropertyChange("addSequence",null,null);
+
+		// 1 t/m 2 telling gebruiken voor AG in AGC
+
+	//	this.
+	}
+	public void removeFromSelectedSequncesFastaMap(String headerKey){
+		this.selectedSequncesMap.remove(headerKey);
+
+		//pcs.firePropertyChange("addSequence",null,null);
+	}
+
+	public void writeToFasta(ArrayList<String> selectedSequncesKeysForSaving, LinkedHashMap<String,String> selectedSequncesMap){
+		HashmapToFastaWriter.k(selectedSequncesKeysForSaving, selectedSequncesMap);
+
+	}
+
+	public void checkdebug(){
+
+		this.selectedSequncesKeysForSaving.size();
+		this.selectedSequncesMap.keySet().size();
+	}
+
+	public LinkedHashMap<String,String> getSelectedSequncesMap(){
+		return this.selectedSequncesMap;
+	}
+
+	public ArrayList<String> getSelectedSequncesFastaMapKeys(){
+			ArrayList<String> keys = new ArrayList<>(this.selectedSequncesMap.keySet());
+		return keys;
+	}
+	public ArrayList<String> getSelectedSequncesKeysForSaving(){
+		return this.selectedSequncesKeysForSaving;
+	}
+
+	public void addToSelectedSequncesKeysForSaving(String keyHeader){
+		this.selectedSequncesKeysForSaving.add(keyHeader);
+		System.out.println( "4"+ selectedSequncesMap.get(keyHeader));
+
+	}
+	public void removeFromSelectedSequncesKeysForSaving(int index){
+		this.selectedSequncesKeysForSaving.remove(index);
+	}
+
+	public void setClickedRefPosition(int position){
+		this.clickedRefPosition = position;
+	}
+	public int getClickedRefPosition(){
+		return this.clickedRefPosition;
+	}
+	public void setSelectionPosition1(){
+		this.selectionPosition1 = this.clickedRefPosition;
+		System.out.println(selectionPosition1+ "setmethod");
+	}
+	public int getSelectionPosition1(){
+
+		return this.selectionPosition1;
+	}
+	public void setSelectionPosition2(){
+		this.selectionPosition2 = this.clickedRefPosition;
+	}
+	public int getSelectionPosition2(){
+		return this.selectionPosition2;
+	}
+	public void resetSelectionPositions(){
+		this.selectionPosition1 = 0;
+		this.selectionPosition2 = 0;
+	}
+
+
+	//private int ClickedRefPosition;
+	//private int selectionPosition1;
+	//private int getSelectionPoint2;
+
 }
