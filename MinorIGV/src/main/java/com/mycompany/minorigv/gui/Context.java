@@ -866,7 +866,7 @@ public class Context implements Serializable, PropertyChangeListener {
 					int xposdiff = currentStartPos - previousStartPos;
 
 					for (int i = 0; i < maxheight + 1; i++){
-						heightArray[i] = Math.max(0,heightArray[i]-xposdiff);
+						heightArray[i] = Math.max(0,heightArray[i]-xposdiff);  //trek het verschil af maar kom niet onder 0
 					}
 
 					previousStartPos = currentStartPos;
@@ -900,7 +900,7 @@ public class Context implements Serializable, PropertyChangeListener {
 			}
 		}
 	//	System.out.println(Collections.max(samArray2, Comparator.comparing(c -> c.getHeightLayer())).getHeightLayer() + "size max");
-		Collections.sort(samArray2, (a,b) -> a.getHeightLayer() < b.getHeightLayer() ? -1: a.getHeightLayer() == b.getHeightLayer() ? 0 : 1);
+		//Collections.sort(samArray2, (a,b) -> a.getHeightLayer() < b.getHeightLayer() ? -1: a.getHeightLayer() == b.getHeightLayer() ? 0 : 1);
 
 		this.currentSamReads = samArray2;
 				//currentSamReads
@@ -1056,7 +1056,7 @@ public class Context implements Serializable, PropertyChangeListener {
 
             String[] lineArray = line.split("\\s+");
 			String samnum = lineArray[0];
-            //  System.out.println(lineArray[5].toString());
+			//System.out.println(lineArray[5].toString());
             String chromString = lineArray[2].toString();
             String cigarString = lineArray[5].toString();
             String sequenceString = lineArray[9].toString();
@@ -1088,7 +1088,7 @@ public class Context implements Serializable, PropertyChangeListener {
                     int operatrions = Integer.parseInt(cigarArray[x].substring(0, cigarArray[x].length() - 1));
 					operrationsarray[x] += operatrions;
 
-                    if (cigarArray[x].endsWith("=")) {
+                    if (cigarArray[x].endsWith("=")||cigarArray[x].endsWith("M")) {
 						cigarCharArray[x] = '=';
 
                         for (int z = 0; z < operatrions; z++) {
@@ -1116,12 +1116,20 @@ public class Context implements Serializable, PropertyChangeListener {
 						cigarCharArray[x] = 'I';
                         for (int z = 0; z < operatrions; z++) {
 
-                            //crommap[0][collumIndex] += 1;
-                            //collumIndex += 1;
-							//ACCACCACACCCACACTTTTCACATCTACCTCTACTCTCGCTGTCACTCCTTACCCGGCTTTCTGACCGAAATTAAAAAAAAAAAAATGAAA
+
                         }
                         positionInReadModifier += operatrions;
                     }
+					if (cigarArray[x].endsWith("S")) {			// soft clip: pieces of sequence that are in the read but not in the reference sequence
+						cigarCharArray[x] = 'S';
+						positionInReadModifier += operatrions;
+					}
+					if (cigarArray[x].endsWith("H")) {			//hard clip: tells the length of sequence that was removed. not present in reference or read
+						cigarCharArray[x] = 'H';
+					}
+
+					// padding
+					// skipped region N add long blue line
 
                     if (cigarArray[x].endsWith("X")) {
 						cigarCharArray[x] = 'X';
@@ -1162,15 +1170,6 @@ public class Context implements Serializable, PropertyChangeListener {
 				}
             }
         }
-  //      System.out.println(Arrays.toString("1=2I4D5=".split("(?<=\\D)")));
-
-  //      br.close();
-      //  System.out.println(organism.getChromosomes().keySet().size());
-      //  System.out.println(organism.getChromosomes().keySet());
-     //   for (int i = 0; i < 5; i++){
-       //     line = br.readLine();
-         //   System.out.println(line);
-        //}
         }catch(IOException e) {
             e.printStackTrace();
         } finally {
@@ -1224,9 +1223,9 @@ public class Context implements Serializable, PropertyChangeListener {
 	public int getPixelSpaceBetweenReads(){
 		return this.pixelSpaceBetweenReads;
 	}
-	//public void xxx(){
+	//public void exportRefButton(){
 	//	pcs.firePropertyChange("area",null,null);
-	//	System.out.println("xxx");
+	//	System.out.println("exportRefButton");
 
 	//}
 
