@@ -17,7 +17,7 @@ public class SamRead {
         this.sequence = sequence;
         //this.gappedSequence = gappedSequence;
         this.start = start;
-        this.totalLength = totalLenght;
+        this.totalLength = totalLenght;  //
         this.samcode = samcode;
         this.cigarChars = cigarChars;
         this.cigarNumbers = cigarNumbers;

@@ -53,7 +53,7 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
     JMenuItem readbarScaleButton;
     JMenuItem readScaleButton;
     JMenuItem readAllignButton;
-    JMenuItem xxx;
+    JMenuItem exportRefButton;
     JMenuItem exportButton;
 
     MotifFrame x;
@@ -330,7 +330,12 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         reads.add(blast_reads);
 
         // Voeg het features menu aan de menu bar
+
+         /**
+          * menu item voor de oude mapping module
+
         add(reads);
+          **/
 
     }
 
@@ -845,8 +850,8 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
     }
 
     public void makeReadbarMenu(){
-        readbarMenu = new JMenu("readbartest");
-        readbarButton = new JMenuItem ("make bar chart");
+        readbarMenu = new JMenu("read mapping");
+        readbarButton = new JMenuItem ("make bar chart and alignment panel");
         readbarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -888,11 +893,11 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
             }
         });
 
-        xxx = new JMenuItem ("add currently visible sequence for export");
-        xxx.addActionListener(new ActionListener() {
+        exportRefButton = new JMenuItem ("add currently visible sequence for export");
+        exportRefButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-              //  cont.xxx();
+              //  cont.exportRefButton();
                 //looptestAction();
                 HashMap <String,String> fastaMap = new HashMap<>();
                 String s1 = new String("a");
@@ -917,8 +922,8 @@ public class IGVMenuBar extends JMenuBar implements PropertyChangeListener {
         readbarMenu.add(readbarButton);
         readbarMenu.add(readbarScaleButton);
         readbarMenu.add(readScaleButton);
-        readbarMenu.add(readAllignButton);
-        readbarMenu.add(xxx);
+       // readbarMenu.add(readAllignButton);
+        readbarMenu.add(exportRefButton);
         readbarMenu.add(exportButton);
         add(readbarMenu);
         // JMenuItem ;

@@ -357,8 +357,11 @@ public class ReadAlignmentPanel extends IGVPanel implements PropertyChangeListen
 
 
 
-                }
-
+                } else if (tempCigarChar[x] == 'S'){
+                    positionInTempSeq += tempCigarNumbers[x];
+                } else if (tempCigarChar[x] == 'H'){
+                // do nothing
+            }
 
 
             }
@@ -559,7 +562,7 @@ public class ReadAlignmentPanel extends IGVPanel implements PropertyChangeListen
         }
     }
 
-    //TODO 22 with is rand voor normale positie bepaling 21 zie je de volgende.
+    //TODO 22 width is rand voor normale positie bepaling 21 zie je de volgende.
     class MyMouse extends MouseAdapter {
         JPopupMenu popup;
         Point p1 = null;
